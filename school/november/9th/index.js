@@ -8,28 +8,32 @@ ctx.canvas.height = window.innerHeight;
 
 const circleRadiusRand = 30
 const circleRadiusOffset = 5
+const circleCount = 100
 
 const circles = []
 
 const colours = [
-    "#800080BF",
-    "#FFD500BF",
-    "#FF971CBF",
-    "#0341AEBF",
-    "#f00000BF",
-    "#72CB3BBF",
-    "#00f0f0BF"
+    "#800080",
+    "#FFD500",
+    "#FF971C",
+    "#0341AE",
+    "#f00000",
+    "#72CB3B",
+    "#00f0f0"
 ]
 
 class Circle {
-    constructor(x, y, radius, dx, dy) {
+    constructor(x, y, radius, angleOffset, angleMultiplier, speed) {
+        const randomAngle = Math.random() * angleMultiplier + angleOffset;
+
         this.x = x
         this.y = y
         this.radius = radius
         this.colour = colours[rand_int(0, colours.length)]
 
-        this.dx = dx
-        this.dy = dy
+
+        this.dx = Math.cos(randomAngle) * speed
+        this.dy = Math.sin(randomAngle) * speed
     }
 
     draw_at_pos(x, y) {
@@ -82,15 +86,16 @@ class Circle {
 
 
 function init() {
-    for (let i = 0; i < 100; i ++) {
+    for (let i = 0; i < circleCount; i ++) {
         const radius = rand_int(0, circleRadiusRand) + circleRadiusOffset
         circles.push(
             new Circle(
                 rand_int(radius, canvas.width - 2*radius),
                 rand_int(radius, canvas.height - 2*radius),
                 radius,
-                rand_float(0.5, 5),
-                rand_float(0.5, 5)
+                0,
+                Math.PI * 2,
+                rand_float(1, 5)
             )
         )
     }

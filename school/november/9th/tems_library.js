@@ -1,9 +1,9 @@
-export function rand_int (min, max) {
-    return Math.floor(Math.random() * max + min) 
+export function rand_int (offset, multiplier) {
+    return Math.floor(Math.random() * multiplier + offset) 
 }
 
-export function rand_float (min, max) {
-    return Math.random() * max + min
+export function rand_float (offset, multiplier) {
+    return Math.random() * multiplier + offset
 }
 
 // export { rand_float, rand_int }
