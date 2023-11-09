@@ -3,7 +3,7 @@ export function rand_int (min, max) {
 }
 
 export function rand_float (min, max) {
-    return MathMath.random() * max + min
+    return Math.random() * max + min
 }
 
 // export { rand_float, rand_int }
