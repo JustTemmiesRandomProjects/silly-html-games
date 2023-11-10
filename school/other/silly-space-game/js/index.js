@@ -8,12 +8,15 @@ resizeCanvas(canvas)
 var loading = document.createElement("img")
 loading.src = "../assets/sprites/loading/loading.gif"
 loading.id = "loading-bar"
-document.body.appendChild(loading)
+document.getElementById("misc").appendChild(loading)
 
 // ready function, called when the program is ready, before the first game tick
 function ready() {
-    // make the gameTick1 function run every 1000 ms
-    setInterval(gameTick1, 1000)
+    global.assets["music_battle"].play()
+    global.assets["music_battle"].loop(true)
+
+    // make the gameTick2 function run every 500 ms
+    setInterval(gameTick2, 500)
 
     // create circles
     for (let i = 0; i < global.circle_count; i++) {
@@ -52,7 +55,7 @@ function gameTick10 () {
 
 
 // gameTick function, called every 10 gameticks (1 time/second)
-function gameTick1 () {
+function gameTick2 () {
     resizeCanvas(canvas)
 }
 
@@ -66,7 +69,7 @@ function drawCircles() {
 }
 
 function drawBackground() {
-    ctx.drawImage(global.images["background"], 0, 0)
+    ctx.drawImage(global.assets["sprite_background"], 0, 0)
 }
 
 // sort the global.circles array based on the `radius` property of the circles, meaning that the bigger circles get drawn last

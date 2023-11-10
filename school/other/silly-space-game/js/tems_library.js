@@ -63,35 +63,45 @@ export async function sleep(ms) {
     });
 }
 
-// function to make sure all the needed images are loaded before we try to use them
-export async function loadImages(imageSources) {
+
+// function to make sure all the needed assets are loaded before we try to use them
+export async function loadAssets(assetSources) {
     return new Promise(resolve => {
-        let imageObjects = {}
-        let imageReady = {}
+        let assetObjects = {}
+        let assetReady = {}
+        for (const [key, value] of Object.entries(assetSources)) {
+            // handling images
+            if (value[1] == Image) {
+                assetObjects[key] = new Image
+                assetReady[key] = false
 
-        for (const [key, value] of Object.entries(imageSources)) {
-            imageObjects[key] = new Image
-            imageReady[key] = false
 
-            imageObjects[key].onload = function() {
-                imageReady[key] = true
+                assetObjects[key].onload = function() {
+                    console.log(`[ASSETS] [IMAGE] ${key} is done loading`)
+                    assetReady[key] = true
+                }
+
+                assetObjects[key].src = value[0]
             }
-
-            imageObjects[key].src = value
+            // handling audio
+            if (value[1] == Audio) {
+                assetObjects[key] = new sound(value[0])
+                assetReady[key] = true
+            }
         }
 
         function isComplete() {
             // loop over the images, if any aren't loaded, break
-            for (const [key, value] of Object.entries(imageReady)) {
+            for (const [key, value] of Object.entries(assetReady)) {
                 if (value == false) {
-                    break
+                    return
                 }
-                
-                // stop the function from executing
-                clearInterval(isComplete)
-                // return the imageObjects
-                resolve(imageObjects)
+
             }
+            // stop the function from executing
+            clearInterval(isComplete)
+            // return the assetObjects
+            resolve(assetObjects)
         }
 
         // set a function to check if all the images are properly loaded every 100 ms
@@ -109,3 +119,32 @@ export function resizeCanvas(canvas) {
         user_current_screen_height = window.innerHeight
     }
 }
+
+
+
+
+// """" custom data types """"
+
+export function sound(src) {
+    this.sound = document.createElement("audio")
+    this.sound.src = src
+    this.sound.setAttribute("preload", "auto")
+    this.sound.setAttribute("controls", "none")
+    document.getElementById("misc").appendChild(this.sound)
+
+    this.play = function(){
+        this.sound.play()
+    }
+    this.stop = function(){
+        this.sound.pause()
+    }
+    this.loop = function(bool){
+        this.sound.loop = bool
+        if (bool === true) {
+            this.sound.classList.add("looping-audio")
+        } else if (bool === false) {
+            this.sound.classList.remove("looping-audio")
+        }
+        console.log(this.sound.classList)
+    }
+} 
