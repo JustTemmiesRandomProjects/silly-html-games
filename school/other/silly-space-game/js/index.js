@@ -12,7 +12,7 @@ document.getElementById("misc").appendChild(loading)
 
 // ready function, called when the program is ready, before the first game tick
 function ready() {
-    global.assets["music_battle"].play()
+    // global.assets["music_battle"].play()
     global.assets["music_battle"].loop(true)
 
     // make the gameTick2 function run every 500 ms
@@ -54,7 +54,7 @@ function gameTick10 () {
 }
 
 
-// gameTick function, called every 10 gameticks (1 time/second)
+// gameTick function, called every 5 gameticks (2 times/second)
 function gameTick2 () {
     resizeCanvas(canvas)
 }
@@ -68,8 +68,28 @@ function drawCircles() {
     }
 }
 
+// draw the background, crop the image if needed to fill the screen
+// the transformations took me too fucking long lmao
 function drawBackground() {
-    ctx.drawImage(global.assets["sprite_background"], 0, 0)
+    const image = global.assets["sprite_background"]
+    
+    const scale = Math.max(
+        canvas.width/image.width,
+        canvas.height/image.height
+    )
+    
+    //https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/transform
+    ctx.setTransform(
+      /*     scale x */ scale,
+      /*      skew x */ 0,
+      /*      skew y */ 0,
+      /*     scale y */ scale,
+      /* translate x */ (canvas.width - scale * image.width) / 2,
+      /* translate y */ (canvas.height - scale * image.height) / 2,
+    );
+  
+    ctx.drawImage(image, 0, 0)
+    ctx.setTransform(1,0,0,1,0,0);
 }
 
 // sort the global.circles array based on the `radius` property of the circles, meaning that the bigger circles get drawn last

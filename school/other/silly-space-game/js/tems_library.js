@@ -84,10 +84,16 @@ export async function loadAssets(assetSources) {
                 assetObjects[key].src = value[0]
             }
             // handling audio
-            if (value[1] == Audio) {
+            else if (value[1] == Audio) {
                 assetObjects[key] = new sound(value[0])
                 assetReady[key] = true
             }
+            // if it's none of the above
+            else {
+                console.log(`format for ${key} was set to ${value[1]}, which is not a valid option`)
+                alert(`format for ${key} was set to ${value[1]}, which is not a valid option`)
+            }
+
         }
 
         function isComplete() {
@@ -145,6 +151,5 @@ export function sound(src) {
         } else if (bool === false) {
             this.sound.classList.remove("looping-audio")
         }
-        console.log(this.sound.classList)
     }
 } 

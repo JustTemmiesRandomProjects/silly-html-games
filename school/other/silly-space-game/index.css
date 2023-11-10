@@ -24,7 +24,7 @@ html, body {
 }
 
 audio {
-    /* display: none; */
+    display: none;
     background-color: #4d4d4d;
 }
 
