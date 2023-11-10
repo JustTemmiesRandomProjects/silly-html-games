@@ -53,5 +53,44 @@ export function accountForDisplay(num) {
     return num * (biggest_user_size_dimension / biggest_developer_size_dimension)
 }
 
+// python time.sleep function
+export async function sleep(ms) {
+    return new Promise(resolve => {
+        setTimeout(resolve, ms);
+    });
+}
 
-// export { randFloat, randInt }
+// function to make sure all the needed images are loaded before we try to use them
+export async function loadImages(imageSources) {
+    return new Promise(resolve => {
+        let imageObjects = []
+        let imageReady = []
+        for (let i = 0; i < imageSources.length; i ++) {
+            imageObjects.push(new Image)
+            imageReady.push(false)
+
+            imageObjects[i].onload = function() {
+                imageReady[i] = true
+            }
+
+            imageObjects[i].src = imageSources[i]
+        }
+
+        function isComplete() {
+            // loop over the images, if any aren't loaded, break
+            for (let i = 0; i < imageObjects.length; i ++) {
+                if (imageReady[i] == false) {
+                    break
+                }
+                
+                // stop the function from executing
+                clearInterval(isComplete)
+                // return the imageObjects
+                resolve(imageObjects)
+            }
+        }
+
+        // set a function to check if all the images are properly loaded every 100 ms
+        setInterval(isComplete, 100)
+    })
+}

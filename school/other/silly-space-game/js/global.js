@@ -1,32 +1,44 @@
-import { accountForDisplay } from "./tems_library.js"
+import { accountForDisplay, loadImages } from "./tems_library.js"
 
 const canvas = document.getElementById("gameCanvas")
 const ctx = canvas.getContext("2d")
 
 class Global {
-    constructor() {
+    constructor(imageObjects) {
         // adjust everything depending on the screen's largest dimension, for a consistent experience accross displays
         this.circle_radius_rand = accountForDisplay(20)
         this.circle_radius_offset = accountForDisplay(12)
-        this.circle_speed_rand = accountForDisplay(2)
-        this.circle_speed_offset = accountForDisplay(0.3)
+        this.circle_speed_rand = accountForDisplay(0.2)
+        this.circle_speed_offset = accountForDisplay(0.03)
 
-        this.circle_count = 30
+        this.circle_count = 20
 
         this.circles = []
 
         this.colours = [
-            "#800080EF",
-            "#FFD500EF",
-            "#FF971CEF",
-            "#0341AEEF",
-            "#F00000EF",
-            "#72CB3BEF",
-            "#00F0F0EF"
+            "#8000808F",
+            "#FFD5008F",
+            "#FF971C8F",
+            "#0341AE8F",
+            "#F000008F",
+            "#72CB3B8F",
+            "#00F0F08F"
         ]
+
+        this.images = imageObjects
     }
 }
 
-const global = new Global()
+var global = null
+
+window.onload = async function() {
+    console.log("loading images..")
+    let images = await loadImages([
+        "../assets/sprites/ulukai/background.png"
+    ])
+    console.log("completed loading images!")
+    global = new Global(images)
+    console.log("completed initiating global varibles!")
+}
 
 export { canvas, ctx, global }

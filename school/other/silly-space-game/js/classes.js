@@ -3,16 +3,20 @@ import { global, canvas, ctx } from "./global.js";
 
 export class Circle {
     constructor(x, y, radius, angle_offset, angle_multiplier, speed) {
-        this.x = x
-        this.y = y
+        const random_angle = randFloat(angle_offset, angle_multiplier);
+        this.velocity = {
+            "x": Math.cos(random_angle) * speed,
+            "y": Math.sin(random_angle) * speed
+        }
+        this.position = {
+            "x": x,
+            "y": y
+        }
+
         this.radius = radius
 
         this.start_colour = global.colours[randInt(0, global.colours.length)]
         this.colour = this.start_colour
-
-        const random_angle = randFloat(angle_offset, angle_multiplier);
-        this.dx = Math.cos(random_angle) * speed
-        this.dy = Math.sin(random_angle) * speed
     }
 
     drawAtPos(x, y) {
@@ -24,42 +28,42 @@ export class Circle {
 
     draw() {
         // handle the edges on the x plane
-        if (this.x < this.radius) {
-            this.drawAtPos(this.x + canvas.width, this.y)
-        } else if (this.x > canvas.width - this.radius) {
-            this.drawAtPos(this.x - canvas.width, this.y)
+        if (this.position["x"] < this.radius) {
+            this.drawAtPos(this.position["x"] + canvas.width, this.position["y"])
+        } else if (this.position["x"] > canvas.width - this.radius) {
+            this.drawAtPos(this.position["x"] - canvas.width, this.position["y"])
         }
 
         // handle the edges on the y plane
-        if (this.y < this.radius) {
-            this.drawAtPos(this.x, this.y + canvas.height)
-        } else if (this.y > canvas.height - this.radius) {
-            this.drawAtPos(this.x, this.y - canvas.height)
+        if (this.position["y"] < this.radius) {
+            this.drawAtPos(this.position["x"], this.position["y"] + canvas.height)
+        } else if (this.position["y"] > canvas.height - this.radius) {
+            this.drawAtPos(this.position["x"], this.position["y"] - canvas.height)
         }
 
         // draw the circle at the actual position
-        this.drawAtPos(this.x, this.y)
+        this.drawAtPos(this.position["x"], this.position["y"])
     }
 
     // direction is an array
     moveTowardsDirection(direction) {
-        this.x += direction[0]
-        this.y += direction[1]
-        if (this.x < 0) {
-            this.x += canvas.width
-        } else if (this.x > canvas.width) {
-            this.x -= canvas.width
+        this.position["x"] += direction["x"]
+        this.position["y"] += direction["y"]
+        if (this.position["x"] < 0) {
+            this.position["x"] += canvas.width
+        } else if (this.position["x"] > canvas.width) {
+            this.position["x"] -= canvas.width
         }
 
-        if (this.y < 0) {
-            this.y += canvas.height
-        } else if (this.y > canvas.height) {
-            this.y -= canvas.height
+        if (this.position["y"] < 0) {
+            this.position["y"] += canvas.height
+        } else if (this.position["y"] > canvas.height) {
+            this.position["y"] -= canvas.height
         }
     }
 
     move() {
-        this.moveTowardsDirection([this.dx, this.dy])
+        this.moveTowardsDirection(this.velocity)
     }
 
     // directions:
@@ -68,7 +72,7 @@ export class Circle {
     // pi * 1.5 = up
     // pi * 2 = right
     applyVelocity(direction, speed) {
-        this.dx += Math.cos(direction) * speed
-        this.dy += Math.sin(direction) * speed
+        this.velocity["x"] += Math.cos(direction) * speed
+        this.velocity["y"] += Math.sin(direction) * speed
     }
 }
