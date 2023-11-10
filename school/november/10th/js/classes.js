@@ -2,17 +2,17 @@ import { randFloat, randInt } from "./tems_library.js";
 import { global, canvas, ctx } from "./global.js";
 
 export class Circle {
-    constructor(x, y, radius, angleOffset, angleMultiplier, speed) {
+    constructor(x, y, radius, angle_offset, angle_multiplier, speed) {
         this.x = x
         this.y = y
         this.radius = radius
 
-        this.startColour = global.colours[randInt(0, global.colours.length)]
-        this.colour = this.startColour
+        this.start_colour = global.colours[randInt(0, global.colours.length)]
+        this.colour = this.start_colour
 
-        const randomAngle = randFloat(angleOffset, angleMultiplier);
-        this.dx = Math.cos(randomAngle) * speed
-        this.dy = Math.sin(randomAngle) * speed
+        const random_angle = randFloat(angle_offset, angle_multiplier);
+        this.dx = Math.cos(random_angle) * speed
+        this.dy = Math.sin(random_angle) * speed
     }
 
     drawAtPos(x, y) {
