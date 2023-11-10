@@ -1,4 +1,4 @@
-import { accountForDisplay, loadImages } from "./tems_library.js"
+import { accountForDisplay, loadImages, resizeCanvas } from "./tems_library.js"
 
 const canvas = document.getElementById("gameCanvas")
 const ctx = canvas.getContext("2d")
@@ -33,11 +33,12 @@ var global = null
 
 window.onload = async function() {
     console.log("loading images..")
-    let images = await loadImages([
-        "../assets/sprites/ulukai/background.png"
-    ])
+    let imageObjects = await loadImages({
+        "background": "../assets/sprites/ulukai/background.png"
+    })
     console.log("completed loading images!")
-    global = new Global(images)
+    
+    global = new Global(imageObjects)
     console.log("completed initiating global varibles!")
 }
 

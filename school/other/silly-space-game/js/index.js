@@ -1,9 +1,8 @@
-import { randFloat, randInt } from "./tems_library.js";
+import { randFloat, randInt, resizeCanvas } from "./tems_library.js";
 import { global, canvas, ctx } from "./global.js";
 import { Circle } from "./classes.js";
 
-ctx.canvas.width = window.innerWidth;
-ctx.canvas.height = window.innerHeight;
+resizeCanvas(canvas)
 
 // image to display that the game is loading
 var loading = document.createElement("img")
@@ -11,6 +10,8 @@ loading.src = "../assets/sprites/loading/loading.gif"
 loading.style = "scale: 8;"
 loading.id = "loading-bar"
 document.body.appendChild(loading)
+
+let gameTickCounter = 0
 
 // ready function, called when the program is ready, before the first game tick
 function ready() {
@@ -33,8 +34,10 @@ function ready() {
     sortCircleArray()
 }
 
-// process function, called every tick
+// process function, called every frame
 function process() {
+    gameTickCounter ++
+    if (gameTickCounter % 60 === 0) { gameTick() }
     requestAnimationFrame(process)
     // ctx.clearRect(0, 0, canvas.width, canvas.height)
     drawBackground()
@@ -43,6 +46,11 @@ function process() {
     global.circles.forEach((circle) => {
         circle.move()
     })
+}
+
+// gameTick function, called every tick (10 times/second)
+function gameTick () {
+    resizeCanvas(canvas)
 }
 
 // draw all of the circles in the global.circles array
@@ -55,7 +63,7 @@ function drawCircles() {
 }
 
 function drawBackground() {
-    ctx.drawImage(global.images[0], 0, 0)
+    ctx.drawImage(global.images["background"], 0, 0)
 }
 
 // sort the global.circles array based on the `radius` property of the circles, meaning that the bigger circles get drawn last
@@ -63,15 +71,17 @@ function sortCircleArray() {
     global.circles.sort((a, b) => a.radius - b.radius);
 }
 
+// check if the global variable is ready every 100ms, until it's ready
 let initInterval = setInterval(() => {
     if (global !== null) {
+        canvas.hidden = false
         clearInterval(initInterval)
         console.log("running ready() function...")
         ready()
         console.log("running first tick...")
         process()
 
-        // delete the loading image
+        // delete the loading bar
         loading.remove()
     }
 }, 100);

@@ -1,7 +1,7 @@
 const canvas = document.getElementById("gameCanvas")
 const ctx = canvas.getContext("2d")
 
-ctx.canvas.width  = window.innerWidth;
+ctx.canvas.width = window.innerWidth;
 ctx.canvas.height = window.innerHeight;
 
 let score = 0
@@ -43,13 +43,12 @@ for (let x = 0; x < boardWidth; x++) {
     }
 }
 
-
+tempBoard[5][2] = tempBoard[4][2] = tempBoard[3][2]= tempBoard[2][2] = true
 
 //tiles
 size = 40
 left_margin = (canvas.width / 2) - ((size * boardWidth) / 2)
 top_margin = (canvas.height / 2) - ((size * boardHeight) / 2)
-
 
 
 function draw_tile(x, y) {
@@ -84,6 +83,7 @@ function draw_tiles() {
     for (let x = 0; x < board.length; x++) {
         for (let y = 0; y < board[x].length; y++) {
             draw_tile(x, y)
+            draw_temp_tile(x, y)
         }
     }
 }
@@ -97,13 +97,14 @@ function move_piece() {
         for (let y = boardHeight - 1; y >= 0; y++) {
             if (tempBoard[x][y] === true) {
                 tempBoard[x][y] = false
-                tempBoard[x][y-1] = true
+                tempBoard[x][y - 1] = true
             }
         }
     }
 }
 
 function gameTick() {
+    console.log("hi")
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     draw_tiles()
     move_piece()
@@ -116,7 +117,7 @@ function gameTick() {
     // x += dx
     // y += dy
 
-    requestAnimationFrame(gameTick)
+    // requestAnimationFrame(gameTick)
 }
 
 
@@ -141,4 +142,4 @@ function keyUpHandler(e) {
 document.addEventListener("keydown", keyDownHandler, false)
 document.addEventListener("keyup", keyUpHandler, false)
 
-gameTick()
+var interval = setInterval(gameTick, 500);

@@ -8,6 +8,8 @@ html, body {
     height: 100%;
     margin: 0;
     overflow: hidden;
+
+    background-color: #101010;
 }
 
 /* make element centered on the screen, above all other elements */
