@@ -10,7 +10,7 @@ ctx.canvas.height = window.innerHeight;
 function ready() {
     // create circles
     for (let i = 0; i < global.circle_count; i++) {
-        const radius = randInt(global.circle_radius_offset, global.circle_radius_rand)
+        const radius = randFloat(global.circle_radius_offset, global.circle_radius_rand)
         global.circles.push(
             new Circle(
                 randInt(radius, canvas.width - 2 * radius),
@@ -35,7 +35,7 @@ function process() {
 
     global.circles.forEach((circle) => {
         circle.move()
-        // circle.applyVelocity(Math.PI * 1, 0.04)
+        circle.applyVelocity(Math.PI * 1.5, circle.dx/10)
     }
     )
 }
