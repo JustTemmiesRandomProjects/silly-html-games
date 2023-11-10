@@ -12,9 +12,11 @@ html, body {
     background-color: #101010;
 }
 
-/* make element centered on the screen, above all other elements */
+/* make loading bar centered on the screen, above all other elements */
 #loading-bar {    
     image-rendering: pixelated;
+    scale: 8;
+    
     position: absolute;
     top: 40%;
     left: 50%;

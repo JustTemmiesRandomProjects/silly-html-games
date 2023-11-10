@@ -7,14 +7,14 @@ resizeCanvas(canvas)
 // image to display that the game is loading
 var loading = document.createElement("img")
 loading.src = "../assets/sprites/loading/loading.gif"
-loading.style = "scale: 8;"
 loading.id = "loading-bar"
 document.body.appendChild(loading)
 
-let gameTickCounter = 0
-
 // ready function, called when the program is ready, before the first game tick
 function ready() {
+    // make the gameTick1 function run every 1000 ms
+    setInterval(gameTick1, 1000)
+
     // create circles
     for (let i = 0; i < global.circle_count; i++) {
         const radius = randFloat(global.circle_radius_offset, global.circle_radius_rand)
@@ -36,8 +36,6 @@ function ready() {
 
 // process function, called every frame
 function process() {
-    gameTickCounter ++
-    if (gameTickCounter % 60 === 0) { gameTick() }
     requestAnimationFrame(process)
     // ctx.clearRect(0, 0, canvas.width, canvas.height)
     drawBackground()
@@ -49,7 +47,12 @@ function process() {
 }
 
 // gameTick function, called every tick (10 times/second)
-function gameTick () {
+function gameTick10 () {
+}
+
+
+// gameTick function, called every 10 gameticks (1 time/second)
+function gameTick1 () {
     resizeCanvas(canvas)
 }
 

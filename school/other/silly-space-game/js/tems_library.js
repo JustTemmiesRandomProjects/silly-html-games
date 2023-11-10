@@ -32,7 +32,7 @@ export function rgbaToHex(rgba) {
 
 export function hexToRgb(hex) {
     // add "ff" to the alpha layer
-    return hexToRgba + "ff"
+    return hexToRgba(hex + "ff")
 }
 
 export function hexToRgba(hex) {
