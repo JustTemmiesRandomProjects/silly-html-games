@@ -2,7 +2,7 @@ console.log("index.js initialized")
 
 import { randFloat, randInt, resizeCanvas, drawBackgroundImage } from "./tems_library/tems_library.js";
 import { global, canvas, ctx } from "./global.js";
-import { Circle } from "./classes.js";
+import { Circle, meteor_sizes } from "./classes.js";
 
 resizeCanvas(canvas)
 
@@ -17,53 +17,31 @@ function ready() {
     // make the gameTick2 function run every 500 ms
     setInterval(gameTick2, 500)
 
-    const meteors = [
-        "sprite_meteor_big_1",
-        "sprite_meteor_big_2",
-        "sprite_meteor_big_3",
-        "sprite_meteor_big_4",
-        "sprite_meteor_med_1",
-        "sprite_meteor_med_2",
-        "sprite_meteor_small_1",
-        "sprite_meteor_small_2",
-        "sprite_meteor_tiny_1",
-        "sprite_meteor_tiny_2",
-    ]
 
     // create circles
     for (let i = 0; i < global.circle_count; i++) {
-        const meteorID = meteors[randInt(0, meteors.length)]
-        const sprite = global.assets[meteorID]
-        const bonusData = global.assetBonusData[meteorID]
-
-        const radius = bonusData["hitboxRadius"]
-        const hitboxColour = bonusData["hitboxColour"]
-        const rotation = randFloat(0, Math.PI*2)
-        const dRotation = randFloat(-0.003, 0.006)
-
+        // loop over the available meteor sizes each time, for a varied size selection
         global.circles.push(
-            new Circle(
-               /*      position */ randInt(radius, canvas.width - 2 * radius), randInt(radius, canvas.height - 2 * radius),
-               /*     rendering */ radius, sprite, hitboxColour, rotation, dRotation,
-               /* initial speed */ 0, Math.PI * 2, randFloat(global.circle_speed_offset, global.circle_speed_rand)
-            )
+            new Circle( meteor_sizes[i % meteor_sizes.length] )
         )
     }
 
     // sort the circles based on size
     sortCircleArray()
+
 }
 
 // process function, called every frame
-function process() {
+async function process() {
     requestAnimationFrame(process)
     // ctx.clearRect(0, 0, canvas.width, canvas.height)
     drawBackgroundImage(ctx, canvas, global.assets["sprite_background"])
     drawCircles()
-
+    
     global.circles.forEach((circle) => {
         circle.move()
     })
+
 }
 
 // gameTick function, called 100 ms (10 times/second)
@@ -88,6 +66,7 @@ function drawCircles() {
 function sortCircleArray() {
     global.circles.sort((a, b) => a.radius - b.radius);
 }
+
 
 // check if the global variable is ready every 100ms, until it's ready
 // this might take some time as loading assets takes a bit of time
