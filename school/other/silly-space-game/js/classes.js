@@ -1,8 +1,12 @@
-import { randFloat, randInt } from "./tems_library.js";
+import { randFloat, randInt } from "./tems_library/tems_library.js";
 import { global, canvas, ctx } from "./global.js";
+import { settings } from "./tems_library/settings.js";
 
 export class Circle {
-    constructor(x, y, radius, angle_offset, angle_multiplier, speed) {
+    constructor(
+        x, y,
+        radius, sprite, hitboxColour, rotation, dRotation,
+        angle_offset, angle_multiplier, speed) {
         const random_angle = randFloat(angle_offset, angle_multiplier);
         this.velocity = {
             "x": Math.cos(random_angle) * speed,
@@ -14,30 +18,44 @@ export class Circle {
         }
 
         this.radius = radius
+        this.rotation = rotation
+        this.dRotation = dRotation
 
-        this.start_colour = global.colours[randInt(0, global.colours.length)]
+        // hitbox colour
+        this.start_colour = hitboxColour
         this.colour = this.start_colour
+        this.sprite = sprite
     }
 
     drawAtPos(x, y) {
-        ctx.beginPath()
-        ctx.arc(x, y, this.radius, 0, 2 * Math.PI)
-        ctx.fillStyle = this.colour
-        ctx.fill()
+        // transform and rotate the transformation matrix in order to rotate the sprite
+        ctx.translate(x, y);
+        ctx.rotate(this.rotation);
+        ctx.translate(-this.sprite.width/2, -this.sprite.height/2)
+        ctx.drawImage(this.sprite, 0, 0)
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        
+        // if this setting in enabled, draw the hitbox
+        if ( settings.showHitboxes ) {
+            ctx.beginPath()
+            ctx.arc(x, y, this.radius, 0, 2 * Math.PI)
+            ctx.fillStyle = this.colour
+            ctx.fill()
+        }
     }
 
     draw() {
         // handle the edges on the x plane
-        if (this.position["x"] < this.radius) {
+        if (this.position["x"] < this.radius + 20) {
             this.drawAtPos(this.position["x"] + canvas.width, this.position["y"])
-        } else if (this.position["x"] > canvas.width - this.radius) {
+        } else if (this.position["x"] > canvas.width - this.radius - 20) {
             this.drawAtPos(this.position["x"] - canvas.width, this.position["y"])
         }
 
         // handle the edges on the y plane
-        if (this.position["y"] < this.radius) {
+        if (this.position["y"] < this.radius + 20) {
             this.drawAtPos(this.position["x"], this.position["y"] + canvas.height)
-        } else if (this.position["y"] > canvas.height - this.radius) {
+        } else if (this.position["y"] > canvas.height - this.radius - 20) {
             this.drawAtPos(this.position["x"], this.position["y"] - canvas.height)
         }
 
@@ -62,10 +80,14 @@ export class Circle {
         }
     }
 
-    move() {
-        this.moveTowardsDirection(this.velocity)
+    applyRotation(rotation) {
+        this.rotation += rotation
     }
 
+    move() {
+        this.moveTowardsDirection(this.velocity)
+        this.applyRotation(this.dRotation)
+    }
     // directions:
     // pi * 0.5 = down
     // pi * 1 = left
