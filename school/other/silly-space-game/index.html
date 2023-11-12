@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="image">
-    <title>Silly game November 10th</title>
+    <title>Silly Space Game</title>
 
     <link rel="stylesheet" href="index.css">
 </head>
@@ -12,6 +12,8 @@
     <div id="misc">
         <img src="assets/sprites/loading/loading.gif" id="loading-bar">
     </div>
+    <!-- we have a seperate canvas for the background, this is so that we don't have to render it every frame, saving tons of performance -->
+    <canvas id="backgroundCanvas" width="900" height="225"></canvas>
     <canvas id="gameCanvas" width="400" height="225" hidden="true"></canvas>
     <script type="module" src="./js/index.js"></script>
 </body>

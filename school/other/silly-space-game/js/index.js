@@ -1,13 +1,14 @@
 console.log("index.js initialized")
 
 import { randFloat, randInt, resizeCanvas, drawBackgroundImage } from "./tems_library/tems_library.js";
-import { global, canvas, ctx } from "./global.js";
+import { global, ctx, backgroundCtx } from "./global.js";
 import { Circle, meteor_sizes } from "./classes.js";
 
-resizeCanvas(canvas)
 
 // ready function, called when the program is ready, before the first game tick
 function ready() {
+    resizeCanvas(ctx.canvas, [backgroundCtx, global.assets["sprite_background"]])
+
     global.assets["music_fight"].play()
     global.assets["music_fight"].loop(true)
 
@@ -28,14 +29,12 @@ function ready() {
 
     // sort the circles based on size
     sortCircleArray()
-
 }
 
 // process function, called every frame
 async function process() {
     requestAnimationFrame(process)
-    // ctx.clearRect(0, 0, canvas.width, canvas.height)
-    drawBackgroundImage(ctx, canvas, global.assets["sprite_background"])
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
     drawCircles()
     
     global.circles.forEach((circle) => {
@@ -46,16 +45,15 @@ async function process() {
 
 // gameTick function, called 100 ms (10 times/second)
 function gameTick10() {
+    resizeCanvas(ctx.canvas, [backgroundCtx, global.assets["sprite_background"]])
 }
 
 // gameTick function, called every 500 ms (2 times/second)
 function gameTick2() {
-    resizeCanvas(canvas)
 }
 
 // draw all of the circles in the global.circles array
 function drawCircles() {
-    canvas.clear
     for (let i = 0; i < global.circles.length; i++) {
         global.circles[i].draw()
         // global.circles[i].applyVelocity(Math.PI * 1, 0.1)
@@ -72,7 +70,7 @@ function sortCircleArray() {
 // this might take some time as loading assets takes a bit of time
 let initInterval = setInterval(() => {
     if (global !== null) {
-        canvas.hidden = false
+        ctx.canvas.hidden = false
         clearInterval(initInterval)
         console.log("running ready() function...")
         ready()

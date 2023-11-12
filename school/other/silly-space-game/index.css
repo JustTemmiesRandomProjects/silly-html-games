@@ -1,6 +1,7 @@
 canvas {
-    background: #eee;
+    /* background: #eee; */
     /* scale: 4; */
+    position: absolute;
 }
 
 html, body {
@@ -8,8 +9,6 @@ html, body {
     height: 100%;
     margin: 0;
     overflow: hidden;
-
-    background-color: #101010;
 }
 
 /* make loading bar centered on the screen, above all other elements */

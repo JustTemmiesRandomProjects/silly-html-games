@@ -1,7 +1,9 @@
 import { accountForDisplay, loadAssets } from "./tems_library/tems_library.js"
 
 const canvas = document.getElementById("gameCanvas")
+const backgroundCanvas = document.getElementById("backgroundCanvas")
 const ctx = canvas.getContext("2d")
+const backgroundCtx = backgroundCanvas.getContext("2d")
 
 class Global {
     constructor(asset_objects, asset_bonus_data) {
@@ -65,4 +67,4 @@ window.onload = async function () {
     console.log("completed initiating global varibles!")
 }
 
-export { canvas, ctx, global }
+export { ctx, backgroundCtx, global }

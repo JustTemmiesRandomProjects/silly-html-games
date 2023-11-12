@@ -1,5 +1,5 @@
 import { settings } from "./settings.js"
-import { canvas } from "../global.js"
+import { ctx } from "../global.js"
 
 const developer_screen_size_width = 1920
 const developer_screen_size_height = 1080
@@ -57,7 +57,6 @@ export function hexToRgba(hex) {
 
 // function that adjusts a number to match the screen size
 export function accountForDisplay(num) {
-    console.log(biggest_user_size_dimension)
     return num * (biggest_user_size_dimension / biggest_developer_size_dimension)
 }
 
@@ -127,7 +126,7 @@ export async function loadAssets(assetSources) {
     })
 }
 
-export function resizeCanvas(canvas) {
+export function resizeCanvas(canvas, background = null) {
     if (user_current_screen_width != window.innerWidth || user_current_screen_height != window.innerHeight) {
         console.log("resizing canvas...")
         canvas.width = window.innerWidth
@@ -135,30 +134,36 @@ export function resizeCanvas(canvas) {
 
         user_current_screen_width = window.innerWidth
         user_current_screen_height = window.innerHeight
+        if ( background != null ) {
+            background[0].canvas.width = window.innerWidth
+            background[0].canvas.height = window.innerHeight
+            drawBackgroundImage(background[0], background[1])
+        }
     }
 }
 
 // draw an image to cover the screen, crop the image if needed to fill the screen
 // the transformations took me too fucking long lmao
-export function drawBackgroundImage(ctx, canvas, image) {
+export function drawBackgroundImage(context, image) {
+    console.log("drawing background...")
     const scale = Math.max(
-        canvas.width / image.width,
-        canvas.height / image.height
+        context.canvas.width / image.width,
+        context.canvas.height / image.height
     )
 
     //https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/transform
-    ctx.setTransform(
+    context.setTransform(
       /*     scale x */ scale,
       /*      skew x */ 0,
       /*      skew y */ 0,
       /*     scale y */ scale,
-      /* translate x */(canvas.width - scale * image.width) / 2,
-      /* translate y */(canvas.height - scale * image.height) / 2,
+      /* translate x */(context.canvas.width - scale * image.width) / 2,
+      /* translate y */(context.canvas.height - scale * image.height) / 2,
     )
 
-    ctx.drawImage(image, 0, 0)
+    context.drawImage(image, 0, 0)
     // reset the transformation back to the default
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    context.setTransform(1, 0, 0, 1, 0, 0);
 }
 
 

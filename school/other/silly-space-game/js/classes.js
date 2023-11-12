@@ -1,7 +1,7 @@
 import { randFloat, randInt } from "./tems_library/tems_library.js";
 import { settings } from "./tems_library/settings.js";
 import { circleOverlapping } from "./tems_library/math.js"
-import { global, canvas, ctx } from "./global.js";
+import { global, ctx } from "./global.js";
 
 // the sprite ID, defined in global.assets, and the size class
 const meteor_sprites = {
@@ -49,8 +49,8 @@ export class Circle {
             "y": Math.sin(random_angle) * speed
         }
         this.position = {
-            "x": randInt(this.radius, canvas.width - 2 * this.radius),
-            "y": randInt(this.radius, canvas.height - 2 * this.radius)
+            "x": randInt(this.radius, ctx.canvas.width - 2 * this.radius),
+            "y": randInt(this.radius, ctx.canvas.height - 2 * this.radius)
         }
     }
 
@@ -74,16 +74,16 @@ export class Circle {
     draw() {
         // handle the edges on the x plane
         if (this.position["x"] < this.radius + 20) {
-            this.drawAtPos(this.position["x"] + canvas.width, this.position["y"])
-        } else if (this.position["x"] > canvas.width - this.radius - 20) {
-            this.drawAtPos(this.position["x"] - canvas.width, this.position["y"])
+            this.drawAtPos(this.position["x"] + ctx.canvas.width, this.position["y"])
+        } else if (this.position["x"] > ctx.canvas.width - this.radius - 20) {
+            this.drawAtPos(this.position["x"] - ctx.canvas.width, this.position["y"])
         }
 
         // handle the edges on the y plane
         if (this.position["y"] < this.radius + 20) {
-            this.drawAtPos(this.position["x"], this.position["y"] + canvas.height)
-        } else if (this.position["y"] > canvas.height - this.radius - 20) {
-            this.drawAtPos(this.position["x"], this.position["y"] - canvas.height)
+            this.drawAtPos(this.position["x"], this.position["y"] + ctx.canvas.height)
+        } else if (this.position["y"] > ctx.canvas.height - this.radius - 20) {
+            this.drawAtPos(this.position["x"], this.position["y"] - ctx.canvas.height)
         }
 
         // draw the circle at the actual position
@@ -95,15 +95,15 @@ export class Circle {
         this.position["x"] += direction["x"]
         this.position["y"] += direction["y"]
         if (this.position["x"] < 0) {
-            this.position["x"] += canvas.width
-        } else if (this.position["x"] > canvas.width) {
-            this.position["x"] -= canvas.width
+            this.position["x"] += ctx.canvas.width
+        } else if (this.position["x"] > ctx.canvas.width) {
+            this.position["x"] -= ctx.canvas.width
         }
 
         if (this.position["y"] < 0) {
-            this.position["y"] += canvas.height
-        } else if (this.position["y"] > canvas.height) {
-            this.position["y"] -= canvas.height
+            this.position["y"] += ctx.canvas.height
+        } else if (this.position["y"] > ctx.canvas.height) {
+            this.position["y"] -= ctx.canvas.height
         }
     }
 
