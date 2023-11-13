@@ -12,8 +12,10 @@ class Global {
         this.circle_speed_offset = accountForDisplay(0.02)
 
         this.circle_count = 40
+        this.player_spawn_safe_radius = 350
 
         this.circles = []
+        this.players = []
 
         this.colours = [
             "#8000808F",
@@ -27,13 +29,14 @@ class Global {
 
         this.assets = asset_objects
         this.asset_bonus_data = asset_bonus_data
+
     }
 }
 
 var global = null
 
 window.onload = async function () {
-    console.log("loading images...")
+    console.log("loading assets...")
     // assets, defined with:
     // "ID": [Type of asset, "path to file", Bonus data] 
     let asset_data = await loadAssets({
@@ -48,6 +51,18 @@ window.onload = async function () {
         "sprite_meteor_small_2":        [Image, "../assets/sprites/kenney/Meteors/meteorBrown_small2.png",                  { "hitboxRadius": 11, "hitboxColour": "#ff000060" }],
         "sprite_meteor_tiny_1":         [Image, "../assets/sprites/kenney/Meteors/meteorBrown_tiny1.png",                   { "hitboxRadius": 5, "hitboxColour": "#ff600060" }],
         "sprite_meteor_tiny_2":         [Image, "../assets/sprites/kenney/Meteors/meteorBrown_tiny2.png",                   { "hitboxRadius": 5, "hitboxColour": "#ff000060" }],
+        "sprite_player_ship_1_blue":     [Image, "assets/sprites/kenney/Player/playerShip1_blue.png",                        { "hitboxColour": "#40505050" }],
+        "sprite_player_ship_1_green":    [Image, "assets/sprites/kenney/Player/playerShip1_green.png",                       { "hitboxColour": "#40505050" }],
+        "sprite_player_ship_1_orange":   [Image, "assets/sprites/kenney/Player/playerShip1_orange.png",                      { "hitboxColour": "#40505050" }],
+        "sprite_player_ship_1_red":      [Image, "assets/sprites/kenney/Player/playerShip1_red.png",                         { "hitboxColour": "#40505050" }],
+        "sprite_player_ship_2_blue":     [Image, "assets/sprites/kenney/Player/playerShip2_blue.png",                        { "hitboxColour": "#40505050" }],
+        "sprite_player_ship_2_green":    [Image, "assets/sprites/kenney/Player/playerShip2_green.png",                       { "hitboxColour": "#40505050" }],
+        "sprite_player_ship_2_orange":   [Image, "assets/sprites/kenney/Player/playerShip2_orange.png",                      { "hitboxColour": "#40505050" }],
+        "sprite_player_ship_2_red":      [Image, "assets/sprites/kenney/Player/playerShip2_red.png",                         { "hitboxColour": "#40505050" }],
+        "sprite_player_ship_3_blue":     [Image, "assets/sprites/kenney/Player/playerShip3_blue.png",                        { "hitboxColour": "#40505050" }],
+        "sprite_player_ship_3_green":    [Image, "assets/sprites/kenney/Player/playerShip3_green.png",                       { "hitboxColour": "#40505050" }],
+        "sprite_player_ship_3_orange":   [Image, "assets/sprites/kenney/Player/playerShip3_orange.png",                      { "hitboxColour": "#40505050" }],
+        "sprite_player_ship_3_red":      [Image, "assets/sprites/kenney/Player/playerShip3_red.png",                         { "hitboxColour": "#40505050" }],
         "music_fight":                  [Audio, "../assets/audio/music/meteor/music_meteor_fight_cut.ogg",                  {}],
         "sfx_laser_large":              [Audio, "../assets/audio/sound-effects/kenney/sfx_laserLarge_001.ogg",              {}],
         "sfx_laser_small":              [Audio, "../assets/audio/sound-effects/kenney/sfx_laserSmall_001.ogg",              {}],

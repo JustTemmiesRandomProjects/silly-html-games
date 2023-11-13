@@ -9,12 +9,21 @@
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
+    <!-- text for users who have chosen to disable javascript -->
+    <noscript id="noscript">
+        <h1>you seem to have JS disabled</h1>
+        <h2>meaning that this game won't work :(</h2>
+    </noscript>
+    
     <div id="misc">
         <img src="assets/sprites/loading/loading.gif" id="loading-bar">
     </div>
+
     <!-- we have a seperate canvas for the background, this is so that we don't have to render it every frame, saving tons of performance -->
     <canvas id="backgroundCanvas" width="900" height="225"></canvas>
     <canvas id="gameCanvas" width="400" height="225" hidden="true"></canvas>
+
+    <!-- javascript -->
     <script type="module" src="./js/index.js"></script>
 </body>
 </html>

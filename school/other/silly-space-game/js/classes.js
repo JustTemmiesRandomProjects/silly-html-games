@@ -1,6 +1,6 @@
-import { randFloat, randInt } from "./tems_library/tems_library.js";
+import { randFloat, randInt, canvas_centre } from "./tems_library/tems_library.js";
 import { settings } from "./tems_library/settings.js";
-import { circleOverlapping } from "./tems_library/math.js"
+import { pointDistanceFromPoint, circleOverlapping } from "./tems_library/math.js"
 import { global, ctx } from "./global.js";
 
 // the sprite ID, defined in global.assets, and the size class
@@ -18,10 +18,10 @@ const meteor_sprites = {
         "sprite_meteor_small_1",
         "sprite_meteor_small_2",
     ],
-    // "tiny" : [
-    //     "sprite_meteor_tiny_1",
-    //     "sprite_meteor_tiny_2",
-    // ]
+    "tiny" : [
+        "sprite_meteor_tiny_1",
+        "sprite_meteor_tiny_2",
+    ]
 }
 
 export const meteor_sizes = Object.keys(meteor_sprites)
@@ -32,22 +32,24 @@ export class Circle {
 
         const meteorID = meteor_sprites[this.size][randInt(0, meteor_sprites[this.size].length)]
         const bonus_data = global.asset_bonus_data[meteorID]
+
         
         this.sprite = global.assets[meteorID]
         
         this.radius = bonus_data["hitboxRadius"]
         this.colour = bonus_data["hitboxColour"]
-
+        
         this.rotation = randFloat(0, Math.PI*2)
-        this.d_rotation = randFloat(-0.003, 0.006)
-
-
+        this.d_rotation = randFloat(-0.004, 0.008)
+        
+        
         const speed = randFloat(global.circle_speed_offset, global.circle_speed_rand)
         const random_angle = randFloat(0, Math.PI * 2);
         this.velocity = {
             "x": Math.cos(random_angle) * speed,
             "y": Math.sin(random_angle) * speed
         }
+
         this.position = {
             "x": randInt(this.radius, ctx.canvas.width - 2 * this.radius),
             "y": randInt(this.radius, ctx.canvas.height - 2 * this.radius)
@@ -161,5 +163,61 @@ export class Circle {
             circle2.velocity.x -= impulse * normalX / circle2.radius**2
             circle2.velocity.y -= impulse * normalY / circle2.radius**2
         }
+    }
+}
+
+
+export class Player {
+    constructor() {
+        this.size = 50
+
+        const skin = "sprite_player_ship_1_blue"
+
+        this.sprite = global.assets[skin]
+        this.colour = global.asset_bonus_data[skin]
+
+        this.rotation = 0
+        this.radius = 350
+
+        this.position = {
+            "x": ctx.canvas.width/2,
+            "y": ctx.canvas.height/2
+        }
+    }
+
+    drawAtPos(x, y) {
+        // transform and rotate the transformation matrix in order to rotate the sprite
+        ctx.translate(x, y);
+        ctx.rotate(this.rotation);
+        ctx.translate(-this.sprite.width/2, -this.sprite.height/2)
+        ctx.drawImage(this.sprite, 0, 0)
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        
+        // if this setting in enabled, draw the hitbox
+        if ( settings.show_hitboxes ) {
+            ctx.beginPath()
+            ctx.arc(x, y, this.radius, 0, 2 * Math.PI)
+            ctx.fillStyle = this.colour
+            ctx.fill()
+        }
+    }
+
+    draw() {
+        // handle the edges on the x plane
+        if (this.position["x"] < this.radius + 20) {
+            this.drawAtPos(this.position["x"] + ctx.canvas.width, this.position["y"])
+        } else if (this.position["x"] > ctx.canvas.width - this.radius - 20) {
+            this.drawAtPos(this.position["x"] - ctx.canvas.width, this.position["y"])
+        }
+
+        // handle the edges on the y plane
+        if (this.position["y"] < this.radius + 20) {
+            this.drawAtPos(this.position["x"], this.position["y"] + ctx.canvas.height)
+        } else if (this.position["y"] > ctx.canvas.height - this.radius - 20) {
+            this.drawAtPos(this.position["x"], this.position["y"] - ctx.canvas.height)
+        }
+
+        // draw the circle at the actual position
+        this.drawAtPos(this.position["x"], this.position["y"])
     }
 }

@@ -10,6 +10,8 @@ var biggest_user_size_dimension = Math.max(window.innerWidth, window.innerHeight
 var user_current_screen_width = 1
 var user_current_screen_height = 1
 
+export var canvas_centre = [ctx.canvas.width / 2, ctx.canvas.height / 2]
+
 // generate a random integer, from 0 (inclusive) to multiplier (exclusive)
 export function randInt(offset, multiplier) {
     return Math.floor((Math.random() * multiplier) + offset)
@@ -134,6 +136,10 @@ export function resizeCanvas(canvas, background = null) {
 
         user_current_screen_width = window.innerWidth
         user_current_screen_height = window.innerHeight
+
+        canvas_centre = [ctx.canvas.width / 2, ctx.canvas.height / 2]
+        
+        // stuff for rending the background canvas
         if ( background != null ) {
             background[0].canvas.width = window.innerWidth
             background[0].canvas.height = window.innerHeight
