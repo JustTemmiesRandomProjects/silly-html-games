@@ -1,7 +1,7 @@
 import { randFloat, randInt, canvas_centre } from "./tems_library/tems_library.js";
 import { settings } from "./tems_library/settings.js";
 import { pointDistanceFromPoint, circleOverlapping } from "./tems_library/math.js"
-import { global, ctx } from "./global.js";
+import { global, ctx, inputManager } from "./global.js";
 
 // the sprite ID, defined in global.assets, and the size class
 const meteor_sprites = {
@@ -93,7 +93,7 @@ export class Circle {
     }
 
     // direction is an array
-    async moveTowardsDirection(direction) {
+    moveTowardsDirection(direction) {
         this.position["x"] += direction["x"]
         this.position["y"] += direction["y"]
         if (this.position["x"] < 0) {
@@ -177,11 +177,18 @@ export class Player {
         this.colour = global.asset_bonus_data[skin]
 
         this.rotation = 0
-        this.radius = 350
+        this.radius = 25
+
+        this.rotation = 0
 
         this.position = {
             "x": ctx.canvas.width/2,
             "y": ctx.canvas.height/2
+        }
+
+        this.velocity = {
+            "x": 0,
+            "y": 0
         }
     }
 
@@ -219,5 +226,90 @@ export class Player {
 
         // draw the circle at the actual position
         this.drawAtPos(this.position["x"], this.position["y"])
+    }
+    
+    // direction is an array
+    moveTowardsDirection(direction) {
+        this.position["x"] += direction["x"]
+        this.position["y"] += direction["y"]
+        if (this.position["x"] < 0) {
+            this.position["x"] += ctx.canvas.width
+        } else if (this.position["x"] > ctx.canvas.width) {
+            this.position["x"] -= ctx.canvas.width
+        }
+
+        if (this.position["y"] < 0) {
+            this.position["y"] += ctx.canvas.height
+        } else if (this.position["y"] > ctx.canvas.height) {
+            this.position["y"] -= ctx.canvas.height
+        }
+    }
+
+    slideTowards(new_velocity) {
+        this.velocity["x"] *= global.player_slipperiness
+        this.velocity["y"] *= global.player_slipperiness
+        this.velocity["x"] += new_velocity["x"]
+        this.velocity["y"] += new_velocity["y"]
+        this.velocity["x"] = inputManager.capInput(this.velocity["x"], -global.player_max_speed, global.player_max_speed)
+        this.velocity["y"] = inputManager.capInput(this.velocity["y"], -global.player_max_speed, global.player_max_speed)
+    }
+
+    getRotation() {
+        this.rotation = 0
+    }
+
+    getInput() {
+        var input = {
+            "x": 0,
+            "y": 0
+        }
+
+        // handle controller
+        inputManager.controllers.forEach(function (controller) {
+            // if firefox
+            if ( navigator.userAgent.indexOf("Firefox") != -1 ) {
+                input["x"] += inputManager.getAxes(controller, 6) + inputManager.getAxes(controller, 0)
+                input["y"] += inputManager.getAxes(controller, 7) + inputManager.getAxes(controller, 1)
+            } // if chromium 
+            else if ( window.chrome ) {
+                input["x"] += inputManager.getButton(controller, 15) - inputManager.getButton(controller, 14) + inputManager.getAxes(controller, 0)
+                input["y"] += inputManager.getButton(controller, 13) - inputManager.getButton(controller, 12) + inputManager.getAxes(controller, 1)
+            }
+        })
+
+        // handle keyboard
+        input["x"] += inputManager.getKey(["KeyD"]) - inputManager.getKey(["KeyA"])
+        input["y"] += inputManager.getKey(["KeyS"]) - inputManager.getKey(["KeyW"])
+        input["x"] += inputManager.getKey(["ArrowRight"]) - inputManager.getKey(["ArrowLeft"])
+        input["y"] += inputManager.getKey(["ArrowDown"]) - inputManager.getKey(["ArrowUp"])
+        
+
+        
+        // normalize the inputs if they're too big
+        input = inputManager.normalize(input["x"], input["y"])
+
+        // make sure the value is within -1 to 1, (to avoid people being able to press `w` and `upArrow` at the same time for double speed)
+        input["x"] = inputManager.capInput(input["x"], -1, 1)
+        input["y"] = inputManager.capInput(input["y"], -1, 1)
+
+        // multiply it by the player's acceleration
+        input["x"] = input["x"] * global.player_acceleration
+        input["y"] = input["y"] * global.player_acceleration
+        
+        return input
+    }
+
+    move() {
+        var input = this.getInput()
+        this.slideTowards(input)
+        this.moveTowardsDirection(this.velocity)
+
+        // console.log(this.velocity)
+
+        for (let i = 0; i < global.circles.length; i++) {
+            if ( circleOverlapping(this, global.circles[i])) {
+                // console.log("death :(")
+            }
+        }
     }
 }

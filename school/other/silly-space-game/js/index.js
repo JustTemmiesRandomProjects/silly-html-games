@@ -1,26 +1,30 @@
 console.log("index.js initialized")
 
 import { randFloat, randInt, resizeCanvas, canvas_centre } from "./tems_library/tems_library.js";
-import { global, ctx, backgroundCtx } from "./global.js";
+import { global, ctx, backgroundCtx, inputManager } from "./global.js";
 import { Circle, Player, meteor_sizes } from "./classes.js";
 import { circleOverlapping, pointDistanceFromPoint } from "./tems_library/math.js";
-
+import { settings } from "./tems_library/settings.js";
 
 // ready function, called when the program is ready, before the first game tick
 function ready() {
     resizeCanvas(ctx.canvas, [backgroundCtx, global.assets["sprite_background"]])
 
+    console.log("playing audio...")
     global.assets["music_fight"].play()
     global.assets["music_fight"].loop(true)
 
+    console.log("registering game ticks...")
     // make the gameTick10 function run every 100 ms
     setInterval(gameTick10, 100)
 
     // make the gameTick2 function run every 500 ms
     setInterval(gameTick2, 500)
 
+    console.log("spawning player...")
     global.players.push( new Player() )
 
+    console.log("spawning meteors...")
     // create circles
     for (let i = 0; i < global.circle_count / 2; i++) {
         // loop over the available meteor sizes each time, for a varied size selection
@@ -36,9 +40,11 @@ function ready() {
         )
     }
     
+    console.log("distributing meteors...")
     // distribute the circles accross the map, making sure they don't overlap each other, and that they don't spawn close to the player
     distributeCircles()
 
+    console.log("sorting the meteors based on size...")
     // sort the circles based on size for them to render in the correct order
     sortCircleArray()
 }
@@ -50,9 +56,10 @@ async function process() {
     drawPlayers()
     drawCircles()
 
-    // global.players.forEach((player) => {
-    //     player.move()
-    // })
+
+    global.players.forEach((player) => {
+        player.move()
+    })
 
 
     
@@ -90,17 +97,19 @@ function sortCircleArray() {
     global.circles.sort((a, b) => a.radius - b.radius);
 }
 
+// make sure the circles have good-ish spawn locations
 function distributeCircles() {
-    // make sure none of the meteors are overlapping
     for (let j = 0; j < global.circles.length; j++ ) {
         let fall_back_counter = 0
         for (let i = 0; i < global.circles.length; i++) {
             if ( i != j ) {
                 if ( 
+                    // make sure none of the meteors are too close to the player
                     pointDistanceFromPoint([global.circles[i].position.x, global.circles[i].position.y], canvas_centre) < global.player_spawn_safe_radius
+                    // make sure none of the meteors are overlapping
                     || circleOverlapping(global.circles[i], global.circles[j])
                 ) {
-                    console.log(`re-randomizing position of meteor at index ${j}`)
+                    console.log(`re-randomizing position of meteor at index ${i}`)
                     global.circles[i].position = {
                         "x": randInt(global.circles[i].radius, ctx.canvas.width - 2 * global.circles[i].radius),
                         "y": randInt(global.circles[i].radius, ctx.canvas.height - 2 * global.circles[i].radius)
@@ -108,7 +117,7 @@ function distributeCircles() {
                     
                     fall_back_counter ++
                     if ( fall_back_counter == 50 ){
-                        console.log(`failed to set position of meteor on index ${j}, oh well ig`)
+                        console.log(`failed to set position of meteor on index ${i}, oh well ig`)
                         break
                     }
 
