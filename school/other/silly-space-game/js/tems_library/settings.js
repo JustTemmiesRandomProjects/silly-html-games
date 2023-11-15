@@ -10,7 +10,7 @@ class Settings {
             "sfx": 1,
         }
 
-        this.show_hitboxes = false
+        this.show_hitboxes = true
     }
 }
 

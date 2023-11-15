@@ -207,7 +207,7 @@ export function sound(src, key) {
             this.sound.classList.remove("looping-audio")
         }
     }
-    this.setVolume = function () {
+    this.updateVolume = function () {
         this.sound.volume =
             // ensure that the volume never goes above 1, or below 0
             Math.max(0,
@@ -234,7 +234,7 @@ export function sound(src, key) {
     document.getElementById("misc").appendChild(this.sound)
 
     // audio mixer
-    this.setVolume()
+    this.updateVolume()
 
     console.log(`[ASSETS] [${this.category.toUpperCase()}] ${key} is done loading`)
 }

@@ -11,7 +11,7 @@ class Global {
         this.circle_speed_rand = accountForDisplay(0.13)
         this.circle_speed_offset = accountForDisplay(0.02)
 
-        this.circle_count = 40
+        this.circle_count = 80
         this.player_spawn_safe_radius = 350
 
         this.circles = []
