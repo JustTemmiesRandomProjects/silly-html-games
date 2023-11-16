@@ -1,4 +1,3 @@
-import { inputManager } from "../global.js"
 import { settings } from "./settings.js"
 
 // InputManager constructor function
@@ -13,10 +12,14 @@ export function InputManager(canvas) {
     }
     this.controllers = []
 
+    this.isUsingController = false
+
+
     // set up event listeners
     this.setupListeners()
 }
 
+ 
 // initialize event listeners
 InputManager.prototype.setupListeners = function () {
     // keyboard events
@@ -68,6 +71,7 @@ InputManager.prototype.handleKeyUp = function (event) {
 
 // mouse event handlers
 InputManager.prototype.handleMouseMove = function (event) {
+    this.isUsingController = false
     var rect = this.canvas.getBoundingClientRect()
     this.mouse.x = event.clientX - rect.left
     this.mouse.y = event.clientY - rect.top

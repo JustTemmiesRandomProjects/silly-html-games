@@ -254,14 +254,28 @@ export class Player {
         this.velocity["y"] = inputManager.capInput(this.velocity["y"], -global.player_max_speed, global.player_max_speed)
     }
 
-    getRotation() {
-        this.rotation = 0
+    updateRotationUsingMouse() {
+        // update the rotation so that the players looks at the mouse
+        this.rotation = Math.PI/2 + Math.atan2(
+            inputManager.mouse["y"] - this.position["y"],
+            inputManager.mouse["x"] - this.position["x"]
+        )
+    }
+
+    updateRotationUsingController(x_direction, y_direction) {
+        // set the rotation to match the joystick's direction
+        this.rotation = Math.PI/2 + Math.atan2(
+            y_direction,
+            x_direction
+        )
     }
 
     getInput() {
         var input = {
-            "x": 0,
-            "y": 0
+            "x": 0, // movement direction
+            "y": 0, // movement direction
+            "rightX": 0, // right joystick direction
+            "rightY": 0, // right joystick direction
         }
 
         // handle controller
@@ -270,7 +284,9 @@ export class Player {
             if ( navigator.userAgent.indexOf("Firefox") != -1 ) {
                 input["x"] += inputManager.getAxes(controller, 6) + inputManager.getAxes(controller, 0)
                 input["y"] += inputManager.getAxes(controller, 7) + inputManager.getAxes(controller, 1)
-            } // if chromium 
+                input["rightX"] += inputManager.getAxes(controller, 3),
+                input["rightY"] += inputManager.getAxes(controller, 4)
+            } // if chromium x_direction
             else if ( window.chrome ) {
                 input["x"] += inputManager.getButton(controller, 15) - inputManager.getButton(controller, 14) + inputManager.getAxes(controller, 0)
                 input["y"] += inputManager.getButton(controller, 13) - inputManager.getButton(controller, 12) + inputManager.getAxes(controller, 1)
@@ -301,8 +317,12 @@ export class Player {
 
     move() {
         var input = this.getInput()
+        console.log(input)
         this.slideTowards(input)
         this.moveTowardsDirection(this.velocity)
+
+        // this.updateRotationUsingController(input)
+        this.updateRotationUsingMouse()
 
         // console.log(this.velocity)
 

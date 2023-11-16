@@ -15,9 +15,9 @@ class Global {
         this.circle_count = 40
         this.player_spawn_safe_radius = 350
 
-        this.player_acceleration = accountForDisplay(0.5)
-        this.player_max_speed = accountForDisplay(5)
-        this.player_slipperiness = 0.93
+        this.player_acceleration = accountForDisplay(0.35)
+        this.player_max_speed = accountForDisplay(6)
+        this.player_slipperiness = 0.97
 
         this.circles = []
         this.players = []

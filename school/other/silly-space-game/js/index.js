@@ -1,10 +1,10 @@
 console.log("index.js initialized")
 
 import { randFloat, randInt, resizeCanvas, canvas_centre } from "./tems_library/tems_library.js";
-import { global, ctx, backgroundCtx, inputManager } from "./global.js";
-import { Circle, Player, meteor_sizes } from "./classes.js";
 import { circleOverlapping, pointDistanceFromPoint } from "./tems_library/math.js";
 import { settings } from "./tems_library/settings.js";
+import { global, ctx, backgroundCtx, inputManager } from "./global.js";
+import { Circle, Player, meteor_sizes } from "./classes.js";
 
 // ready function, called when the program is ready, before the first game tick
 function ready() {
