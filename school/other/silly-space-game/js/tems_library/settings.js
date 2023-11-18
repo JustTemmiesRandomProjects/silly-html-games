@@ -3,8 +3,8 @@ class Settings {
     constructor() {
         // volume mixer levels, 1 means 100% audio, 0 means 0%
         this.volume_mixer = {
-            "master": 1,
-            "music": 1,
+            "master": 0.6,
+            "music": 0.08,
             "sfx": 1,
         }
         this.visible_audio_players = false

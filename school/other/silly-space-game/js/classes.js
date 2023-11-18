@@ -180,6 +180,12 @@ export class Player {
         this.controller_rotation = 0
         this.radius = 25
 
+        this.shoot_charge_up_time = 0
+        this.input = {}
+
+        // how many space ships have been drawn this frame, used for when all 4 possible ships should be rendered
+        this.drawn_this_frame = 0
+
         this.position = {
             "x": ctx.canvas.width/2,
             "y": ctx.canvas.height/2
@@ -192,6 +198,7 @@ export class Player {
     }
 
     drawAtPos(x, y) {
+        this.drawn_this_frame += 1
         // transform and rotate the transformation matrix in order to rotate the sprite
         ctx.translate(x, y)
         if ( inputManager.isUsingController ) {
@@ -210,25 +217,61 @@ export class Player {
             ctx.fillStyle = this.colour
             ctx.fill()
         }
+
+        // shooting
+        if ( this.input["shooting"] == false && this.shoot_charge_up_time > 10 ) {
+            if ( this.shoot_charge_up_time < 45 ) {
+                this.shootSmall(x, y)
+            }
+            else {
+                this.shootBig(x, y)
+            }
+            console.log(`POW! ${this.shoot_charge_up_time}`)
+        }
     }
 
     draw() {
+        this.drawn_this_frame = 0
+        const offset_value = 20
+
         // handle the edges on the x plane
-        if (this.position["x"] < this.radius + 20) {
+        if (this.position["x"] < this.radius + offset_value) {
             this.drawAtPos(this.position["x"] + ctx.canvas.width, this.position["y"])
-        } else if (this.position["x"] > ctx.canvas.width - this.radius - 20) {
+        } else if (this.position["x"] > ctx.canvas.width - this.radius - offset_value) {
             this.drawAtPos(this.position["x"] - ctx.canvas.width, this.position["y"])
         }
 
         // handle the edges on the y plane
-        if (this.position["y"] < this.radius + 20) {
+        if (this.position["y"] < this.radius + offset_value) {
             this.drawAtPos(this.position["x"], this.position["y"] + ctx.canvas.height)
-        } else if (this.position["y"] > ctx.canvas.height - this.radius - 20) {
+        } else if (this.position["y"] > ctx.canvas.height - this.radius - offset_value) {
             this.drawAtPos(this.position["x"], this.position["y"] - ctx.canvas.height)
         }
 
         // draw the circle at the actual position
         this.drawAtPos(this.position["x"], this.position["y"])
+
+        // if there's already been 3 players drawn, we need to draw a 4th one as the player is in one of the corners
+        // and the code above simply doesn't have the ability to handle corners properly :)
+        if ( this.drawn_this_frame == 3 ){
+            if ( this.position["x"] > ctx.canvas.width / 2 ) {
+                if ( this.position["y"] < ctx.canvas.height / 2 ) {
+                    // the real player is at the top right
+                    this.drawAtPos(this.position["x"] - ctx.canvas.width, this.position["y"] + ctx.canvas.height)
+                } else {
+                    // the real player is at the bottom right
+                    this.drawAtPos(this.position["x"] - ctx.canvas.width, this.position["y"] - ctx.canvas.height)
+                }
+            } else {
+                if ( this.position["y"] < ctx.canvas.height / 2 ) {
+                    // the real player is at the top left
+                    this.drawAtPos(this.position["x"] + ctx.canvas.width, this.position["y"] + ctx.canvas.height)
+                } else {
+                    // the real player is at the bottom left
+                    this.drawAtPos(this.position["x"] + ctx.canvas.width, this.position["y"] - ctx.canvas.height)
+                }
+            }
+        }
     }
     
     // direction is an array
@@ -292,6 +335,7 @@ export class Player {
                 "x": 0, // right joystick direction
                 "y": 0, // right joystick direction
             },
+            "shooting": false
         }
 
         // handle controller
@@ -317,6 +361,8 @@ export class Player {
         input["movement"]["y"] += inputManager.getKey(["KeyS"]) - inputManager.getKey(["KeyW"])
         input["movement"]["x"] += inputManager.getKey(["ArrowRight"]) - inputManager.getKey(["ArrowLeft"])
         input["movement"]["y"] += inputManager.getKey(["ArrowDown"]) - inputManager.getKey(["ArrowUp"])
+
+        if ( inputManager.mouse.leftButton ) { input["shooting"] = true }
         
 
         
@@ -334,6 +380,8 @@ export class Player {
         return input
     }
 
+
+
     updateIsUsingController() {
         inputManager.controllers.forEach(function (controller) {
             if (
@@ -345,16 +393,55 @@ export class Player {
         })
     }
 
+    shootSmall(x, y) {
+        global.assets["sfx_laser_small"].play()
+        global.lasers.push(
+            new Laser(
+                x, y,
+                inputManager.mouse.x, inputManager.mouse.y,
+                "#CC4444", 5,
+                0.7
+            )
+        )
+    }
+
+    shootBig(x, y) {
+        global.assets["sfx_laser_large"].play()
+        global.lasers.push(
+            new Laser(
+                x, y,
+                inputManager.mouse.x, inputManager.mouse.y,
+                // this.radius * 2 - 8 in the beam width just ensures that the beam's max width is as wide as the player's hit box
+                "#FF0030", 8 + Math.min(this.radius * 2 - 8, (this.shoot_charge_up_time-45) / 5),
+                // set the decay time to 18 frames
+                (8 + Math.min(this.radius * 2 - 8, (this.shoot_charge_up_time-45) / 5)) / 18
+            )
+        )
+    }
+
     move() {
         this.updateIsUsingController()
-        // console.log(inputManager.isUsingController)
 
-        var input = this.getInput()
-        // console.log(input)
-        this.slideTowards(input["movement"])
+        // shooting
+        if ( this.input["shooting"] ) { this.shoot_charge_up_time += 1}
+        else if ( this.shoot_charge_up_time > 10 ) {
+            global.assets["sfx_space_engine_2"].pause()
+            // the actual shooting is handled in the drawAtPos() function
+            this.shoot_charge_up_time = 0
+        }
+
+        if ( this.shoot_charge_up_time == 45 ){
+            global.assets["sfx_space_engine_2"].play()
+        }
+
+        this.input = this.getInput()
+
+        // movement
+        this.slideTowards(this.input["movement"])
+        this.updateShipRotationUsingController(this.input["direction"]["x"], this.input["direction"]["y"])
         this.moveTowardsDirection(this.velocity)
 
-        this.updateShipRotationUsingController(input["direction"]["x"], input["direction"]["y"])
+
 
         // console.log(this.velocity)
 
@@ -363,5 +450,37 @@ export class Player {
                 // console.log("death :(")
             }
         }
+    }
+}
+
+class Laser {
+    constructor (x, y, targetX, targetY, colour, width, decay_speed) {
+        this.x = x
+        this.y = y
+
+        this.targetX = targetX
+        this.targetY = targetY
+
+        this.colour = colour
+        this.width = width
+        this.decay_speed = decay_speed
+    }
+    
+    drawAtPos(x, y, targetX, targetY) {
+        ctx.beginPath()
+        ctx.moveTo(x, y)
+        ctx.lineTo(targetX, targetY)
+        ctx.lineWidth = this.width
+        ctx.strokeStyle = this.colour
+        ctx.stroke()
+    }
+
+    draw() {
+        this.drawAtPos(this.x, this.y, this.targetX, this.targetY)
+    }
+
+    tick() {
+        this.draw()
+        this.width -= this.decay_speed
     }
 }

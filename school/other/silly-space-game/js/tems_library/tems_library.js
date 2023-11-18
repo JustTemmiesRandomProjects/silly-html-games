@@ -128,22 +128,24 @@ export async function loadAssets(assetSources) {
     })
 }
 
-export function resizeCanvas(canvas, background = null) {
+export function resizeCanvas(canvases, background) {
     if (user_current_screen_width != window.innerWidth || user_current_screen_height != window.innerHeight) {
         console.log("resizing canvas...")
-        canvas.width = window.innerWidth
-        canvas.height = window.innerHeight
+        for (let i = 0; i < canvases.length; i++) {
+            canvases[i].width = window.innerWidth
+            canvases[i].height = window.innerHeight
+        }
 
         user_current_screen_width = window.innerWidth
         user_current_screen_height = window.innerHeight
 
         canvas_centre = [ctx.canvas.width / 2, ctx.canvas.height / 2]
-        
-        // stuff for rending the background canvas
-        if ( background != null ) {
-            background[0].canvas.width = window.innerWidth
-            background[0].canvas.height = window.innerHeight
-            drawBackgroundImage(background[0], background[1])
+
+        if (background != undefined) {
+            drawBackgroundImage(
+                background[0],
+                background[1]
+            )
         }
     }
 }
@@ -193,9 +195,10 @@ export function sound(src, key) {
 
     // functions
     this.play = function () {
+        this.sound.currentTime = 0
         this.sound.play()
     }
-    this.stop = function () {
+    this.pause = function () {
         this.sound.pause()
     }
     this.loop = function (bool) {
@@ -207,7 +210,7 @@ export function sound(src, key) {
             this.sound.classList.remove("looping-audio")
         }
     }
-    this.updateVolume = function () {
+    this.updateVolume = function (volume) {
         this.sound.volume =
             // ensure that the volume never goes above 1, or below 0
             Math.max(0,
@@ -216,6 +219,7 @@ export function sound(src, key) {
                     settings.volume_mixer[this.category]
                     // the master volume, if this is at 0.5, it will halve the sound of all audio players
                     * settings.volume_mixer["master"]
+                    * volume
                 )
             )
     }
@@ -234,7 +238,7 @@ export function sound(src, key) {
     document.getElementById("misc").appendChild(this.sound)
 
     // audio mixer
-    this.updateVolume()
+    this.updateVolume(1)
 
     console.log(`[ASSETS] [${this.category.toUpperCase()}] ${key} is done loading`)
 }

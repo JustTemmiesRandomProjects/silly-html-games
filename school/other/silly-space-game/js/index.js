@@ -3,12 +3,14 @@ console.log("index.js initialized")
 import { randFloat, randInt, resizeCanvas, canvas_centre } from "./tems_library/tems_library.js";
 import { circleOverlapping, pointDistanceFromPoint } from "./tems_library/math.js";
 import { settings } from "./tems_library/settings.js";
-import { global, ctx, backgroundCtx, inputManager } from "./global.js";
+import { global, ctx, backgroundCtx, inputManager, particleCtx } from "./global.js";
 import { Circle, Player, meteor_sizes } from "./classes.js";
+import { LaserParticle, Particle } from "./tems_library/particles.js";
+
 
 // ready function, called when the program is ready, before the first game tick
 function ready() {
-    resizeCanvas(ctx.canvas, [backgroundCtx, global.assets["sprite_background"]])
+    resizeCanvas([ctx.canvas, particleCtx.canvas, backgroundCtx.canvas], [backgroundCtx, global.assets["sprite_background"]])
 
     console.log("playing audio...")
     global.assets["music_fight"].play()
@@ -40,6 +42,15 @@ function ready() {
         )
     }
     
+    for (let i = 0; i < 10; i++) {
+        global.particles.push(
+            new LaserParticle(
+                randInt(100, 600), randInt(100, 600),
+                randFloat(25, 30), "#ee88f8", particleCtx
+            )
+        )
+    }
+    
     console.log("distributing meteors...")
     // distribute the circles accross the map, making sure they don't overlap each other, and that they don't spawn close to the player
     distributeCircles()
@@ -53,25 +64,28 @@ function ready() {
 async function process() {
     requestAnimationFrame(process)
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
-    drawPlayers()
+    particleCtx.clearRect(0, 0, particleCtx.canvas.width, particleCtx.canvas.height)
+
     drawCircles()
-
-
+    processLasers()
+    drawPlayers()
+    drawParticles()
+    
+    
     global.players.forEach((player) => {
         player.move()
     })
-
-
     
     global.circles.forEach((circle) => {
         circle.move()
     })
-
+    
+    removeCompleteParticles()
 }
 
 // gameTick function, called 100 ms (10 times/second)
 function gameTick10() {
-    resizeCanvas(ctx.canvas, [backgroundCtx, global.assets["sprite_background"]])
+    resizeCanvas([ctx.canvas, particleCtx.canvas, backgroundCtx.canvas], [backgroundCtx, global.assets["sprite_background"]])
 }
 
 // gameTick function, called every 500 ms (2 times/second)
@@ -90,6 +104,23 @@ function drawPlayers() {
     global.players.forEach((player) => {
         player.draw()
     })
+}
+
+function processLasers() {
+    global.lasers.forEach((laser) => {
+        laser.tick()
+    })
+    global.lasers = global.lasers.filter(laser => laser.width > 1)
+}
+
+function drawParticles() {
+    global.particles.forEach((particle) => {
+        particle.tick()
+    })
+}
+
+function removeCompleteParticles() {
+    global.particles = global.particles.filter(particle => particle.isComplete == false)
 }
 
 // sort the global.circles array based on the `radius` property of the circles, meaning that the bigger circles get drawn last
@@ -134,6 +165,8 @@ function distributeCircles() {
 let initInterval = setInterval(() => {
     if (global !== null) {
         ctx.canvas.hidden = false
+        particleCtx.canvas.hidden = false
+
         clearInterval(initInterval)
         console.log("running ready() function...")
         ready()
