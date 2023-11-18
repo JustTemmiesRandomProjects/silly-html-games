@@ -75,16 +75,16 @@ export class Circle {
 
     draw() {
         // handle the edges on the x plane
-        if (this.position["x"] < this.radius + 20) {
+        if (this.position["x"] < this.radius + 5) {
             this.drawAtPos(this.position["x"] + ctx.canvas.width, this.position["y"])
-        } else if (this.position["x"] > ctx.canvas.width - this.radius - 20) {
+        } else if (this.position["x"] > ctx.canvas.width - this.radius - 5) {
             this.drawAtPos(this.position["x"] - ctx.canvas.width, this.position["y"])
         }
 
         // handle the edges on the y plane
-        if (this.position["y"] < this.radius + 20) {
+        if (this.position["y"] < this.radius + 5) {
             this.drawAtPos(this.position["x"], this.position["y"] + ctx.canvas.height)
-        } else if (this.position["y"] > ctx.canvas.height - this.radius - 20) {
+        } else if (this.position["y"] > ctx.canvas.height - this.radius - 5) {
             this.drawAtPos(this.position["x"], this.position["y"] - ctx.canvas.height)
         }
 
@@ -176,10 +176,9 @@ export class Player {
         this.sprite = global.assets[skin]
         this.colour = global.asset_bonus_data[skin]
 
-        this.rotation = 0
+        this.mouse_rotation = 0
+        this.controller_rotation = 0
         this.radius = 25
-
-        this.rotation = 0
 
         this.position = {
             "x": ctx.canvas.width/2,
@@ -194,8 +193,12 @@ export class Player {
 
     drawAtPos(x, y) {
         // transform and rotate the transformation matrix in order to rotate the sprite
-        ctx.translate(x, y);
-        ctx.rotate(this.rotation);
+        ctx.translate(x, y)
+        if ( inputManager.isUsingController ) {
+            ctx.rotate(this.controller_rotation)
+        } else {
+            ctx.rotate(this.updateShipRotationUsingMouse(x, y))
+        }
         ctx.translate(-this.sprite.width/2, -this.sprite.height/2)
         ctx.drawImage(this.sprite, 0, 0)
         ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -254,75 +257,104 @@ export class Player {
         this.velocity["y"] = inputManager.capInput(this.velocity["y"], -global.player_max_speed, global.player_max_speed)
     }
 
-    updateRotationUsingMouse() {
+    // take x and y as arguments so that when drawing this on the edges of the screen it correctly works
+    updateShipRotationUsingMouse(x, y) {
         // update the rotation so that the players looks at the mouse
-        this.rotation = Math.PI/2 + Math.atan2(
-            inputManager.mouse["y"] - this.position["y"],
-            inputManager.mouse["x"] - this.position["x"]
+        this.mouse_rotation = Math.PI/2 + Math.atan2(
+            inputManager.mouse["y"] - y,
+            inputManager.mouse["x"] - x
         )
+
+        return this.mouse_rotation
     }
 
-    updateRotationUsingController(x_direction, y_direction) {
+    updateShipRotationUsingController(x_direction, y_direction) {
+        if ( x_direction == 0 && y_direction == 0 ) {
+            return this.controller_rotation
+        }
+
         // set the rotation to match the joystick's direction
-        this.rotation = Math.PI/2 + Math.atan2(
+        this.controller_rotation = Math.PI/2 + Math.atan2(
             y_direction,
             x_direction
         )
+        
+        return this.controller_rotation
     }
 
     getInput() {
         var input = {
-            "x": 0, // movement direction
-            "y": 0, // movement direction
-            "rightX": 0, // right joystick direction
-            "rightY": 0, // right joystick direction
+            "movement" : {
+                "x": 0, // movement direction
+                "y": 0, // movement direction
+            },
+            "direction" : {
+                "x": 0, // right joystick direction
+                "y": 0, // right joystick direction
+            },
         }
 
         // handle controller
         inputManager.controllers.forEach(function (controller) {
             // if firefox
             if ( navigator.userAgent.indexOf("Firefox") != -1 ) {
-                input["x"] += inputManager.getAxes(controller, 6) + inputManager.getAxes(controller, 0)
-                input["y"] += inputManager.getAxes(controller, 7) + inputManager.getAxes(controller, 1)
-                input["rightX"] += inputManager.getAxes(controller, 3),
-                input["rightY"] += inputManager.getAxes(controller, 4)
+                input["movement"]["x"] += inputManager.getAxes(controller, 6) + inputManager.getAxes(controller, 0)
+                input["movement"]["y"] += inputManager.getAxes(controller, 7) + inputManager.getAxes(controller, 1)
+                input["direction"]["x"] += inputManager.getAxes(controller, 3),
+                input["direction"]["y"] += inputManager.getAxes(controller, 4)
             } // if chromium x_direction
             else if ( window.chrome ) {
-                input["x"] += inputManager.getButton(controller, 15) - inputManager.getButton(controller, 14) + inputManager.getAxes(controller, 0)
-                input["y"] += inputManager.getButton(controller, 13) - inputManager.getButton(controller, 12) + inputManager.getAxes(controller, 1)
+                input["movement"]["x"] += inputManager.getButton(controller, 15) - inputManager.getButton(controller, 14) + inputManager.getAxes(controller, 0)
+                input["movement"]["y"] += inputManager.getButton(controller, 13) - inputManager.getButton(controller, 12) + inputManager.getAxes(controller, 1)
+                input["direction"]["x"] += inputManager.getAxes(controller, 3),
+                input["direction"]["y"] += inputManager.getAxes(controller, 4)
             }
         })
 
+
         // handle keyboard
-        input["x"] += inputManager.getKey(["KeyD"]) - inputManager.getKey(["KeyA"])
-        input["y"] += inputManager.getKey(["KeyS"]) - inputManager.getKey(["KeyW"])
-        input["x"] += inputManager.getKey(["ArrowRight"]) - inputManager.getKey(["ArrowLeft"])
-        input["y"] += inputManager.getKey(["ArrowDown"]) - inputManager.getKey(["ArrowUp"])
+        input["movement"]["x"] += inputManager.getKey(["KeyD"]) - inputManager.getKey(["KeyA"])
+        input["movement"]["y"] += inputManager.getKey(["KeyS"]) - inputManager.getKey(["KeyW"])
+        input["movement"]["x"] += inputManager.getKey(["ArrowRight"]) - inputManager.getKey(["ArrowLeft"])
+        input["movement"]["y"] += inputManager.getKey(["ArrowDown"]) - inputManager.getKey(["ArrowUp"])
         
 
         
         // normalize the inputs if they're too big
-        input = inputManager.normalize(input["x"], input["y"])
+        input["movement"] = inputManager.normalize(input["movement"]["x"], input["movement"]["y"])
 
         // make sure the value is within -1 to 1, (to avoid people being able to press `w` and `upArrow` at the same time for double speed)
-        input["x"] = inputManager.capInput(input["x"], -1, 1)
-        input["y"] = inputManager.capInput(input["y"], -1, 1)
+        input["movement"]["x"] = inputManager.capInput(input["movement"]["x"], -1, 1)
+        input["movement"]["y"] = inputManager.capInput(input["movement"]["y"], -1, 1)
 
         // multiply it by the player's acceleration
-        input["x"] = input["x"] * global.player_acceleration
-        input["y"] = input["y"] * global.player_acceleration
+        input["movement"]["x"] = input["movement"]["x"] * global.player_acceleration
+        input["movement"]["y"] = input["movement"]["y"] * global.player_acceleration
         
         return input
     }
 
+    updateIsUsingController() {
+        inputManager.controllers.forEach(function (controller) {
+            if (
+                inputManager.getAxes(controller, 3)
+                || inputManager.getAxes(controller, 4)
+            ) {
+                inputManager.isUsingController = true
+            }
+        })
+    }
+
     move() {
+        this.updateIsUsingController()
+        // console.log(inputManager.isUsingController)
+
         var input = this.getInput()
-        console.log(input)
-        this.slideTowards(input)
+        // console.log(input)
+        this.slideTowards(input["movement"])
         this.moveTowardsDirection(this.velocity)
 
-        // this.updateRotationUsingController(input)
-        this.updateRotationUsingMouse()
+        this.updateShipRotationUsingController(input["direction"]["x"], input["direction"]["y"])
 
         // console.log(this.velocity)
 
