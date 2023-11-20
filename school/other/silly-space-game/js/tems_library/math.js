@@ -12,7 +12,7 @@ export function pointDistanceFromPoint(point1, point2) {
 }
 
 // function to check if a line and circle intersect
-export function checkCollision(laser, circle) {
+export function checkLaserCircleCollision(laser, circle) {
     // calculate the direction vector of the laser
     const dx = laser.targetX - laser.x;
     const dy = laser.targetY - laser.y;

@@ -1,7 +1,7 @@
 console.log("index.js initialized")
 
 import { randFloat, randInt, resizeCanvas, canvas_centre } from "./tems_library/tems_library.js";
-import { checkCollision, circleOverlapping, pointDistanceFromPoint } from "./tems_library/math.js";
+import { checkLaserCircleCollision, circleOverlapping, pointDistanceFromPoint } from "./tems_library/math.js";
 import { settings } from "./tems_library/settings.js";
 import { LaserParticle, Particle } from "./classes/particles.js";
 import { global, ctx, backgroundCtx, inputManager, particleCtx } from "./global.js";
@@ -112,7 +112,7 @@ function processLasers() {
     // check if any lasers and circles are overlapping
     global.lasers.forEach((laser) => {
         global.circles.forEach((circle) => {
-            if (checkCollision(laser, circle)) {
+            if (checkLaserCircleCollision(laser, circle)) {
                 global.particles.push (new LaserParticle(
                     circle.position["x"], circle.position["y"],
                     circle.radius * 1.3, circle.colour, particleCtx
