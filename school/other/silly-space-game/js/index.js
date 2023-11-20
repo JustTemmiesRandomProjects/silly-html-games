@@ -1,12 +1,13 @@
 console.log("index.js initialized")
 
 import { randFloat, randInt, resizeCanvas, canvas_centre } from "./tems_library/tems_library.js";
-import { circleOverlapping, pointDistanceFromPoint } from "./tems_library/math.js";
+import { checkCollision, circleOverlapping, pointDistanceFromPoint } from "./tems_library/math.js";
 import { settings } from "./tems_library/settings.js";
-import { LaserParticle, Particle } from "./tems_library/particles.js";
+import { LaserParticle, Particle } from "./classes/particles.js";
 import { global, ctx, backgroundCtx, inputManager, particleCtx } from "./global.js";
 import { Circle, meteor_sizes } from "./classes/circles.js";
 import { Player } from "./classes/player.js";
+
 
 
 // ready function, called when the program is ready, before the first game tick
@@ -72,7 +73,7 @@ async function process() {
     drawPlayers()
     drawParticles()
     
-    
+
     global.players.forEach((player) => {
         player.tick()
     })
@@ -81,7 +82,7 @@ async function process() {
         circle.tick()
     })
     
-    removeCompleteParticles()
+    removeCompletedParticles()
 }
 
 // gameTick function, called 100 ms (10 times/second)
@@ -108,6 +109,19 @@ function drawPlayers() {
 }
 
 function processLasers() {
+    // check if any lasers and circles are overlapping
+    global.lasers.forEach((laser) => {
+        global.circles.forEach((circle) => {
+            if (checkCollision(laser, circle)) {
+                global.particles.push (new LaserParticle(
+                    circle.position["x"], circle.position["y"],
+                    circle.radius * 1.3, circle.colour, particleCtx
+                ))
+                global.circles = global.circles.filter(temp_circle => temp_circle.ID != circle.ID)
+            }
+        })
+    })
+
     global.lasers.forEach((laser) => {
         laser.tick()
     })
@@ -120,7 +134,7 @@ function drawParticles() {
     })
 }
 
-function removeCompleteParticles() {
+function removeCompletedParticles() {
     global.particles = global.particles.filter(particle => particle.isComplete == false)
 }
 

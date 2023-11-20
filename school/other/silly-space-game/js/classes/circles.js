@@ -1,4 +1,4 @@
-import { randFloat, randInt } from "../tems_library/tems_library.js";
+import { drawWithScreenWrap, randFloat, randInt } from "../tems_library/tems_library.js";
 import { settings } from "../tems_library/settings.js";
 import { circleOverlapping } from "../tems_library/math.js"
 import { global, ctx } from "../global.js";
@@ -33,6 +33,7 @@ export class Circle {
         const meteorID = meteor_sprites[this.size][randInt(0, meteor_sprites[this.size].length)]
         const bonus_data = global.asset_bonus_data[meteorID]
 
+        this.ID = global.circles.length
         
         this.sprite = global.assets[meteorID]
         
@@ -56,40 +57,30 @@ export class Circle {
         }
     }
 
-    drawAtPos(x, y) {
+    // because of technical reasons i'm using self here
+    // tl;dr self = this
+    drawAtPos(x, y, self) {
         // transform and rotate the transformation matrix in order to rotate the sprite
         ctx.translate(x, y);
-        ctx.rotate(this.rotation);
-        ctx.translate(-this.sprite.width/2, -this.sprite.height/2)
-        ctx.drawImage(this.sprite, 0, 0)
+        ctx.rotate(self.rotation);
+        ctx.translate(-self.sprite.width/2, -self.sprite.height/2)
+        ctx.drawImage(self.sprite, 0, 0)
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         
         // if this setting in enabled, draw the hitbox
         if ( settings.show_hitboxes ) {
             ctx.beginPath()
-            ctx.arc(x, y, this.radius, 0, 2 * Math.PI)
-            ctx.fillStyle = this.colour
+            ctx.arc(x, y, self.radius, 0, 2 * Math.PI)
+            ctx.fillStyle = self.colour
             ctx.fill()
         }
     }
 
     draw() {
-        // handle the edges on the x plane
-        if (this.position["x"] < this.radius + 5) {
-            this.drawAtPos(this.position["x"] + ctx.canvas.width, this.position["y"])
-        } else if (this.position["x"] > ctx.canvas.width - this.radius - 5) {
-            this.drawAtPos(this.position["x"] - ctx.canvas.width, this.position["y"])
-        }
-
-        // handle the edges on the y plane
-        if (this.position["y"] < this.radius + 5) {
-            this.drawAtPos(this.position["x"], this.position["y"] + ctx.canvas.height)
-        } else if (this.position["y"] > ctx.canvas.height - this.radius - 5) {
-            this.drawAtPos(this.position["x"], this.position["y"] - ctx.canvas.height)
-        }
-
-        // draw the circle at the actual position
-        this.drawAtPos(this.position["x"], this.position["y"])
+        drawWithScreenWrap(
+            this.position["x"], this.position["y"], this.radius,
+            this.drawAtPos, 10, this
+        )
     }
 
     // direction is an array

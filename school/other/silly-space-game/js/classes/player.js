@@ -1,4 +1,4 @@
-import { randFloat, randInt, canvas_centre } from "../tems_library/tems_library.js";
+import { randFloat, randInt, canvas_centre, drawWithScreenWrap } from "../tems_library/tems_library.js";
 import { settings } from "../tems_library/settings.js";
 import { circleOverlapping } from "../tems_library/math.js"
 import { global, ctx, inputManager } from "../global.js";
@@ -21,9 +21,6 @@ export class Player {
         this.shoot_charge_up_time = 0
         this.input = {}
 
-        // how many space ships have been drawn this frame, used for when all 4 possible ships should be rendered
-        this.drawn_this_frame = 0
-
 
         this.position = {
             "x": ctx.canvas.width/2,
@@ -36,81 +33,45 @@ export class Player {
         }
     }
 
-    drawAtPos(x, y) {
-        this.drawn_this_frame += 1
+    // self is used instead as this function is called from outside the class, and i simply can't pass in this
+    // tl;dr self = this
+    drawAtPos(x, y, self) {
         // transform and rotate the transformation matrix in order to rotate the sprite
         ctx.translate(x, y)
         if ( inputManager.isUsingController ) {
-            ctx.rotate(this.controller_rotation)
+            ctx.rotate(self.controller_rotation)
         } else {
-            ctx.rotate(this.updateShipRotationUsingMouse(x, y))
+            ctx.rotate(self.updateShipRotationUsingMouse(x, y))
         }
-        ctx.translate(-this.sprite.width/2, -this.sprite.height/2)
-        ctx.drawImage(this.sprite, 0, 0)
+        ctx.translate(-self.sprite.width/2, -self.sprite.height/2)
+        ctx.drawImage(self.sprite, 0, 0)
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         
         // if this setting in enabled, draw the hitbox
         if ( settings.show_hitboxes ) {
             ctx.beginPath()
-            ctx.arc(x, y, this.radius, 0, 2 * Math.PI)
-            ctx.fillStyle = this.colour
+            ctx.arc(x, y, self.radius, 0, 2 * Math.PI)
+            ctx.fillStyle = self.colour
             ctx.fill()
         }
 
         // shooting
-        if ( this.input["shooting"] == false && this.shoot_charge_up_time >= 1 && this.time_since_last_shot >= 10) {
-            if ( this.shoot_charge_up_time < 45 ) {
-                this.shootSmall(x, y)
+        if ( self.input["shooting"] == false && self.shoot_charge_up_time >= 1 && self.time_since_last_shot >= 10) {
+            if ( self.shoot_charge_up_time < 45 ) {
+                self.shootSmall(x, y)
             }
             else {
-                this.shootBig(x, y)
+                self.shootBig(x, y)
             }
-            console.log(`POW! ${this.shoot_charge_up_time}`)
+            console.log(`POW! ${self.shoot_charge_up_time}`)
         }
     }
 
     draw() {
-        this.drawn_this_frame = 0
-        const offset_value = 20
-
-        // handle the edges on the x plane
-        if (this.position["x"] < this.radius + offset_value) {
-            this.drawAtPos(this.position["x"] + ctx.canvas.width, this.position["y"])
-        } else if (this.position["x"] > ctx.canvas.width - this.radius - offset_value) {
-            this.drawAtPos(this.position["x"] - ctx.canvas.width, this.position["y"])
-        }
-
-        // handle the edges on the y plane
-        if (this.position["y"] < this.radius + offset_value) {
-            this.drawAtPos(this.position["x"], this.position["y"] + ctx.canvas.height)
-        } else if (this.position["y"] > ctx.canvas.height - this.radius - offset_value) {
-            this.drawAtPos(this.position["x"], this.position["y"] - ctx.canvas.height)
-        }
-
-        // draw the circle at the actual position
-        this.drawAtPos(this.position["x"], this.position["y"])
-
-        // if there's already been 3 players drawn, we need to draw a 4th one as the player is in one of the corners
-        // and the code above simply doesn't have the ability to handle corners properly :)
-        if ( this.drawn_this_frame == 3 ){
-            if ( this.position["x"] > ctx.canvas.width / 2 ) {
-                if ( this.position["y"] < ctx.canvas.height / 2 ) {
-                    // the real player is at the top right
-                    this.drawAtPos(this.position["x"] - ctx.canvas.width, this.position["y"] + ctx.canvas.height)
-                } else {
-                    // the real player is at the bottom right
-                    this.drawAtPos(this.position["x"] - ctx.canvas.width, this.position["y"] - ctx.canvas.height)
-                }
-            } else {
-                if ( this.position["y"] < ctx.canvas.height / 2 ) {
-                    // the real player is at the top left
-                    this.drawAtPos(this.position["x"] + ctx.canvas.width, this.position["y"] + ctx.canvas.height)
-                } else {
-                    // the real player is at the bottom left
-                    this.drawAtPos(this.position["x"] + ctx.canvas.width, this.position["y"] - ctx.canvas.height)
-                }
-            }
-        }
+        drawWithScreenWrap(
+            this.position["x"], this.position["y"], this.radius,
+            this.drawAtPos, 20, this
+        )
     }
     
     // direction is an array
@@ -130,6 +91,7 @@ export class Player {
         }
     }
 
+    // slideTowards is my movement function, it uses player_slipperiness as inverse friction 
     slideTowards(new_velocity) {
         this.velocity["x"] *= global.player_slipperiness
         this.velocity["y"] *= global.player_slipperiness
@@ -167,12 +129,12 @@ export class Player {
     getInput() {
         var input = {
             "movement" : {
-                "x": 0, // movement direction
-                "y": 0, // movement direction
+                "x": 0, // movement x direction
+                "y": 0, // movement y direction
             },
             "direction" : {
-                "x": 0, // right joystick direction
-                "y": 0, // right joystick direction
+                "x": 0, // right joystick x direction
+                "y": 0, // right joystick y direction
             },
             "shooting": false
         }
@@ -252,8 +214,8 @@ export class Player {
                 inputManager.mouse.x, inputManager.mouse.y,
                 // this.radius * 2 - 8 in the beam width just ensures that the beam's max width is as wide as the player's hit box
                 "#FF0030", 8 + Math.min(this.radius * 2 - 8, (this.shoot_charge_up_time-45) / 5),
-                // set the decay time to 18 frames
-                (8 + Math.min(this.radius * 2 - 8, (this.shoot_charge_up_time-45) / 5)) / 18
+                // set the decay time to 25 frames
+                (8 + Math.min(this.radius * 2 - 8, (this.shoot_charge_up_time-45) / 5)) / 25
             )
         )
     }

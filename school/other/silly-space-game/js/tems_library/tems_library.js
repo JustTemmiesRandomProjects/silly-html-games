@@ -174,6 +174,57 @@ export function drawBackgroundImage(context, image) {
     context.setTransform(1, 0, 0, 1, 0, 0);
 }
 
+// function to deal with drawing things on the edges of the screen, at making them "wrap around" to the other side
+export function drawWithScreenWrap(position_x, position_y, radius, drawAtPos, offset_value, object) {
+    var drawn_this_frame = 0
+
+
+    // handle the edges on the x plane
+    if (position_x < radius + offset_value) {
+        drawAtPos(position_x + ctx.canvas.width, position_y, object)
+        drawn_this_frame ++
+    } else if (position_x > ctx.canvas.width - radius - offset_value) {
+        drawAtPos(position_x - ctx.canvas.width, position_y, object)
+        drawn_this_frame ++
+    }
+
+    // handle the edges on the y plane
+    if (position_y < radius + offset_value) {
+        drawAtPos(position_x, position_y + ctx.canvas.height, object)
+        drawn_this_frame ++
+    } else if (position_y > ctx.canvas.height - radius - offset_value) {
+        drawAtPos(position_x, position_y - ctx.canvas.height, object)
+        drawn_this_frame ++
+    }
+
+    // draw the player at the actual position
+    drawAtPos(position_x, position_y, object)
+    drawn_this_frame ++
+
+    // if there's already been 3 objects drawn, we need to draw a 4th one as the real object is in one of the corners
+    // and the code above simply doesn't have the ability to handle corners properly :)
+    if ( drawn_this_frame >= 3 ){
+        // if object is on the rgiht
+        if ( position_x > ctx.canvas.width / 2 ) {
+            // if object is at the top
+            if ( position_y < ctx.canvas.height / 2 ) {
+                // the real object is at the top right
+                drawAtPos(position_x - ctx.canvas.width, position_y + ctx.canvas.height, object)
+            } else {
+                // the real object is at the bottom right
+                drawAtPos(position_x - ctx.canvas.width, position_y - ctx.canvas.height, object)
+            }
+        } else {
+            if ( position_y < ctx.canvas.height / 2 ) {
+                // the real object is at the top left
+                drawAtPos(position_x + ctx.canvas.width, position_y + ctx.canvas.height, object)
+            } else {
+                // the real object is at the bottom left
+                drawAtPos(position_x + ctx.canvas.width, position_y - ctx.canvas.height, object)
+            }
+        }
+    }
+}
 
 
 

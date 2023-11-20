@@ -1,3 +1,6 @@
+import { drawWithScreenWrap } from "../tems_library/tems_library.js"
+
+// class to be extended into other classes, you should never actually instance this class
 export class Particle {
     constructor (x, y, size, colour, ctx) {
         this.x = x
@@ -12,11 +15,20 @@ export class Particle {
         this.isComplete = false
     }
 
+    // because of technical reasons i'm using self here
+    // tl;dr self = this
+    drawAtPos(x, y, self) {
+        self.ctx.beginPath()
+        self.ctx.fillStyle = self.colour
+        self.ctx.arc(x, y, self.size, 0, 2 * Math.PI)
+        self.ctx.fill()
+
+    }
     draw() {
-        this.ctx.beginPath()
-        this.ctx.fillStyle = this.colour
-        this.ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI)
-        this.ctx.fill()
+        drawWithScreenWrap(
+            this.x, this.y, this.size,
+            this.drawAtPos, 5, this
+        )
     }
     
     tick() {
