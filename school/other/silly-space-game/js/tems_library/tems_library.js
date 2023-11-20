@@ -195,10 +195,13 @@ export function sound(src, key) {
 
     // functions
     this.play = function () {
-        this.sound.currentTime = 0
         this.sound.play()
     }
     this.pause = function () {
+        this.sound.pause()
+    }
+    this.stop = function () {
+        this.sound.currentTime = 0
         this.sound.pause()
     }
     this.loop = function (bool) {

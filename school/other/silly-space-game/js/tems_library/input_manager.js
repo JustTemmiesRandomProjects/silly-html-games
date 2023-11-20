@@ -116,6 +116,8 @@ InputManager.prototype.capInput = function (inputValue, min, max) {
     return Math.max(min, Math.min(max, inputValue))
 }
 
+// normalize function, this normalizes player input
+// so that the player doesn't move faster diagonally
 InputManager.prototype.normalize = function (x, y) {
     // calculate the distance
     const distance = Math.sqrt(x * x + y * y);

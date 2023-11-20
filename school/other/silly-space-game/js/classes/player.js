@@ -1,171 +1,8 @@
-import { randFloat, randInt, canvas_centre } from "./tems_library/tems_library.js";
-import { settings } from "./tems_library/settings.js";
-import { pointDistanceFromPoint, circleOverlapping } from "./tems_library/math.js"
-import { global, ctx, inputManager } from "./global.js";
-
-// the sprite ID, defined in global.assets, and the size class
-const meteor_sprites = {
-    "big" : [
-        "sprite_meteor_big_1",
-        "sprite_meteor_big_3",
-        "sprite_meteor_big_4",
-    ],
-    "medium" : [
-        "sprite_meteor_med_1",
-        "sprite_meteor_med_2",
-    ],
-    "small" : [
-        "sprite_meteor_small_1",
-        "sprite_meteor_small_2",
-    ],
-    "tiny" : [
-        "sprite_meteor_tiny_1",
-        "sprite_meteor_tiny_2",
-    ]
-}
-
-export const meteor_sizes = Object.keys(meteor_sprites)
-
-export class Circle {
-    constructor(size) {
-        this.size = size
-
-        const meteorID = meteor_sprites[this.size][randInt(0, meteor_sprites[this.size].length)]
-        const bonus_data = global.asset_bonus_data[meteorID]
-
-        
-        this.sprite = global.assets[meteorID]
-        
-        this.radius = bonus_data["hitboxRadius"]
-        this.colour = bonus_data["hitboxColour"]
-        
-        this.rotation = randFloat(0, Math.PI*2)
-        this.d_rotation = randFloat(-0.004, 0.008)
-        
-        
-        const speed = randFloat(global.circle_speed_offset, global.circle_speed_rand)
-        const random_angle = randFloat(0, Math.PI * 2);
-        this.velocity = {
-            "x": Math.cos(random_angle) * speed,
-            "y": Math.sin(random_angle) * speed
-        }
-
-        this.position = {
-            "x": randInt(this.radius, ctx.canvas.width - 2 * this.radius),
-            "y": randInt(this.radius, ctx.canvas.height - 2 * this.radius)
-        }
-    }
-
-    drawAtPos(x, y) {
-        // transform and rotate the transformation matrix in order to rotate the sprite
-        ctx.translate(x, y);
-        ctx.rotate(this.rotation);
-        ctx.translate(-this.sprite.width/2, -this.sprite.height/2)
-        ctx.drawImage(this.sprite, 0, 0)
-        ctx.setTransform(1, 0, 0, 1, 0, 0);
-        
-        // if this setting in enabled, draw the hitbox
-        if ( settings.show_hitboxes ) {
-            ctx.beginPath()
-            ctx.arc(x, y, this.radius, 0, 2 * Math.PI)
-            ctx.fillStyle = this.colour
-            ctx.fill()
-        }
-    }
-
-    draw() {
-        // handle the edges on the x plane
-        if (this.position["x"] < this.radius + 5) {
-            this.drawAtPos(this.position["x"] + ctx.canvas.width, this.position["y"])
-        } else if (this.position["x"] > ctx.canvas.width - this.radius - 5) {
-            this.drawAtPos(this.position["x"] - ctx.canvas.width, this.position["y"])
-        }
-
-        // handle the edges on the y plane
-        if (this.position["y"] < this.radius + 5) {
-            this.drawAtPos(this.position["x"], this.position["y"] + ctx.canvas.height)
-        } else if (this.position["y"] > ctx.canvas.height - this.radius - 5) {
-            this.drawAtPos(this.position["x"], this.position["y"] - ctx.canvas.height)
-        }
-
-        // draw the circle at the actual position
-        this.drawAtPos(this.position["x"], this.position["y"])
-    }
-
-    // direction is an array
-    moveTowardsDirection(direction) {
-        this.position["x"] += direction["x"]
-        this.position["y"] += direction["y"]
-        if (this.position["x"] < 0) {
-            this.position["x"] += ctx.canvas.width
-        } else if (this.position["x"] > ctx.canvas.width) {
-            this.position["x"] -= ctx.canvas.width
-        }
-
-        if (this.position["y"] < 0) {
-            this.position["y"] += ctx.canvas.height
-        } else if (this.position["y"] > ctx.canvas.height) {
-            this.position["y"] -= ctx.canvas.height
-        }
-    }
-
-    applyRotation(rotation) {
-        this.rotation += rotation
-    }
-
-    move() {
-        this.moveTowardsDirection(this.velocity)
-        this.applyRotation(this.d_rotation)
-
-        for (let i = 0; i < global.circles.length; i++) {
-            if ( circleOverlapping(this, global.circles[i])) {
-                this.handleCollision(this, global.circles[i])
-            }
-        }
-    }
-
-    // directions:
-    // pi * 0.5 = down
-    // pi * 1 = left
-    // pi * 1.5 = up
-    // pi * 2 = right
-    applyVelocity(direction, speed) {
-        this.velocity["x"] += Math.cos(direction) * speed
-        this.velocity["y"] += Math.sin(direction) * speed
-    }
-
-
-    handleCollision(circle1, circle2) {                              
-        // calculate the distance between the circles
-        const distanceX = circle2.position.x - circle1.position.x;
-        const distanceY = circle2.position.y - circle1.position.y;
-        const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
-
-        // calculate the normal vector
-        const normalX = distanceX / distance;
-        const normalY = distanceY / distance;
-
-        // calculate relative velocity
-        const relativeVelocityX = circle2.velocity.x - circle1.velocity.x;
-        const relativeVelocityY = circle2.velocity.y - circle1.velocity.y;
-
-        // calculate relative speed along the normal vector
-        const relativeSpeed = relativeVelocityX * normalX + relativeVelocityY * normalY;
-
-        // check if the circles are moving towards each other
-        if (relativeSpeed < 0) {
-            // calculate impulse (change in momentum)
-            const impulse = 2 * relativeSpeed / (1 / circle1.radius**2 + 1 / circle2.radius**2);
-
-            // update velocities of the circles
-            circle1.velocity.x += impulse * normalX / circle1.radius**2
-            circle1.velocity.y += impulse * normalY / circle1.radius**2
-            circle2.velocity.x -= impulse * normalX / circle2.radius**2
-            circle2.velocity.y -= impulse * normalY / circle2.radius**2
-        }
-    }
-}
-
+import { randFloat, randInt, canvas_centre } from "../tems_library/tems_library.js";
+import { settings } from "../tems_library/settings.js";
+import { circleOverlapping } from "../tems_library/math.js"
+import { global, ctx, inputManager } from "../global.js";
+import { Laser } from "./lasers.js"
 
 export class Player {
     constructor() {
@@ -180,11 +17,13 @@ export class Player {
         this.controller_rotation = 0
         this.radius = 25
 
+        this.time_since_last_shot = 0
         this.shoot_charge_up_time = 0
         this.input = {}
 
         // how many space ships have been drawn this frame, used for when all 4 possible ships should be rendered
         this.drawn_this_frame = 0
+
 
         this.position = {
             "x": ctx.canvas.width/2,
@@ -219,7 +58,7 @@ export class Player {
         }
 
         // shooting
-        if ( this.input["shooting"] == false && this.shoot_charge_up_time > 10 ) {
+        if ( this.input["shooting"] == false && this.shoot_charge_up_time >= 1 && this.time_since_last_shot >= 10) {
             if ( this.shoot_charge_up_time < 45 ) {
                 this.shootSmall(x, y)
             }
@@ -419,29 +258,35 @@ export class Player {
         )
     }
 
-    move() {
+    tick() {
         this.updateIsUsingController()
-
+        
         // shooting
         if ( this.input["shooting"] ) { this.shoot_charge_up_time += 1}
-        else if ( this.shoot_charge_up_time > 10 ) {
-            global.assets["sfx_space_engine_2"].pause()
+        else if ( this.time_since_last_shot >= 10 && this.shoot_charge_up_time > 1) {
+            global.assets["sfx_space_engine_2"].stop()
             // the actual shooting is handled in the drawAtPos() function
+            // this is done so that each ship will shoot independently of eachother
+            // so that if the player is "between" two sides of the map, they will shoot from "both ships"
             this.shoot_charge_up_time = 0
+            this.time_since_last_shot = 0
         }
 
         if ( this.shoot_charge_up_time == 45 ){
             global.assets["sfx_space_engine_2"].play()
         }
 
+        this.time_since_last_shot += 1
+
+        // get player input
         this.input = this.getInput()
 
         // movement
         this.slideTowards(this.input["movement"])
         this.updateShipRotationUsingController(this.input["direction"]["x"], this.input["direction"]["y"])
         this.moveTowardsDirection(this.velocity)
-
-
+        
+        
 
         // console.log(this.velocity)
 
@@ -450,37 +295,5 @@ export class Player {
                 // console.log("death :(")
             }
         }
-    }
-}
-
-class Laser {
-    constructor (x, y, targetX, targetY, colour, width, decay_speed) {
-        this.x = x
-        this.y = y
-
-        this.targetX = targetX
-        this.targetY = targetY
-
-        this.colour = colour
-        this.width = width
-        this.decay_speed = decay_speed
-    }
-    
-    drawAtPos(x, y, targetX, targetY) {
-        ctx.beginPath()
-        ctx.moveTo(x, y)
-        ctx.lineTo(targetX, targetY)
-        ctx.lineWidth = this.width
-        ctx.strokeStyle = this.colour
-        ctx.stroke()
-    }
-
-    draw() {
-        this.drawAtPos(this.x, this.y, this.targetX, this.targetY)
-    }
-
-    tick() {
-        this.draw()
-        this.width -= this.decay_speed
     }
 }

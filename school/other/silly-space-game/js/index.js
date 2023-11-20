@@ -3,9 +3,10 @@ console.log("index.js initialized")
 import { randFloat, randInt, resizeCanvas, canvas_centre } from "./tems_library/tems_library.js";
 import { circleOverlapping, pointDistanceFromPoint } from "./tems_library/math.js";
 import { settings } from "./tems_library/settings.js";
-import { global, ctx, backgroundCtx, inputManager, particleCtx } from "./global.js";
-import { Circle, Player, meteor_sizes } from "./classes.js";
 import { LaserParticle, Particle } from "./tems_library/particles.js";
+import { global, ctx, backgroundCtx, inputManager, particleCtx } from "./global.js";
+import { Circle, meteor_sizes } from "./classes/circles.js";
+import { Player } from "./classes/player.js";
 
 
 // ready function, called when the program is ready, before the first game tick
@@ -73,11 +74,11 @@ async function process() {
     
     
     global.players.forEach((player) => {
-        player.move()
+        player.tick()
     })
     
     global.circles.forEach((circle) => {
-        circle.move()
+        circle.tick()
     })
     
     removeCompleteParticles()
