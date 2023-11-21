@@ -69,6 +69,7 @@ window.onload = async function () {
         "sprite_player_ship_3_green":       [Image, "assets/sprites/kenney/Player/playerShip3_green.png",                    { "hitboxColour": "#40505050" }],
         "sprite_player_ship_3_orange":      [Image, "assets/sprites/kenney/Player/playerShip3_orange.png",                   { "hitboxColour": "#40505050" }],
         "sprite_player_ship_3_red":         [Image, "assets/sprites/kenney/Player/playerShip3_red.png",                      { "hitboxColour": "#40505050" }],
+        "sprite_space_coin":                [Image, "assets/sprites/original/space_coin.gif",                                {}],
         "music_fight":                      [Audio, "assets/audio/music/meteor/music_meteor_fight_cut.ogg",                  {}],
         "sfx_laser_large":                  [Audio, "assets/audio/sound-effects/kenney/sfx_laserLarge_001.ogg",              {}],
         "sfx_laser_small":                  [Audio, "assets/audio/sound-effects/kenney/sfx_laserSmall_001.ogg",              {}],
@@ -84,8 +85,8 @@ window.onload = async function () {
     let asset_bonus_data = asset_data[1]
     console.log("completed loading images!")
 
-    asset_objects["sfx_laser_small"].updateVolume(0.7)
-    asset_objects["sfx_space_engine_2"].updateVolume(0.3)
+    // asset_objects["sfx_laser_small"].updateVolume(0.7)
+    // asset_objects["sfx_space_engine_2"].updateVolume(0.3)
     asset_objects["sfx_space_engine_2"].loop(true)
     console.log("completed fixing audio levels")
 

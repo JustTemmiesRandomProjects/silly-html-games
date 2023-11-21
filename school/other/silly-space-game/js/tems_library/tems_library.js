@@ -244,7 +244,22 @@ export function sound(src, key) {
         alert(`the category "${this.category}" was not found in settings.volume_mixer, this is not a valid category for ${key}`)
     }
 
-    // functions
+    // functions for "unique" audio players
+    this.play_unique = function () {
+        // create the HTML audio player
+        const temp_sound = document.createElement("audio")
+        temp_sound.src = src
+        temp_sound.setAttribute("preload", "auto")
+        temp_sound.setAttribute("controls", "none")
+
+        temp_sound.play()
+        return temp_sound
+    }
+    this.stop_unique = function (audio_player) {
+        audio_player.pause()
+    }
+
+    // other helper functions
     this.play = function () {
         this.sound.play()
     }

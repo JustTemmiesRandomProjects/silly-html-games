@@ -18,10 +18,10 @@ export const meteor_sprites = {
         "sprite_meteor_small_1",
         "sprite_meteor_small_2",
     ],
-    "tiny" : [
-        "sprite_meteor_tiny_1",
-        "sprite_meteor_tiny_2",
-    ]
+    // "tiny" : [
+    //     "sprite_meteor_tiny_1",
+    //     "sprite_meteor_tiny_2",
+    // ]
 }
 
 export const meteor_sizes = Object.keys(meteor_sprites)
@@ -46,6 +46,8 @@ export class Circle {
         
         this.rotation = randFloat(0, Math.PI*2)
         this.d_rotation = randFloat(-0.004, 0.008)
+        
+        this.immunity_frames = 10
         
         if ( speed == undefined ) {
             speed = randFloat(global.circle_speed_offset, global.circle_speed_rand)
@@ -119,6 +121,9 @@ export class Circle {
     }
 
     tick() {
+        if ( this.immunity_frames >= 1 ) {
+            this.immunity_frames -= 1
+        } 
         this.moveTowardsDirection(this.velocity)
         this.applyRotation(this.d_rotation)
 

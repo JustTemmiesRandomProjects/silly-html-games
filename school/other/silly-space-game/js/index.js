@@ -113,7 +113,7 @@ function processLasers() {
     // check if any lasers and circles are overlapping
     global.lasers.forEach((laser) => {
         global.circles.forEach((circle) => {
-            if (checkLaserCircleCollision(laser, circle)) {
+            if ( checkLaserCircleCollision(laser, circle) && circle.immunity_frames == 0 ) {
                 global.particles.push (new LaserParticle(
                     circle.position["x"], circle.position["y"],
                     circle.radius * 1.3, circle.colour, particleCtx
@@ -134,14 +134,14 @@ function processLasers() {
 /* the "weight" of the old circle                   */    * circle.radius
 /* the "weight" of the new circle(s)                */    / new_size
 /* the amount of new circles                        */    / meteor_count
-/* offset the speed based on the laser's power      */    + Math.min(3, global.players_last_shot_laser_power / 1500)
-/* just a constant                                  */    + 0.2
+/* offset the speed based on the laser's power      */    + Math.min(4, global.players_last_shot_laser_power / 2000)
+/* just a constant                                  */    + 1
                     )
                     
                     for (let i = 0; i < meteor_count; i++) {
                         const new_pos = {"x": 0, "y":0}
-                        new_pos["x"] = circle.position["x"] + 1.5 * i
-                        new_pos["y"] = circle.position["y"] + 1.5 * i
+                        new_pos["x"] = circle.position["x"] + 7 * i
+                        new_pos["y"] = circle.position["y"] + 7 * i
                         
                         global.circles.push(
                             new Circle(
@@ -216,6 +216,7 @@ let initInterval = setInterval(async () => {
         clearInterval(initInterval)
         
         await load_menu()
+        play_game()
 
         console.log("setup fully complete!")
     }

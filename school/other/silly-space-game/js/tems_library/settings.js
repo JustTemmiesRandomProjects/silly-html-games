@@ -4,12 +4,12 @@ class Settings {
         // volume mixer levels, 1 means 100% audio, 0 means 0%
         this.volume_mixer = {
             "master": 0.6,
-            "music": 0.08,
-            "sfx": 1,
+            "music": 0.5,
+            "sfx": 0.5,
         }
         this.visible_audio_players = false
 
-        this.show_hitboxes = true
+        this.show_hitboxes = false
 
         this.controller_dead_zone = 0.15
     }

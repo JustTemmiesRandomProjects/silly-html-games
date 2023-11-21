@@ -4,6 +4,11 @@ import { circleOverlapping } from "../tems_library/math.js"
 import { global, ctx, inputManager } from "../global.js";
 import { Laser } from "./lasers.js"
 
+function reset_stuff_done_this_tick () {
+    return {
+        "has_shot": false
+    }
+}
 export class Player {
     constructor() {
         this.size = 50
@@ -21,6 +26,7 @@ export class Player {
         this.shoot_charge_up_time = 0
         this.input = {}
 
+        this.stuff_done_this_tick = reset_stuff_done_this_tick()
 
         this.position = {
             "x": ctx.canvas.width/2,
@@ -195,7 +201,10 @@ export class Player {
     }
 
     shootSmall(x, y) {
-        global.assets["sfx_laser_small"].play()
+        if ( this.stuff_done_this_tick["has_shot"] == false ) {
+            global.assets["sfx_laser_small"].play_unique()
+            this.stuff_done_this_tick["has_shot"] = true
+        }
         global.lasers.push(
             new Laser(
                 x, y,
@@ -207,7 +216,13 @@ export class Player {
     }
 
     shootBig(x, y) {
-        global.assets["sfx_laser_large"].play()
+        if ( this.stuff_done_this_tick["has_shot"] == false ) {
+            const lasers_to_play = Math.min(3, Math.ceil((this.shoot_charge_up_time-45) / 50))
+            for (let i = 0; i < lasers_to_play; i++) {
+                global.assets["sfx_laser_large"].play_unique()
+            }
+            this.stuff_done_this_tick["has_shot"] = true
+        }
         global.lasers.push(
             new Laser(
                 x, y,
@@ -220,6 +235,8 @@ export class Player {
     }
 
     tick() {
+        // stuff to just run every tick
+        this.stuff_done_this_tick = reset_stuff_done_this_tick()
         this.updateIsUsingController()
         
         // shooting
