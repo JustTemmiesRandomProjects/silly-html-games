@@ -3,10 +3,11 @@ console.log("index.js initialized")
 import { randFloat, randInt, resizeCanvas, canvas_centre } from "./tems_library/tems_library.js";
 import { checkLaserCircleCollision, circleOverlapping, pointDistanceFromPoint } from "./tems_library/math.js";
 import { settings } from "./tems_library/settings.js";
+import { load_menu } from "./main_menu/index.js";
 import { LaserParticle, Particle } from "./classes/particles.js";
-import { global, ctx, backgroundCtx, inputManager, particleCtx } from "./global.js";
-import { Circle, meteor_sizes } from "./classes/circles.js";
+import { Circle, meteor_sizes, meteor_sprites } from "./classes/circles.js";
 import { Player } from "./classes/player.js";
+import { global, ctx, backgroundCtx, inputManager, particleCtx } from "./global.js";
 
 
 
@@ -33,14 +34,14 @@ function ready() {
     for (let i = 0; i < global.circle_count / 2; i++) {
         // loop over the available meteor sizes each time, for a varied size selection
         global.circles.push(
-            new Circle( meteor_sizes[i % meteor_sizes.length] )
+            new Circle( i % meteor_sizes.length )
         )
         // add a second meteor that's either big or medium
         // this and the above push ensures that 1/8th of the meteors will be small or tiny,
         // whilst 3/8th of the meteors will be large or medium
         // this is done because tons of small meteors is "meh" gameplay wise
         global.circles.push(
-            new Circle( meteor_sizes[i % Math.floor(meteor_sizes.length / 2)] )
+            new Circle( i % Math.floor(meteor_sizes.length / 2) )
         )
     }
     
@@ -118,6 +119,39 @@ function processLasers() {
                     circle.radius * 1.3, circle.colour, particleCtx
                 ))
                 global.circles = global.circles.filter(temp_circle => temp_circle.ID != circle.ID)
+                if ( circle.size_index + 1 < meteor_sizes.length ) {
+                    const meteor_count = 3
+                    const random_angle = randFloat(0, Math.PI * 2);
+                    const meteor_ids_for_size_class = meteor_sprites[
+                        meteor_sizes[
+                            circle.size_index + 1
+                        ]
+                    ]
+                    const new_size = global.asset_bonus_data[meteor_ids_for_size_class[randInt(0, meteor_ids_for_size_class.length)]]["hitboxRadius"]
+                    const new_speed = (
+/* the x velocity of the old circle                 */    (circle.velocity["x"]
+/* devide by math.cos() in order to get it's speed  */    / Math.cos(circle.random_angle))
+/* the "weight" of the old circle                   */    * circle.radius
+/* the "weight" of the new circle(s)                */    / new_size
+/* the amount of new circles                        */    / meteor_count
+/* offset the speed based on the laser's power      */    + Math.min(3, global.players_last_shot_laser_power / 1500)
+/* just a constant                                  */    + 0.2
+                    )
+                    
+                    for (let i = 0; i < meteor_count; i++) {
+                        const new_pos = {"x": 0, "y":0}
+                        new_pos["x"] = circle.position["x"] + 1.5 * i
+                        new_pos["y"] = circle.position["y"] + 1.5 * i
+                        
+                        global.circles.push(
+                            new Circle(
+                                circle.size_index + 1, new_pos,
+                                random_angle + (Math.PI / meteor_count) * i * 2, new_speed
+                            )
+                        )
+                        console.log(random_angle + (Math.PI / meteor_count) * i * 2)
+                    }
+                }
             }
         })
     })
@@ -177,19 +211,22 @@ function distributeCircles() {
 
 // check if the global variable is ready every 100ms, until it's ready
 // this might take some time as loading assets takes a bit of time
-let initInterval = setInterval(() => {
-    if (global !== null) {
-        ctx.canvas.hidden = false
-        particleCtx.canvas.hidden = false
-
+let initInterval = setInterval(async () => {
+    if ( global !== null ) {
         clearInterval(initInterval)
-        console.log("running ready() function...")
-        ready()
-        console.log("running first tick...")
-        process()
+        
+        await load_menu()
 
-        // delete the loading bar
-        document.getElementById("loading-bar").remove()
         console.log("setup fully complete!")
     }
 }, 100);
+
+export function play_game() {
+    ctx.canvas.hidden = false
+    particleCtx.canvas.hidden = false
+
+    console.log("running ready() function...")
+    ready()
+    console.log("running first tick...")
+    process()
+}

@@ -16,25 +16,18 @@ class Global {
 
         this.circle_count = 40
         this.player_spawn_safe_radius = 350
+        // just a counter used to set a unique ID for every circle
+        this.next_circle_ID = 0
 
         this.player_acceleration = accountForDisplay(0.3)
         this.player_max_speed = accountForDisplay(5)
         this.player_slipperiness = 0.97
+        this.players_last_shot_laser_power = 0
 
         this.circles = []
         this.players = []
         this.lasers = []
         this.particles = []
-
-        this.colours = [
-            "#8000808F",
-            "#FFD5008F",
-            "#FF971C8F",
-            "#0341AE8F",
-            "#F000008F",
-            "#72CB3B8F",
-            "#00F0F08F"
-        ]
 
         this.assets = asset_objects
         this.asset_bonus_data = asset_bonus_data

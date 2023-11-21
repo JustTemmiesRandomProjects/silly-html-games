@@ -4,7 +4,7 @@ import { circleOverlapping } from "../tems_library/math.js"
 import { global, ctx } from "../global.js";
 
 // the sprite ID, defined in global.assets, and the size class
-const meteor_sprites = {
+export const meteor_sprites = {
     "big" : [
         "sprite_meteor_big_1",
         "sprite_meteor_big_3",
@@ -27,13 +27,17 @@ const meteor_sprites = {
 export const meteor_sizes = Object.keys(meteor_sprites)
 
 export class Circle {
-    constructor(size) {
-        this.size = size
+    // only size_index is required
+    constructor(size_index, position, random_angle, speed) {
+        this.ID = global.next_circle_ID
+        global.next_circle_ID ++
+        
+        this.size_index = size_index
+        this.size = meteor_sizes[size_index]
 
         const meteorID = meteor_sprites[this.size][randInt(0, meteor_sprites[this.size].length)]
         const bonus_data = global.asset_bonus_data[meteorID]
 
-        this.ID = global.circles.length
         
         this.sprite = global.assets[meteorID]
         
@@ -43,17 +47,27 @@ export class Circle {
         this.rotation = randFloat(0, Math.PI*2)
         this.d_rotation = randFloat(-0.004, 0.008)
         
-        
-        const speed = randFloat(global.circle_speed_offset, global.circle_speed_rand)
-        const random_angle = randFloat(0, Math.PI * 2);
+        if ( speed == undefined ) {
+            speed = randFloat(global.circle_speed_offset, global.circle_speed_rand)
+        }
+        if ( random_angle == undefined ) {
+            random_angle = randFloat(0, Math.PI * 2);
+        }
+        this.random_angle = random_angle
+
         this.velocity = {
             "x": Math.cos(random_angle) * speed,
             "y": Math.sin(random_angle) * speed
         }
 
-        this.position = {
-            "x": randInt(this.radius, ctx.canvas.width - 2 * this.radius),
-            "y": randInt(this.radius, ctx.canvas.height - 2 * this.radius)
+        if ( position == undefined ) {
+            this.position = {
+                "x": randInt(this.radius, ctx.canvas.width - 2 * this.radius),
+                "y": randInt(this.radius, ctx.canvas.height - 2 * this.radius)
+            }
+        }
+        else {
+            this.position = position
         }
     }
 

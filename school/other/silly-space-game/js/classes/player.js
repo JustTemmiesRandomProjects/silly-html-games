@@ -212,7 +212,6 @@ export class Player {
             new Laser(
                 x, y,
                 inputManager.mouse.x, inputManager.mouse.y,
-                // this.radius * 2 - 8 in the beam width just ensures that the beam's max width is as wide as the player's hit box
                 "#FF0030", 8 + Math.min(this.radius * 2 - 8, (this.shoot_charge_up_time-45) / 5),
                 // set the decay time to 25 frames
                 (8 + Math.min(this.radius * 2 - 8, (this.shoot_charge_up_time-45) / 5)) / 25
@@ -230,6 +229,7 @@ export class Player {
             // the actual shooting is handled in the drawAtPos() function
             // this is done so that each ship will shoot independently of eachother
             // so that if the player is "between" two sides of the map, they will shoot from "both ships"
+            global.players_last_shot_laser_power = this.shoot_charge_up_time
             this.shoot_charge_up_time = 0
             this.time_since_last_shot = 0
         }
