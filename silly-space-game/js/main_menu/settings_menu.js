@@ -1,10 +1,30 @@
+import { settings } from "../tems_library/settings.js";
+
 class SettingsMenu {
     constructor () {
         const buttons = {
-            "visible_audio_players": document.getElementById("settings-view-hitboxes-btn")
+            "show_hitboxes": document.getElementById("settings-show-hitboxes-btn"),
+            "visible_audio_players": document.getElementById("settings-view-audio-players-btn"),
         }
 
-        console.log(buttons[0])
+        for (const [key, value] of Object.entries(buttons)) {
+            // initiate the button's colour
+            if (settings[key] == true) {
+                value.className = "button-active"
+            } else {
+                value.className = "button-inactive"
+            }
+
+            // register a function to trigger on button click
+            value.addEventListener("click", () => {
+                settings[key] = !settings[key]
+                if (settings[key] == true) {
+                    value.className = "button-active"
+                } else {
+                    value.className = "button-inactive"
+                }
+            })
+        }
     }
 }
 

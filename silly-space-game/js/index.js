@@ -65,7 +65,6 @@ function ready() {
 
 // process function, called every frame
 async function process() {
-    console.log(global.players[0].position)
     requestAnimationFrame(process)
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
     particleCtx.clearRect(0, 0, particleCtx.canvas.width, particleCtx.canvas.height)
@@ -225,6 +224,18 @@ let initInterval = setInterval(async () => {
 export function play_game() {
     const menu = document.getElementById("main-menu")
     menu.hidden = true
+
+    // re-check settings and stuff
+    if ( settings.visible_audio_players ) {
+        for (const [key] of Object.entries(global.assets)) {
+            
+            // if the asset has a function updateVisibilty, call it
+            const asset = global.assets[key]
+            if ( typeof asset.updateVisibilty == "function" ) {
+                asset.updateVisibilty();
+            }
+        }
+    }
 
     ctx.canvas.hidden = false
     particleCtx.canvas.hidden = false

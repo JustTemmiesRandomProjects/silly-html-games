@@ -46,23 +46,27 @@ body {
     color: #fff;
     font-size: 1.5rem;
     padding: 10px 20px;
-    border: 2px solid #fff;
     border-radius: 25px;
     transition: all 0.3s ease;
     text-shadow: 1px 1px 2px #000;
 }
 
-.menu-list a:hover {
+.button-simple {
+    border: 2px solid #fff;
+}
+
+.button-simple:hover  {
     background-color: #fff;
     color: #000;
     box-shadow: 0 0 10px #fff;
 }
 
-.menu-list a:hover {
-    background-color: #fff;
-    color: #000;
-    box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff; /* Example of a pulsating effect */
-    animation: pulsate 1s ease infinite alternate;
+.button-active {
+    background-color: #00ff0030;
+}
+
+.button-inactive {
+    background-color: #ff000030;
 }
 
 @keyframes pulsate {

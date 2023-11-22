@@ -242,6 +242,8 @@ export function drawWithScreenWrap(position_x, position_y, radius, drawAtPos, of
 
 // SOUND
 export function sound(src, key) {
+    this.is_audio = true
+
     if (!key.includes("_")) {
         console.log(`the ID ${key} isn't valid, it needs to have a category, like "sound_" or "music_" before the actual name`)
         alert(`the ID ${key} isn't valid, it needs to have a category, like "sound_" or "music_" before the actual name`)
@@ -280,6 +282,13 @@ export function sound(src, key) {
         this.sound.currentTime = 0
         this.sound.pause()
     }
+    this.updateVisibilty = function () {
+        if ( settings.visible_audio_players ) {
+            this.sound.style = "dislpay: full"
+        } else {
+            this.sound.style = "display: none"
+        }
+    }
     this.loop = function (bool) {
         this.sound.loop = bool
         // make sure the "looping-audio" html class is matching it's current state
@@ -310,9 +319,8 @@ export function sound(src, key) {
     this.sound.setAttribute("controls", "none")
 
     // hide the audo players according to the settings
-    if (!settings.visible_audio_players) {
-        this.sound.style = "display: none"
-    }
+    this.updateVisibilty()
+
     // get the "misc" div, and add the html audio player to it
     document.getElementById("misc").appendChild(this.sound)
 
