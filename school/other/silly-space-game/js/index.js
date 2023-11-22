@@ -45,14 +45,14 @@ function ready() {
         )
     }
     
-    for (let i = 0; i < 10; i++) {
-        global.particles.push(
-            new LaserParticle(
-                randInt(100, 600), randInt(100, 600),
-                randFloat(25, 30), "#ee88f8", particleCtx
-            )
-        )
-    }
+    // for (let i = 0; i < 10; i++) {
+    //     global.particles.push(
+    //         new LaserParticle(
+    //             randInt(100, 600), randInt(100, 600),
+    //             randFloat(25, 30), "#ee88f8", particleCtx
+    //         )
+    //     )
+    // }
     
     console.log("distributing meteors...")
     // distribute the circles accross the map, making sure they don't overlap each other, and that they don't spawn close to the player
@@ -65,6 +65,7 @@ function ready() {
 
 // process function, called every frame
 async function process() {
+    console.log(global.players[0].position)
     requestAnimationFrame(process)
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
     particleCtx.clearRect(0, 0, particleCtx.canvas.width, particleCtx.canvas.height)
@@ -216,13 +217,15 @@ let initInterval = setInterval(async () => {
         clearInterval(initInterval)
         
         await load_menu()
-        play_game()
 
         console.log("setup fully complete!")
     }
 }, 100);
 
 export function play_game() {
+    const menu = document.getElementById("main-menu")
+    menu.hidden = true
+
     ctx.canvas.hidden = false
     particleCtx.canvas.hidden = false
 

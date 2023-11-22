@@ -54,7 +54,7 @@ export function hexToRgba(hex) {
         (bigint >> 16) & 255,
         (bigint >> 8) & 255,
         bigint & 255,
-    ];
+    ]
 }
 
 // function that adjusts a number to match the screen size
@@ -65,8 +65,8 @@ export function accountForDisplay(num) {
 // python time.sleep function
 export async function sleep(ms) {
     return new Promise(resolve => {
-        setTimeout(resolve, ms);
-    });
+        setTimeout(resolve, ms)
+    })
 }
 
 
@@ -80,11 +80,21 @@ export async function loadAssets(assetSources) {
             // stuff for all formats
             asset_bonus_data[key] = assetSources[key][2]
 
+            // gif, a custom format
+            if ( value[0] == GIF ) {
+                assetObjects[key] = new GIF(value[1])
+                assetReady[key] = false
+                
+                assetObjects[key].onload = function () {
+                    console.log(`[ASSETS] [GIF] ${key} is done loading`)
+                    assetReady[key] = true
+                }
+            }
+
             // handling images
-            if (value[0] == Image) {
+            else if ( value[0] == Image ) {
                 assetObjects[key] = new Image
                 assetReady[key] = false
-
 
                 assetObjects[key].onload = function () {
                     console.log(`[ASSETS] [IMAGE] ${key} is done loading`)
@@ -171,7 +181,7 @@ export function drawBackgroundImage(context, image) {
 
     context.drawImage(image, 0, 0)
     // reset the transformation back to the default
-    context.setTransform(1, 0, 0, 1, 0, 0);
+    context.setTransform(1, 0, 0, 1, 0, 0)
 }
 
 // function to deal with drawing things on the edges of the screen, at making them "wrap around" to the other side
@@ -301,7 +311,7 @@ export function sound(src, key) {
 
     // hide the audo players according to the settings
     if (!settings.visible_audio_players) {
-        this.sound.style = "display: none;"
+        this.sound.style = "display: none"
     }
     // get the "misc" div, and add the html audio player to it
     document.getElementById("misc").appendChild(this.sound)
@@ -312,5 +322,66 @@ export function sound(src, key) {
     console.log(`[ASSETS] [${this.category.toUpperCase()}] ${key} is done loading`)
 }
 
+// GIF
+export class GIF {
+    constructor(url, ctx) {
+        this.url = url
+        this.ctx = ctx
 
+        this.frames = []
+        this.currentFrame = 0
+        this.gif = new Image()
+        this.onload = null // Callback function for onload event
+        this.gif.onload = () => {
+            this.extractFrames()
+            if (typeof this.onload === 'function') {
+                this.onload() // Execute the onload callback if defined
+            }
+        }
+        this.loadGif()
 
+        // game stuff
+        this.position = {
+            "x": null,
+            "y": null
+        }
+    }
+
+    loadGif() {
+        this.gif.src = this.url
+    }
+
+    setPosition(x, y){
+        this.position["x"] = x
+        this.position["y"] = y
+    }
+
+    extractFrames() {
+        // You can use this method to extract frames from the loaded GIF if needed.
+        // For simplicity, let's assume frames are already extracted or the browser handles it.
+        // Example: this.frames = extractedFrames
+    }
+
+    displayCurrentFrame() {
+        if (this.frames.length === 0) {
+            console.log('Frames not loaded yet.')
+            return
+        }
+
+        // Display the current frame. For simplicity, let's assume frames are images.
+        // Replace this logic with your own code for displaying the nth frame.
+        if (this.currentFrame >= 0 && this.currentFrame < this.frames.length) {
+            const currentFrameImage = this.frames[this.currentFrame]
+            // For example, if you want to display the frame in an HTML element:
+            // document.getElementById('gifContainer').src = currentFrameImage.src
+            console.log('Displaying frame:', this.currentFrame)
+        } else {
+            console.log('Frame index out of bounds.')
+        }
+    }
+
+    displayNthFrame(n) {
+        this.currentFrame = n
+        this.displayCurrentFrame()
+    }
+}

@@ -7,6 +7,7 @@
     <title>Silly Space Game</title>
 
     <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="main_menu.css">
 </head>
 <body>
     <!-- text for users who have chosen to disable javascript -->
@@ -31,5 +32,27 @@
 
     <!-- javascript -->
     <script type="module" src="./js/index.js"></script>
+
+    <!-- main menu -->
+    <div class="menu" id="main-menu" hidden="true">
+        <h1 class="title">Silly Space Game</h1>
+        <ul class="menu-list">
+            <li><a id="play-btn" href="#">Play</a></li>
+            <li><a id="settings-btn" href="#">Settings</a></li>
+            <li><a id="about-btn" href="#">About</a></li>
+            <!-- <li><a href="#">Exit</a></li> -->
+        </ul>
+    </div>
+
+    <div class="menu" id="settings-menu" hidden="true">
+        <h1 class="title">Settings</h1>
+        <ul class="menu-list">
+            <li><a id="settings-view-hitboxes-btn" href="#">eyo</a></li>
+            <li><a>hi</a></li>
+            <li><a>hi</a></li>
+            <li><a>hi</a></li>
+            <li><a id="return-to-main-menu-btn" href="#">back</a></li>
+        </ul>
+    </div>
 </body>
 </html>

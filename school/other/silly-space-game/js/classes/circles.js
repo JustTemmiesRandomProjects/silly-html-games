@@ -132,6 +132,11 @@ export class Circle {
                 this.handleCollision(this, global.circles[i])
             }
         }
+
+        // collide with player
+        if (circleOverlapping(this, global.players[0])) {
+            this.handleCollision(this, global.players[0])
+        }
     }
 
     // directions:
@@ -165,13 +170,13 @@ export class Circle {
         // check if the circles are moving towards each other
         if (relativeSpeed < 0) {
             // calculate impulse (change in momentum)
-            const impulse = 2 * relativeSpeed / (1 / circle1.radius**2 + 1 / circle2.radius**2);
+            const impulse = 2 * relativeSpeed / (1 / Math.pow(circle1.radius, 2) + 1 / Math.pow(circle2.radius, 2));
 
             // update velocities of the circles
-            circle1.velocity.x += impulse * normalX / circle1.radius**2
-            circle1.velocity.y += impulse * normalY / circle1.radius**2
-            circle2.velocity.x -= impulse * normalX / circle2.radius**2
-            circle2.velocity.y -= impulse * normalY / circle2.radius**2
+            circle1.velocity.x += impulse * normalX / Math.pow(circle1.radius, 2)
+            circle1.velocity.y += impulse * normalY / Math.pow(circle1.radius, 2)
+            circle2.velocity.x -= impulse * normalX / Math.pow(circle2.radius, 2)
+            circle2.velocity.y -= impulse * normalY / Math.pow(circle2.radius, 2)
         }
     }
 }

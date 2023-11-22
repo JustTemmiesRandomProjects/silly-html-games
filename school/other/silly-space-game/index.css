@@ -8,14 +8,6 @@ canvas {
     pointer-events: none;
 }
 
-html, body {
-    width:  100%;
-    height: 100%;
-    margin: 0;
-    overflow: hidden;
-    background-color: #3a2e3f;
-}
-
 /* make loading bar centered on the screen, above all other elements */
 #loading-bar {    
     image-rendering: pixelated;
