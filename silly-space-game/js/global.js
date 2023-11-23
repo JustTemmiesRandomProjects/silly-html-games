@@ -74,7 +74,7 @@ window.onload = async function () {
         "sprite_player_ship_3_green":       [Image, "assets/sprites/kenney/Player/playerShip3_green.png",                    { "hitboxColour": "#40505050" }],
         "sprite_player_ship_3_orange":      [Image, "assets/sprites/kenney/Player/playerShip3_orange.png",                   { "hitboxColour": "#40505050" }],
         "sprite_player_ship_3_red":         [Image, "assets/sprites/kenney/Player/playerShip3_red.png",                      { "hitboxColour": "#40505050" }],
-        "sprite_space_coin":                [GIF,   "assets/sprites/original/space_coin.gif",                                {}],
+        "sprite_space_coin":                [GIF,   ["assets/sprites/kenney/Player/playerShip1_orange.png", "assets/sprites/kenney/Player/playerShip2_orange.png", "assets/sprites/kenney/Player/playerShip3_orange.png"], {}],
         "music_fight":                      [Audio, "assets/audio/music/meteor/music_meteor_fight_cut.ogg",                  {}],
         "sfx_laser_large":                  [Audio, "assets/audio/sound-effects/kenney/sfx_laserLarge_001.ogg",              {}],
         "sfx_laser_small":                  [Audio, "assets/audio/sound-effects/kenney/sfx_laserSmall_001.ogg",              {}],

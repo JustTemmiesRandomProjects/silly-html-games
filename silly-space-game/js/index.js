@@ -69,17 +69,19 @@ function ready() {
 
 // process function, called every frame
 async function process() {
-    global.frames_processed ++ 
-    // ctx.drawImage(global.assets["sprite_space_coin"].frames[0].image, 200, 100);
-    
+    global.frames_processed ++
     requestAnimationFrame(process)
+
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
     particleCtx.clearRect(0, 0, particleCtx.canvas.width, particleCtx.canvas.height)
 
+    
     drawCircles()
     processLasers()
     drawPlayers()
     drawParticles()
+    
+    global.assets["sprite_space_coin"].draw()
     
     
     global.players.forEach((player) => {

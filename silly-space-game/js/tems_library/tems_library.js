@@ -82,13 +82,11 @@ export async function loadAssets(assetSources) {
 
             // gif, a custom format
             if ( value[0] == GIF ) {
-                assetObjects[key] = new GIF(value[1], ctx)
                 assetReady[key] = false
-                
-                assetObjects[key].onload = function () {
+                assetObjects[key] = new GIF(value[1], ctx, function () {
                     console.log(`[ASSETS] [GIF] ${key} is done loading`)
                     assetReady[key] = true
-                }
+                })
             }
 
             // handling images
@@ -331,31 +329,43 @@ export function sound(src, key) {
 
 // GIF
 export class GIF {
-    constructor(url, ctx) {
-        this.url = url
+    constructor(urls, ctx, onload) {
+        this.urls = urls
         this.ctx = ctx
 
+        this.current_frame = 0
+        this.tick_counter = 0
+        this.ticks_per_frame = 10
+
         this.frames = []
-        this.currentFrame = 0
-        this.gif = new Image()
-        this.onload = null // Callback function for onload event
-        this.gif.onload = () => {
-            this.extractFrames()
-            if (typeof this.onload === 'function') {
-                this.onload() // Execute the onload callback if defined
-            }
-        }
-        this.loadGif()
+        const frames_ready = []
 
         // game stuff
         this.position = {
             "x": null,
             "y": null
         }
-    }
 
-    loadGif() {
-        this.gif.src = this.url
+        for (let i = 0; i < urls.length; i++) {
+            const url = urls[i]
+            this.frames.push(new Image())
+            this.frames[i].onload = function () {
+                frames_ready[i] = true
+                for (let j = 0; j < urls.length; j ++) {
+                    if ( frames_ready[j] == false ) {
+                        break
+                    } else {
+                        if (typeof onload === 'function') {
+                            onload() // Execute the onload callback if defined
+                        } else {
+                            alert(`onload function not assigned for gif with urls ${urls}`)
+                        }
+                    }
+                }
+            }
+            frames_ready.push(false)
+            this.frames[i].src = url
+        }
     }
 
     setPosition(x, y){
@@ -363,52 +373,16 @@ export class GIF {
         this.position["y"] = y
     }
 
-    extractFrames() {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
+    draw() {
+        this.tick_counter ++
+        if ( this.tick_counter > this.ticks_per_frame ) {
+            this.current_frame ++
+            this.tick_counter = 0
 
-        canvas.width = this.gif.width;
-        canvas.height = this.gif.height;
-        ctx.drawImage(this.gif, 0, 0);
-
-        // Splitting the GIF into frames based on canvas manipulation.
-        // This is a simplified version and may not work correctly for all GIFs.
-        const numberOfFrames = 10; // Number of frames to extract (change as needed)
-        const frameWidth = canvas.width / numberOfFrames;
-
-        for (let i = 0; i < numberOfFrames; i++) {
-            const frame = document.createElement('canvas');
-            const frameCtx = frame.getContext('2d');
-
-            frame.width = frameWidth;
-            frame.height = canvas.height;
-            frameCtx.drawImage(canvas, -i * frameWidth, 0);
-
-            this.frames.push(frame);
+            this.current_frame %= this.frames.length
         }
-    }
-
-    displayCurrentFrame() {
-        if (this.frames.length === 0) {
-            console.log('Frames not loaded yet.')
-            return
-        }
-
-        // Display the current frame. For simplicity, let's assume frames are images.
-        // Replace this logic with your own code for displaying the nth frame.
-        if (this.currentFrame >= 0 && this.currentFrame < this.frames.length) {
-            const currentFrameImage = this.frames[this.currentFrame]
-            
-            // For example, if you want to display the frame in an HTML element:
-            // document.getElementById('gifContainer').src = currentFrameImage.src
-            console.log('Displaying frame:', this.currentFrame)
-        } else {
-            console.log('Frame index out of bounds.')
-        }
-    }
-
-    displayNthFrame(n) {
-        this.currentFrame = n
-        this.displayCurrentFrame()
+        
+        const this_frame = this.frames[this.current_frame]
+        this.ctx.drawImage(this_frame, this.position["x"] - this_frame.width/2, this.position["y"] - this_frame.height/2)
     }
 }
