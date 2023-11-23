@@ -27,6 +27,7 @@ class Global {
         this.players_last_shot_laser_power = 0
 
         this.score = 0
+        this.frames_processed = 0
 
         this.circles = []
         this.players = []

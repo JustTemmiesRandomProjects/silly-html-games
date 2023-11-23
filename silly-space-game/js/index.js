@@ -69,9 +69,9 @@ function ready() {
 
 // process function, called every frame
 async function process() {
-    console.log(
-        global.assets["sprite_space_coin"].gif.src
-    )
+    global.frames_processed ++ 
+    // ctx.drawImage(global.assets["sprite_space_coin"].frames[0].image, 200, 100);
+    
     requestAnimationFrame(process)
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
     particleCtx.clearRect(0, 0, particleCtx.canvas.width, particleCtx.canvas.height)
@@ -81,7 +81,7 @@ async function process() {
     drawPlayers()
     drawParticles()
     
-
+    
     global.players.forEach((player) => {
         player.tick()
     })

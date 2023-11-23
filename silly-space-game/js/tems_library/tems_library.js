@@ -364,9 +364,28 @@ export class GIF {
     }
 
     extractFrames() {
-        // You can use this method to extract frames from the loaded GIF if needed.
-        // For simplicity, let's assume frames are already extracted or the browser handles it.
-        // Example: this.frames = extractedFrames
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = this.gif.width;
+        canvas.height = this.gif.height;
+        ctx.drawImage(this.gif, 0, 0);
+
+        // Splitting the GIF into frames based on canvas manipulation.
+        // This is a simplified version and may not work correctly for all GIFs.
+        const numberOfFrames = 10; // Number of frames to extract (change as needed)
+        const frameWidth = canvas.width / numberOfFrames;
+
+        for (let i = 0; i < numberOfFrames; i++) {
+            const frame = document.createElement('canvas');
+            const frameCtx = frame.getContext('2d');
+
+            frame.width = frameWidth;
+            frame.height = canvas.height;
+            frameCtx.drawImage(canvas, -i * frameWidth, 0);
+
+            this.frames.push(frame);
+        }
     }
 
     displayCurrentFrame() {
@@ -379,6 +398,7 @@ export class GIF {
         // Replace this logic with your own code for displaying the nth frame.
         if (this.currentFrame >= 0 && this.currentFrame < this.frames.length) {
             const currentFrameImage = this.frames[this.currentFrame]
+            
             // For example, if you want to display the frame in an HTML element:
             // document.getElementById('gifContainer').src = currentFrameImage.src
             console.log('Displaying frame:', this.currentFrame)
