@@ -29,8 +29,8 @@ export const meteor_sizes = Object.keys(meteor_sprites)
 export class Circle {
     // only size_index is required
     constructor(size_index, position, random_angle, speed) {
-        this.ID = global.next_circle_ID
-        global.next_circle_ID ++
+        this.ID = global.entity_counter
+        global.entity_counter ++
         
         this.size_index = size_index
         this.size = meteor_sizes[size_index]

@@ -7,6 +7,7 @@ import { load_menu } from "./main_menu/index.js";
 import { LaserParticle, Particle } from "./classes/particles.js";
 import { Circle, meteor_sizes, meteor_sprites } from "./classes/circles.js";
 import { Player } from "./classes/player.js";
+import { Coin } from "./classes/coin.js";
 import { global, ctx, backgroundCtx, inputManager, particleCtx, hudCtx } from "./global.js";
 import { drawHud } from "./hud.js";
 
@@ -65,6 +66,12 @@ function ready() {
 
     console.log("drawing hud...")
     drawHud()
+
+    global.coins.push(new Coin())
+    global.coins.push(new Coin())
+    global.coins.push(new Coin())
+    global.coins.push(new Coin())
+    global.coins.push(new Coin()) 
 }
 
 // process function, called every frame
@@ -80,9 +87,9 @@ async function process() {
     processLasers()
     drawPlayers()
     drawParticles()
+    drawCoins()
     
-    global.assets["sprite_space_coin"].draw()
-    
+
     
     global.players.forEach((player) => {
         player.tick()
@@ -183,6 +190,16 @@ function processLasers() {
 function drawParticles() {
     global.particles.forEach((particle) => {
         particle.tick()
+    })
+}
+
+function drawCoins() {
+    global.coins.forEach((coin) => {
+        coin.draw()
+        if ( circleOverlapping(coin, global.players[0]) ) {
+            console.log("shiny")
+            global.coins = global.coins.filter(tempCoin => tempCoin.ID != coin.ID)
+        }
     })
 }
 

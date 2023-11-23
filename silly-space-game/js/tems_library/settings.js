@@ -9,7 +9,7 @@ class Settings {
         }
         this.visible_audio_players = false
 
-        this.show_hitboxes = false
+        this.show_hitboxes = true
 
         this.circles_collide = true
         this.player_collide = false

@@ -18,8 +18,8 @@ class Global {
 
         this.circle_count = 50
         this.player_spawn_safe_radius = 350
-        // just a counter used to set a unique ID for every circle
-        this.next_circle_ID = 0
+        // just a counter used to set a unique ID for every entity
+        this.entity_counter = 0
 
         this.player_acceleration = accountForDisplay(0.3)
         this.player_max_speed = accountForDisplay(5)
@@ -33,6 +33,7 @@ class Global {
         this.players = []
         this.lasers = []
         this.particles = []
+        this.coins = []
 
         this.assets = asset_objects
         this.asset_bonus_data = asset_bonus_data

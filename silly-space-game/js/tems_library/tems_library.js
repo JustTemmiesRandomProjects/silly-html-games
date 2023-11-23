@@ -328,8 +328,13 @@ export function sound(src, key) {
 }
 
 // GIF
+// to generate a clone of this GIF, in order to draw multiple gifs at one, you would do something like this
+// const coiny = global.assets["sprite_space_coin"].newClone()
+// coiny.setPosition(randFloat(100, 1720), randFloat(100, 800))
+// coiny.setTicksPerFrame(randInt(2, 20))
+// coiny.draw()
 export class GIF {
-    constructor(urls, ctx, onload) {
+    constructor(urls, ctx, onload, frames) {
         this.urls = urls
         this.ctx = ctx
 
@@ -337,45 +342,61 @@ export class GIF {
         this.tick_counter = 0
         this.ticks_per_frame = 10
 
-        this.frames = []
-        const frames_ready = []
-
         // game stuff
         this.position = {
             "x": null,
             "y": null
         }
 
-        for (let i = 0; i < urls.length; i++) {
-            const url = urls[i]
-            this.frames.push(new Image())
-            this.frames[i].onload = function () {
-                frames_ready[i] = true
-                for (let j = 0; j < urls.length; j ++) {
-                    if ( frames_ready[j] == false ) {
-                        break
-                    } else {
-                        if (typeof onload === 'function') {
-                            onload() // Execute the onload callback if defined
+        if (frames == undefined) {
+            this.frames = []
+            const frames_ready = []
+
+            // load all the sub images
+            for (let i = 0; i < urls.length; i++) {
+                const url = urls[i]
+                this.frames.push(new Image())
+                this.frames[i].onload = function () {
+                    // set this frame's status to loaded
+                    frames_ready[i] = true
+                    // check if all the frames are loaded
+                    for (let j = 0; j < urls.length; j ++) {
+                        if ( frames_ready[j] == false ) {
+                            break
                         } else {
-                            alert(`onload function not assigned for gif with urls ${urls}`)
+                            // call the callback function
+                            if (typeof onload === 'function') {
+                                onload() // Execute the onload callback if defined
+                            } else {
+                                alert(`onload function not assigned for gif with urls ${urls}`)
+                            }
                         }
                     }
                 }
+                frames_ready.push(false)
+                this.frames[i].src = url
             }
-            frames_ready.push(false)
-            this.frames[i].src = url
+        } else {
+            this.frames = frames
         }
     }
 
-    setPosition(x, y){
+    setPosition(x, y) {
         this.position["x"] = x
         this.position["y"] = y
     }
 
+    setTicksPerFrame(n) {
+        Math.max(1, this.ticks_per_frame = n)
+    }
+
+    newClone() {
+        return new GIF(this.urls, this.ctx, null, this.frames)
+    }
+
     draw() {
         this.tick_counter ++
-        if ( this.tick_counter > this.ticks_per_frame ) {
+        if ( this.tick_counter >= this.ticks_per_frame ) {
             this.current_frame ++
             this.tick_counter = 0
 
