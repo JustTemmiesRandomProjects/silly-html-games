@@ -1,19 +1,20 @@
 console.log("index.js initialized")
 
-import { randFloat, randInt, resizeCanvas, canvas_centre } from "./tems_library/tems_library.js";
+import { randFloat, randInt, resizeCanvas, canvas_centre, drawBackgroundImage } from "./tems_library/tems_library.js";
 import { checkLaserCircleCollision, circleOverlapping, pointDistanceFromPoint } from "./tems_library/math.js";
 import { settings } from "./tems_library/settings.js";
 import { load_menu } from "./main_menu/index.js";
 import { LaserParticle, Particle } from "./classes/particles.js";
 import { Circle, meteor_sizes, meteor_sprites } from "./classes/circles.js";
 import { Player } from "./classes/player.js";
-import { global, ctx, backgroundCtx, inputManager, particleCtx } from "./global.js";
+import { global, ctx, backgroundCtx, inputManager, particleCtx, hudCtx } from "./global.js";
+import { drawHud } from "./hud.js";
 
 
 
 // ready function, called when the program is ready, before the first game tick
 function ready() {
-    resizeCanvas([ctx.canvas, particleCtx.canvas, backgroundCtx.canvas], [backgroundCtx, global.assets["sprite_background"]])
+    resizeCanvas([ctx.canvas, particleCtx.canvas, backgroundCtx.canvas, hudCtx.canvas], [updateBackground, drawHud])
 
     console.log("playing audio...")
     global.assets["music_fight"].play()
@@ -61,10 +62,16 @@ function ready() {
     console.log("sorting the meteors based on size...")
     // sort the circles based on size for them to render in the correct order
     sortCircleArray()
+
+    console.log("drawing hud...")
+    drawHud()
 }
 
 // process function, called every frame
 async function process() {
+    console.log(
+        global.assets["sprite_space_coin"].gif.src
+    )
     requestAnimationFrame(process)
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
     particleCtx.clearRect(0, 0, particleCtx.canvas.width, particleCtx.canvas.height)
@@ -88,7 +95,7 @@ async function process() {
 
 // gameTick function, called 100 ms (10 times/second)
 function gameTick10() {
-    resizeCanvas([ctx.canvas, particleCtx.canvas, backgroundCtx.canvas], [backgroundCtx, global.assets["sprite_background"]])
+    resizeCanvas([ctx.canvas, particleCtx.canvas, backgroundCtx.canvas, hudCtx.canvas], [updateBackground, drawHud])
 }
 
 // gameTick function, called every 500 ms (2 times/second)
@@ -114,6 +121,16 @@ function processLasers() {
     global.lasers.forEach((laser) => {
         global.circles.forEach((circle) => {
             if ( checkLaserCircleCollision(laser, circle) && circle.immunity_frames == 0 ) {
+                const score_awards = {
+                    "big": 5000,
+                    "medium": 2500,
+                    "small": 1000,
+                    "tiny": 250
+                }
+                
+                global.score += score_awards[circle.size]
+                drawHud()
+
                 global.particles.push (new LaserParticle(
                     circle.position["x"], circle.position["y"],
                     circle.radius * 1.3, circle.colour, particleCtx
@@ -149,7 +166,6 @@ function processLasers() {
                                 random_angle + (Math.PI / meteor_count) * i * 2, new_speed
                             )
                         )
-                        console.log(random_angle + (Math.PI / meteor_count) * i * 2)
                     }
                 }
             }
@@ -175,6 +191,10 @@ function removeCompletedParticles() {
 // sort the global.circles array based on the `radius` property of the circles, meaning that the bigger circles get drawn last
 function sortCircleArray() {
     global.circles.sort((a, b) => a.radius - b.radius);
+}
+
+function updateBackground() {
+    drawBackgroundImage(backgroundCtx, global.assets["sprite_background"])
 }
 
 // make sure the circles have good-ish spawn locations
@@ -239,6 +259,7 @@ export function play_game() {
 
     ctx.canvas.hidden = false
     particleCtx.canvas.hidden = false
+    hudCtx.canvas.hidden = false
 
     console.log("running ready() function...")
     ready()

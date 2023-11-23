@@ -127,15 +127,20 @@ export class Circle {
         this.moveTowardsDirection(this.velocity)
         this.applyRotation(this.d_rotation)
 
-        for (let i = 0; i < global.circles.length; i++) {
-            if ( circleOverlapping(this, global.circles[i])) {
-                this.handleCollision(this, global.circles[i])
+        // collide with other circles
+        if ( settings.circles_collide ) {
+            for (let i = 0; i < global.circles.length; i++) {
+                if ( circleOverlapping(this, global.circles[i])) {
+                    this.handleCollision(this, global.circles[i])
+                }
             }
         }
 
         // collide with player
-        if (circleOverlapping(this, global.players[0])) {
-            this.handleCollision(this, global.players[0])
+        if ( settings.player_collide ) {
+            if (circleOverlapping(this, global.players[0])) {
+                this.handleCollision(this, global.players[0])
+            }
         }
     }
 

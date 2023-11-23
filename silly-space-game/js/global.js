@@ -4,9 +4,11 @@ import { InputManager } from "./tems_library/input_manager.js"
 const canvas = document.getElementById("gameCanvas")
 const particlesCanvas = document.getElementById("particleCanvas")
 const backgroundCanvas = document.getElementById("backgroundCanvas")
+const hudCanvas = document.getElementById("hudCanvas")
 const ctx = canvas.getContext("2d")
 const particleCtx = particlesCanvas.getContext("2d")
 const backgroundCtx = backgroundCanvas.getContext("2d")
+const hudCtx = hudCanvas.getContext("2d")
 
 class Global {
     constructor(asset_objects, asset_bonus_data) {
@@ -14,7 +16,7 @@ class Global {
         this.circle_speed_rand = accountForDisplay(0.13)
         this.circle_speed_offset = accountForDisplay(0.02)
 
-        this.circle_count = 40
+        this.circle_count = 50
         this.player_spawn_safe_radius = 350
         // just a counter used to set a unique ID for every circle
         this.next_circle_ID = 0
@@ -23,6 +25,8 @@ class Global {
         this.player_max_speed = accountForDisplay(5)
         this.player_slipperiness = 0.97
         this.players_last_shot_laser_power = 0
+
+        this.score = 0
 
         this.circles = []
         this.players = []
@@ -95,4 +99,4 @@ window.onload = async function () {
 
 }
 
-export { ctx, particleCtx, backgroundCtx, global, inputManager }
+export { ctx, particleCtx, backgroundCtx, hudCtx, global, inputManager }

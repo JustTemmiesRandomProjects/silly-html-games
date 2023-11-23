@@ -11,6 +11,9 @@ class Settings {
 
         this.show_hitboxes = false
 
+        this.circles_collide = true
+        this.player_collide = false
+
         this.controller_dead_zone = 0.15
     }
 }

@@ -29,6 +29,9 @@
 
     <!-- particle canvas, for drawing particles -->
     <canvas id="particleCanvas" class="ignore-mouse" width="400" height="225" hidden="true"></canvas>
+    
+    <!-- HUD canvas, for drawing the HUD -->
+    <canvas id="hudCanvas" class="ignore-mouse" width="400" height="225" hidden="true"></canvas>
 
     <!-- javascript -->
     <script type="module" src="./js/index.js"></script>
@@ -48,6 +51,8 @@
         <ul class="menu-list">
             <li><a class="button-active" id="settings-show-hitboxes-btn" href="#">Show Hitboxes</a></li>
             <li><a class="button-active" id="settings-view-audio-players-btn" href="#">Show Audio Players</a></li>
+            <li><a class="button-active" id="settings-circles-collide-btn" href="#">Meteor Collision</a></li>
+            <li><a class="button-inactive" id="settings-player-collide-btn" href="#">Player Collision</a></li>
             <li><a class="button-simple" data-button="return-to-main-menu-btn" href="#">Back</a></li>
         </ul>
     </div>
@@ -64,7 +69,7 @@
             <li style="margin-top: 10px;">"Meteor" by Jan125 on OpenGameArt.org</li>
             <li style="margin-top: 10px;">All other audio by Kenney (www.kenney.nl)</li>
             <li style="margin-top: 20px;"><h3 style="margin-bottom: 10px;">Code</h3></li>
-            <li style="margin-top: 10px;">All code by JustTemmie from GitHub with help from Stack Overflow</li>
+            <li style="margin-top: 10px;">All code by JustTemmie from GitHub</li>
             <li><a class="button-simple" data-button="return-to-main-menu-btn" href="#">Back</a></li>
         </ul>
     </div>

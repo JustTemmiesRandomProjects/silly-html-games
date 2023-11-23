@@ -69,7 +69,6 @@ export class Player {
             else {
                 self.shootBig(x, y)
             }
-            console.log(`POW! ${self.shoot_charge_up_time}`)
         }
     }
 
@@ -266,9 +265,6 @@ export class Player {
         this.moveTowardsDirection(this.velocity)
         
         
-
-        // console.log(this.velocity)
-
         for (let i = 0; i < global.circles.length; i++) {
             if ( circleOverlapping(this, global.circles[i])) {
                 // console.log("death :(")

@@ -82,7 +82,7 @@ export async function loadAssets(assetSources) {
 
             // gif, a custom format
             if ( value[0] == GIF ) {
-                assetObjects[key] = new GIF(value[1])
+                assetObjects[key] = new GIF(value[1], ctx)
                 assetReady[key] = false
                 
                 assetObjects[key].onload = function () {
@@ -138,7 +138,7 @@ export async function loadAssets(assetSources) {
     })
 }
 
-export function resizeCanvas(canvases, background) {
+export function resizeCanvas(canvases, callbackFunctions) {
     if (user_current_screen_width != window.innerWidth || user_current_screen_height != window.innerHeight) {
         console.log("resizing canvas...")
         for (let i = 0; i < canvases.length; i++) {
@@ -150,12 +150,11 @@ export function resizeCanvas(canvases, background) {
         user_current_screen_height = window.innerHeight
 
         canvas_centre = [ctx.canvas.width / 2, ctx.canvas.height / 2]
-
-        if (background != undefined) {
-            drawBackgroundImage(
-                background[0],
-                background[1]
-            )
+        
+        if (callbackFunctions != undefined) {
+            callbackFunctions.forEach(element => {
+                element()
+            });
         }
     }
 }
