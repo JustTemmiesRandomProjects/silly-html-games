@@ -10,6 +10,7 @@ import { Player } from "./classes/player.js";
 import { Coin } from "./classes/coin.js";
 import { global, ctx, backgroundCtx, inputManager, particleCtx, hudCtx } from "./global.js";
 import { drawHud } from "./hud.js";
+import { setCookie } from "./cookies.js";
 
 
 
@@ -66,12 +67,10 @@ function ready() {
 
     console.log("drawing hud...")
     drawHud()
-
-    global.coins.push(new Coin())
-    global.coins.push(new Coin())
-    global.coins.push(new Coin())
-    global.coins.push(new Coin())
-    global.coins.push(new Coin()) 
+    
+    for (let i = 0; i < 3; i ++) {
+        spawnNewCoin()
+    }
 }
 
 // process function, called every frame
@@ -83,11 +82,11 @@ async function process() {
     particleCtx.clearRect(0, 0, particleCtx.canvas.width, particleCtx.canvas.height)
 
     
+    drawCoins()
     drawCircles()
     processLasers()
     drawPlayers()
     drawParticles()
-    drawCoins()
     
 
     
@@ -197,10 +196,36 @@ function drawCoins() {
     global.coins.forEach((coin) => {
         coin.draw()
         if ( circleOverlapping(coin, global.players[0]) ) {
-            console.log("shiny")
+            pickUpCoin()
             global.coins = global.coins.filter(tempCoin => tempCoin.ID != coin.ID)
         }
     })
+}
+
+function pickUpCoin() {
+    console.log("shiny")
+    
+    global.score += 20000
+    drawHud()
+
+    global.save_data.coins += 1
+
+    console.log(global.save_data)
+
+    setCookie("save_data", global.save_data)
+
+    spawnNewCoin()
+}
+
+function spawnNewCoin() {
+    global.coins.push(new Coin(
+        Math.max(global.coin_radius, Math.min(ctx.canvas.width - global.coin_radius, (
+            global.players[0].position["x"] + randFloat(ctx.canvas.width * 0.3, ctx.canvas.width * 0.4)
+        ) % ctx.canvas.width)),
+        Math.max(global.coin_radius, Math.min(ctx.canvas.height - global.coin_radius, (
+            global.players[0].position["y"] + randFloat(ctx.canvas.height * 0.3, ctx.canvas.height * 0.4)
+        ) % ctx.canvas.height))
+    ))
 }
 
 function removeCompletedParticles() {
@@ -253,7 +278,8 @@ function distributeCircles() {
 let initInterval = setInterval(async () => {
     if ( global !== null ) {
         clearInterval(initInterval)
-        
+        console.log(`player save data: ${JSON.stringify(global.save_data)}`)
+
         await load_menu()
 
         console.log("setup fully complete!")
