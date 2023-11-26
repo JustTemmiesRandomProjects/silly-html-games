@@ -109,7 +109,7 @@ InputManager.prototype.getButton = function (controller, button) {
 
 // get keyboard key
 InputManager.prototype.getKey = function (key) {
-    return this.keys[key] ? 1 : 0;
+    return this.keys[key] ? 1 : 0
 }
 
 InputManager.prototype.capInput = function (inputValue, min, max) {
@@ -120,12 +120,12 @@ InputManager.prototype.capInput = function (inputValue, min, max) {
 // so that the player doesn't move faster diagonally
 InputManager.prototype.normalize = function (x, y) {
     // calculate the distance
-    const distance = Math.sqrt(x * x + y * y);
+    const distance = Math.sqrt(x * x + y * y)
 
     // if the total is above 1, normalize the values
     if (distance > 1) {
-        x /= distance;
-        y /= distance;
+        x /= distance
+        y /= distance
     }
     
     return { x, y }

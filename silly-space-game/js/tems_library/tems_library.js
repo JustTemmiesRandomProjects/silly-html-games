@@ -152,7 +152,7 @@ export function resizeCanvas(canvases, callbackFunctions) {
         if (callbackFunctions != undefined) {
             callbackFunctions.forEach(element => {
                 element()
-            });
+            })
         }
     }
 }

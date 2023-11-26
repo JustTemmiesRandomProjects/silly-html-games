@@ -1,7 +1,7 @@
-import { randFloat, randInt, canvas_centre, drawWithScreenWrap } from "../tems_library/tems_library.js";
-import { settings } from "../tems_library/settings.js";
+import { randFloat, randInt, canvas_centre, drawWithScreenWrap } from "../tems_library/tems_library.js"
+import { settings } from "../tems_library/settings.js"
 import { circleOverlapping } from "../tems_library/math.js"
-import { global, ctx, inputManager } from "../global.js";
+import { global, ctx, inputManager } from "../global.js"
 import { Laser } from "./lasers.js"
 
 function reset_stuff_done_this_tick () {
@@ -28,6 +28,10 @@ export class Player {
 
         this.stuff_done_this_tick = reset_stuff_done_this_tick()
 
+        this.shield_health = 100
+        this.shield_regen_cooldown = 0
+        this.shield_sprite = global.assets["sprite_player_shield_blue"]
+
         this.position = {
             "x": ctx.canvas.width/2,
             "y": ctx.canvas.height/2
@@ -51,7 +55,9 @@ export class Player {
         }
         ctx.translate(-self.sprite.width/2, -self.sprite.height/2)
         ctx.drawImage(self.sprite, 0, 0)
-        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        // reset the tranformation back to the default
+        ctx.setTransform(1, 0, 0, 1, 0, 0)
+
         
         // if this setting in enabled, draw the hitbox
         if ( settings.show_hitboxes ) {
@@ -60,6 +66,23 @@ export class Player {
             ctx.fillStyle = self.colour
             ctx.fill()
         }
+
+        // draw the shield
+        if ( self.shield_health > 0 ) {
+            ctx.beginPath()
+            ctx.arc(x, y, self.radius * 2.6, 0, 2 * Math.PI)
+            console.log(self.shield_health)
+            // make the shield flicker a bit if it's under 28% health
+            if ( self.shield_health > 28 ) {
+                ctx.fillStyle = `#5f78ef${Math.floor(self.shield_health * 1.5).toString(16)}`
+            } else if ( global.frames_processed % (32 - Math.floor(self.shield_health)) == 0 ) { // flicker logic
+                ctx.fillStyle = `#5f78ef1f`
+            } else {
+                ctx.fillStyle = "#00000000" // fully transparent
+            }
+            ctx.fill()
+        }
+
 
         // shooting
         if ( self.input["shooting"] == false && self.shoot_charge_up_time >= 1 && self.time_since_last_shot >= 10) {
@@ -237,6 +260,13 @@ export class Player {
         // stuff to just run every tick
         this.stuff_done_this_tick = reset_stuff_done_this_tick()
         this.updateIsUsingController()
+
+        // regen shield
+        if ( this.shield_regen_cooldown > 0) {
+            this.shield_regen_cooldown -= 1
+        } else if ( this.shield_health < 100 ) {
+            this.shield_health += 0.15
+        }
         
         // shooting
         if ( this.input["shooting"] ) { this.shoot_charge_up_time += 1}

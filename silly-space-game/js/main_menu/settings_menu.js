@@ -1,4 +1,4 @@
-import { settings } from "../tems_library/settings.js";
+import { settings } from "../tems_library/settings.js"
 
 class SettingsMenu {
     constructor () {
@@ -6,7 +6,7 @@ class SettingsMenu {
             "show_hitboxes": document.getElementById("settings-show-hitboxes-btn"),
             "visible_audio_players": document.getElementById("settings-view-audio-players-btn"),
             "circles_collide": document.getElementById("settings-circles-collide-btn"),
-            "player_collide": document.getElementById("settings-player-collide-btn"),
+            "player_invincible": document.getElementById("settings-player-invincible-btn"),
         }
 
         for (const [key, value] of Object.entries(buttons)) {

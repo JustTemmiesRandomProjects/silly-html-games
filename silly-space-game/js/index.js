@@ -1,16 +1,16 @@
 console.log("index.js initialized")
 
-import { randFloat, randInt, resizeCanvas, canvas_centre, drawBackgroundImage } from "./tems_library/tems_library.js";
-import { checkLaserCircleCollision, circleOverlapping, pointDistanceFromPoint } from "./tems_library/math.js";
-import { settings } from "./tems_library/settings.js";
-import { load_menu } from "./main_menu/index.js";
-import { LaserParticle, Particle } from "./classes/particles.js";
-import { Circle, meteor_sizes, meteor_sprites } from "./classes/circles.js";
-import { Player } from "./classes/player.js";
-import { Coin } from "./classes/coin.js";
-import { global, ctx, backgroundCtx, inputManager, particleCtx, hudCtx } from "./global.js";
-import { drawHud } from "./hud.js";
-import { setCookie } from "./cookies.js";
+import { randFloat, randInt, resizeCanvas, canvas_centre, drawBackgroundImage } from "./tems_library/tems_library.js"
+import { checkLaserCircleCollision, circleOverlapping, pointDistanceFromPoint } from "./tems_library/math.js"
+import { settings } from "./tems_library/settings.js"
+import { load_menu } from "./main_menu/index.js"
+import { LaserParticle, Particle } from "./classes/particles.js"
+import { Circle, meteor_sizes, meteor_sprites } from "./classes/circles.js"
+import { Player } from "./classes/player.js"
+import { Coin } from "./classes/coin.js"
+import { global, ctx, backgroundCtx, inputManager, particleCtx, hudCtx } from "./global.js"
+import { drawHud } from "./hud.js"
+import { setCookie } from "./cookies.js"
 
 
 
@@ -138,15 +138,16 @@ function processLasers() {
                 
                 global.score += score_awards[circle.size]
                 drawHud()
-
+                
                 global.particles.push (new LaserParticle(
                     circle.position["x"], circle.position["y"],
                     circle.radius * 1.3, circle.colour, particleCtx
                 ))
+
                 global.circles = global.circles.filter(temp_circle => temp_circle.ID != circle.ID)
                 if ( circle.size_index + 1 < meteor_sizes.length ) {
                     const meteor_count = 3
-                    const random_angle = randFloat(0, Math.PI * 2);
+                    const random_angle = randFloat(0, Math.PI * 2)
                     const meteor_ids_for_size_class = meteor_sprites[
                         meteor_sizes[
                             circle.size_index + 1
@@ -206,11 +207,8 @@ function pickUpCoin() {
     console.log("shiny")
     
     global.score += 20000
-    drawHud()
-
     global.save_data.coins += 1
-
-    console.log(global.save_data)
+    drawHud()
 
     setCookie("save_data", global.save_data)
 
@@ -234,7 +232,7 @@ function removeCompletedParticles() {
 
 // sort the global.circles array based on the `radius` property of the circles, meaning that the bigger circles get drawn last
 function sortCircleArray() {
-    global.circles.sort((a, b) => a.radius - b.radius);
+    global.circles.sort((a, b) => a.radius - b.radius)
 }
 
 function updateBackground() {
@@ -284,7 +282,7 @@ let initInterval = setInterval(async () => {
 
         console.log("setup fully complete!")
     }
-}, 100);
+}, 100)
 
 export function play_game() {
     const menu = document.getElementById("main-menu")
@@ -297,7 +295,7 @@ export function play_game() {
             // if the asset has a function updateVisibilty, call it
             const asset = global.assets[key]
             if ( typeof asset.updateVisibilty == "function" ) {
-                asset.updateVisibilty();
+                asset.updateVisibilty()
             }
         }
     }

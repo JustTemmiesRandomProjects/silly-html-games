@@ -1,4 +1,4 @@
-import { global, ctx } from "../global.js";
+import { global, ctx } from "../global.js"
 
 export class Laser {
     constructor (x, y, targetX, targetY, colour, width, decay_speed) {
