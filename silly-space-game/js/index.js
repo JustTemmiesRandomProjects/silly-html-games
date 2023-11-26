@@ -108,6 +108,14 @@ function gameTick10() {
 
 // gameTick function, called every 500 ms (2 times/second)
 function gameTick2() {
+    // if any circles are too far out of bounds, delete them to save performance, this might happen if they collide whilst out of bounds, just after spawning whilst running
+    global.circles.forEach((circle) => {
+        if ( Math.abs(circle.position["x"] - ctx.canvas.width / 2) > ctx.canvas.width * 2 ) {
+            global.circles = global.circles.filter(temp_circle => temp_circle.ID != circle.ID)
+        } else if ( Math.abs(circle.position["y"] - ctx.canvas.height / 2) > ctx.canvas.height * 2 ) (
+            global.circles = global.circles.filter(temp_circle => temp_circle.ID != circle.ID)
+        )
+    })
 }
 
 // draw all of the circles in the global.circles array
@@ -213,17 +221,94 @@ function pickUpCoin() {
     setCookie("save_data", global.save_data)
 
     spawnNewCoin()
+    spawnNewCircleOutOfBounds()
+
+    for (let i = 0; i < 25; i ++) {
+        // allow the shield to be overloaded above 100, at a deminishing rate, but no more than 150
+        if ( global.players[0].shield_health < 100 ) {
+            global.players[0].shield_health += 1
+        } else if ( global.players[0].shield_health > 150 ) {
+        } else {
+            global.players[0].shield_health += 1 / ((global.players[0].shield_health - 50) / 30)
+        }
+    }
 }
 
 function spawnNewCoin() {
-    global.coins.push(new Coin(
-        Math.max(global.coin_radius, Math.min(ctx.canvas.width - global.coin_radius, (
-            global.players[0].position["x"] + randFloat(ctx.canvas.width * 0.3, ctx.canvas.width * 0.4)
-        ) % ctx.canvas.width)),
-        Math.max(global.coin_radius, Math.min(ctx.canvas.height - global.coin_radius, (
-            global.players[0].position["y"] + randFloat(ctx.canvas.height * 0.3, ctx.canvas.height * 0.4)
-        ) % ctx.canvas.height))
-    ))
+    const target_x = Math.max(global.coin_radius, Math.min(ctx.canvas.width - global.coin_radius, (
+        global.players[0].position["x"] + randFloat(ctx.canvas.width * 0.3, ctx.canvas.width * 0.4)
+    ) % ctx.canvas.width))
+    const target_y = Math.max(global.coin_radius, Math.min(ctx.canvas.height - global.coin_radius, (
+        global.players[0].position["y"] + randFloat(ctx.canvas.height * 0.3, ctx.canvas.height * 0.4)
+    ) % ctx.canvas.height))
+
+    spawnNewCoinAtPos(target_x, target_y)
+    // spawnCircleAtPos(target_x, target_y)
+}
+
+function spawnNewCoinAtPos(x, y) {
+    global.coins.push(new Coin(x, y))
+}
+
+// unused
+function spawnCircleAtPos(x, y) {
+    global.circles.push(
+        new Circle(
+            randInt(0, meteor_sizes.length),
+            {
+                "x": x + randInt(-100, 200),
+                "y": y + randInt(-100, 200)
+            }
+        )
+    )
+}
+
+function spawnNewCircleOutOfBounds() {
+    const spawn_side_random_value = Math.random()
+    let circle_pos
+    if ( spawn_side_random_value < 0.25 ) {
+        circle_pos = {
+            "x": ctx.canvas.width + 150,
+            "y": randFloat(40, ctx.canvas.height - 80)
+        }
+    } else if ( spawn_side_random_value < 0.50 ) {
+        circle_pos = {
+            "x": -150,
+            "y": randFloat(40, ctx.canvas.height - 80)
+        }
+    } else if ( spawn_side_random_value < 0.75 ) {
+        circle_pos = {
+            "x": randFloat(40, ctx.canvas.width - 80),
+            "y": ctx.canvas.height + 150
+        }
+    } else {
+        circle_pos = {
+            "x": randFloat(40, ctx.canvas.width - 80),
+            "y": -150
+        }
+    }
+
+    const target_pos = {
+        "x": ctx.canvas.width / 2 + randFloat(-200, 400),
+        "y": ctx.canvas.height / 2 + randFloat(-200, 400)
+    }
+
+    const target_direction = Math.PI*0 + Math.atan2(
+        target_pos["y"] - circle_pos["y"],
+        target_pos["x"] - circle_pos["x"]
+    )
+
+
+    const new_circle = new Circle(
+        randInt(0, meteor_sizes.length),
+        circle_pos,
+        target_direction, randFloat(0.5, 1)
+    )
+
+
+    new_circle.wrap_around = false
+
+    global.circles.push(new_circle)
 }
 
 function removeCompletedParticles() {

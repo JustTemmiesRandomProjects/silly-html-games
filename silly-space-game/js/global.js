@@ -17,7 +17,7 @@ class Global {
         this.circle_speed_rand = accountForDisplay(0.13)
         this.circle_speed_offset = accountForDisplay(0.02)
 
-        this.circle_count = 40
+        this.circle_count = 0
         this.player_spawn_safe_radius = 350
         this.coin_radius = 40
         // just a counter used to set a unique ID for every entity

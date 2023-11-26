@@ -48,6 +48,7 @@ export class Circle {
         this.d_rotation = randFloat(-0.004, 0.008)
         
         this.immunity_frames = 10
+        this.wrap_around = true
         
         if ( speed == undefined ) {
             speed = randFloat(global.circle_speed_offset, global.circle_speed_rand)
@@ -93,16 +94,33 @@ export class Circle {
     }
 
     draw() {
-        drawWithScreenWrap(
-            this.position["x"], this.position["y"], this.radius,
-            this.drawAtPos, 10, this
-        )
+        if ( this.wrap_around ) {
+            drawWithScreenWrap(
+                this.position["x"], this.position["y"], this.radius,
+                this.drawAtPos, 10, this
+            )
+        } else  {
+            const offset_value = this.radius - 250
+            if ( this.position["x"] + offset_value < 0 || this.position["x"] - offset_value > ctx.canvas.width ) {
+                this.drawAtPos(this.position["x"], this.position["y"], this)
+            } else if ( this.position["y"] + offset_value < 0 || this.position["y"] - offset_value > ctx.canvas.height ) {
+                this.drawAtPos(this.position["x"], this.position["y"], this)
+            } else {
+                this.wrap_around = true
+                this.draw()
+            }
+        }
     }
 
     // direction is an array
     moveTowardsDirection(direction) {
         this.position["x"] += direction["x"]
         this.position["y"] += direction["y"]
+
+        if ( !this.wrap_around ) {
+            return
+        }
+
         if (this.position["x"] < 0) {
             this.position["x"] += ctx.canvas.width
         } else if (this.position["x"] > ctx.canvas.width) {

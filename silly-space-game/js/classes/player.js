@@ -71,7 +71,6 @@ export class Player {
         if ( self.shield_health > 0 ) {
             ctx.beginPath()
             ctx.arc(x, y, self.radius * 2.6, 0, 2 * Math.PI)
-            console.log(self.shield_health)
             // make the shield flicker a bit if it's under 28% health
             if ( self.shield_health > 28 ) {
                 ctx.fillStyle = `#5f78ef${Math.floor(self.shield_health * 1.5).toString(16)}`
@@ -98,7 +97,7 @@ export class Player {
     draw() {
         drawWithScreenWrap(
             this.position["x"], this.position["y"], this.radius,
-            this.drawAtPos, 20, this
+            this.drawAtPos, 40, this
         )
     }
     
@@ -265,7 +264,7 @@ export class Player {
         if ( this.shield_regen_cooldown > 0) {
             this.shield_regen_cooldown -= 1
         } else if ( this.shield_health < 100 ) {
-            this.shield_health += 0.075
+            this.shield_health += 0.025
         }
         
         // shooting
