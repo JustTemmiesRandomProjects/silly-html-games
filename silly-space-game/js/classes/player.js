@@ -249,7 +249,7 @@ export class Player {
             new Laser(
                 x, y,
                 inputManager.mouse.x, inputManager.mouse.y,
-                "#FF0030", 8 + Math.min(this.radius * 2 - 8, (this.shoot_charge_up_time-45) / 5),
+                "#FF0030", 8 + Math.min(this.radius * 2 - 8, (this.shoot_charge_up_time-40) / 3),
                 // set the decay time to 25 frames
                 (8 + Math.min(this.radius * 2 - 8, (this.shoot_charge_up_time-45) / 5)) / 25
             )
@@ -265,7 +265,7 @@ export class Player {
         if ( this.shield_regen_cooldown > 0) {
             this.shield_regen_cooldown -= 1
         } else if ( this.shield_health < 100 ) {
-            this.shield_health += 0.15
+            this.shield_health += 0.075
         }
         
         // shooting

@@ -49,27 +49,43 @@
     <div class="menu" id="settings-menu" hidden="true">
         <h1 class="title">Settings</h1>
         <ul class="menu-list" style="z-index: 10;">
-            <li><a class="button-active" id="settings-show-hitboxes-btn" href="#">Show Hitboxes</a></li>
-            <li><a class="button-active" id="settings-view-audio-players-btn" href="#">Show Audio Players</a></li>
-            <li><a class="button-active" id="settings-circles-collide-btn" href="#">Meteor Collision</a></li>
-            <li><a class="button-inactive" id="settings-player-invincible-btn" href="#">Player Invincible</a></li>
+            <div class="menu-list-container">
+                <div class="menu-list-child">
+                    <li><a class="set-in-code" id="settings-show-hitboxes-btn" href="#">Show Hitboxes</a></li>
+                    <li><a class="set-in-code" id="settings-view-audio-players-btn" href="#">Show Audio Players</a></li>
+                    <li><a class="set-in-code" id="settings-circles-collide-btn" href="#">Meteor Collision</a></li>
+                    <li><a class="set-in-code" id="settings-player-invincible-btn" href="#">Player Invincible</a></li>
+                </div>
+                <div class="menu-list-child">
+                    <li><a class="set-in-code" id="settings-show-hitboxes-btn" href="#">Show Hitboxes</a></li>
+                    <li><a class="set-in-code" id="settings-view-audio-players-btn" href="#">Show Audio Players</a></li>
+                </div>
+            </div>
             <li><a class="button-simple" data-button="return-to-main-menu-btn" href="#">Back</a></li>
         </ul>
     </div>
 
     <div class="menu" id="about-menu" hidden="true">
         <h1 class="title">About</h1>
-        <ul class="menu-list" style="z-index: 10;">
+        <ul class="menu-list" style="z-index: 10; width: 85vw;">
             <li><h4>A simple, open-source silly space game written in bare-bones JavaScript</h4></li>
-            <li style="margin-top: 70px;"><h3 style="margin-bottom: 10px;">Art</h3></li>
-            <li style="margin-top: 10px;">"Loading..." by Top Rascal on OpenGameArt.org</li>
-            <li style="margin-top: 10px;">"Space Coin" by JustTemmie on GitHub</li>
-            <li style="margin-top: 10px;">All other art by Kenney (www.kenney.nl)</li>
-            <li style="margin-top: 20px;"><h3 style="margin-bottom: 10px;">Audio</h3></li>
-            <li style="margin-top: 10px;">"Meteor" by Jan125 on OpenGameArt.org</li>
-            <li style="margin-top: 10px;">All other audio by Kenney (www.kenney.nl)</li>
-            <li style="margin-top: 20px;"><h3 style="margin-bottom: 10px;">Code</h3></li>
-            <li style="margin-top: 10px;">All code by JustTemmie from GitHub</li>
+            <div class="menu-list-container">
+                <div class="menu-list-child">
+                    <li style="margin: 0px; margin-bottom: 15px"><h3>Art</h3></li>
+                    <li style="margin: 0px; margin-bottom: 15px">"Loading..." by Top Rascal on OpenGameArt.org</li>
+                    <li style="margin: 0px; margin-bottom: 15px">"Space Coin" by JustTemmie on GitHub</li>
+                    <li style="margin: 0px; margin-bottom: 15px">All other art by Kenney (www.kenney.nl)</li>
+                </div>
+                <div class="menu-list-child">
+                    <li style="margin: 0px; margin-bottom: 15px"><h3>Audio</h3></li>
+                    <li style="margin: 0px; margin-bottom: 15px">"Meteor" by Jan125 on OpenGameArt.org</li>
+                    <li style="margin: 0px; margin-bottom: 15px">All other audio by Kenney (www.kenney.nl)</li>
+                </div>
+                <div class="menu-list-child">
+                    <li style="margin: 0px; margin-bottom: 15px"><h3>Code</h3></li>
+                    <li style="margin: 0px; margin-bottom: 15px">All code by JustTemmie on GitHub</li>
+                </div>
+            </div>
             <li><a class="button-simple" rel="noreferrer noopener" target="_blank" href="https://github.com/JustTemmiesRandomProjects/silly-html-games/tree/main/silly-space-game">Source Code</a></li>
             <li><a class="button-simple" data-button="return-to-main-menu-btn" href="#">Back</a></li>
         </ul>

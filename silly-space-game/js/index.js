@@ -160,7 +160,7 @@ function processLasers() {
 /* the "weight" of the old circle                   */    * circle.radius
 /* the "weight" of the new circle(s)                */    / new_size
 /* the amount of new circles                        */    / meteor_count
-/* offset the speed based on the laser's power      */    + Math.min(4, global.players_last_shot_laser_power / 2000)
+/* offset the speed based on the laser's power      */    + Math.min(1, global.players_last_shot_laser_power / 2000)
 /* just a constant                                  */    + 1
                     )
                     

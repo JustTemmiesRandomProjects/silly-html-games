@@ -1,5 +1,6 @@
 import { settings } from "./settings.js"
 import { ctx } from "../global.js"
+import { global } from "../global.js"
 
 const developer_screen_size_width = 1920
 const developer_screen_size_height = 1080
@@ -334,13 +335,18 @@ export function sound(src, key) {
 // coiny.setTicksPerFrame(randInt(2, 20))
 // coiny.draw()
 export class GIF {
-    constructor(urls, ctx, onload, frames) {
+    constructor(urls, ctx, onload, frames, scale) {
         this.urls = urls
         this.ctx = ctx
 
         this.current_frame = 0
-        this.tick_counter = 0
         this.ticks_per_frame = 10
+
+        if ( scale == undefined ) {
+            this.scale = 1
+        } else {
+            this.scale = scale
+        }
 
         // game stuff
         this.position = {
@@ -390,20 +396,36 @@ export class GIF {
         Math.max(1, this.ticks_per_frame = n)
     }
 
+    setScale(scale) {
+        this.scale = scale
+    }
+
     newClone() {
-        return new GIF(this.urls, this.ctx, null, this.frames)
+        // return a copy of this
+        return new GIF(this.urls, this.ctx, null, this.frames, this.scale)
     }
 
     draw() {
-        this.tick_counter ++
-        if ( this.tick_counter >= this.ticks_per_frame ) {
-            this.current_frame ++
-            this.tick_counter = 0
-
-            this.current_frame %= this.frames.length
-        }
+        this.current_frame = Math.floor(global.frames_processed/this.ticks_per_frame) % this.frames.length
         
         const this_frame = this.frames[this.current_frame]
-        this.ctx.drawImage(this_frame, this.position["x"] - this_frame.width/2, this.position["y"] - this_frame.height/2)
+
+        if ( this.scale != 1 ) {
+            // scale the sprite to have a new scale
+            this.ctx.setTransform(
+                /*     scale x */ this.scale,
+                /*      skew x */ 0,
+                /*      skew y */ 0,
+                /*     scale y */ this.scale,
+                /* translate x */ (this.position["x"] - (this_frame.width/2) * this.scale),
+                /* translate y */ (this.position["y"] - (this_frame.height/2) * this.scale),
+            )
+        
+            // this.sprite.draw()
+            this.ctx.drawImage(this_frame, 0, 0)
+            this.ctx.setTransform(1, 0, 0, 1, 0, 0)
+        } else {
+            this.ctx.drawImage(this_frame, this.position["x"] - this_frame.width/2, this.position["y"] - this_frame.height/2)
+        }
     }
 }
