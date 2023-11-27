@@ -47,6 +47,7 @@ body {
     margin: 60px;
     padding: 3px;
     scale: 1.5;
+    height: 45px;
 }
 
 .menu-list a {
@@ -59,6 +60,26 @@ body {
     text-shadow: 1px 1px 2px #000;
 }
 
+.menu-list h3 {
+    text-decoration: none;
+    color: #fff;
+    font-size: 1.5rem;
+    padding: 0px;
+    border-radius: 25px;
+    margin: 0px;
+    transition: all 0.3s ease;
+    text-shadow: 1px 1px 2px #000;
+}
+
+.audio-slider h4 {
+    text-decoration: none;
+    color: #fff;
+    font-size: 1rem;
+    padding: 0px;
+    margin-bottom: 4px;
+    margin-top: -10px;
+    text-shadow: 1px 1px 2px #000;
+}
 
 .button-simple {
     border: 2px solid #fff;

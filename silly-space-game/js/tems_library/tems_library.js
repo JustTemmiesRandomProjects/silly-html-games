@@ -366,16 +366,12 @@ export class GIF {
                     // set this frame's status to loaded
                     frames_ready[i] = true
                     // check if all the frames are loaded
-                    for (let j = 0; j < urls.length; j ++) {
-                        if ( frames_ready[j] == false ) {
-                            break
+                    if ( !frames_ready.includes(false) ) {
+                        // call the callback function
+                        if (typeof onload === 'function') {
+                            onload() // Execute the onload callback if defined
                         } else {
-                            // call the callback function
-                            if (typeof onload === 'function') {
-                                onload() // Execute the onload callback if defined
-                            } else {
-                                alert(`onload function not assigned for gif with urls ${urls}`)
-                            }
+                            alert(`onload function not assigned for gif with urls ${urls}`)
                         }
                     }
                 }

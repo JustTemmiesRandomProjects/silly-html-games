@@ -48,17 +48,35 @@
 
     <div class="menu" id="settings-menu" hidden="true">
         <h1 class="title">Settings</h1>
-        <ul class="menu-list" style="z-index: 10;">
-            <div class="menu-list-container">
+        <ul class="menu-list" style="z-index: 10; width: 1400px; margin-top: 25px;">
+            <div class="menu-list-container" style="margin-bottom: -60px;">
                 <div class="menu-list-child">
+                    <li><h3>Debug</h3></li>
+                    <li><a class="set-in-code" id="settings-debug-test-1-btn" href="#">Debug Testy Thiny nr 2</a></li>
+                    <li><a class="set-in-code" id="settings-debug-test-2-btn" href="#">Test Button</a></li>
                     <li><a class="set-in-code" id="settings-show-hitboxes-btn" href="#">Show Hitboxes</a></li>
                     <li><a class="set-in-code" id="settings-view-audio-players-btn" href="#">Show Audio Players</a></li>
-                    <li><a class="set-in-code" id="settings-circles-collide-btn" href="#">Meteor Collision</a></li>
-                    <li><a class="set-in-code" id="settings-player-invincible-btn" href="#">Player Invincible</a></li>
                 </div>
                 <div class="menu-list-child">
-                    <li><a class="set-in-code" id="settings-show-hitboxes-btn" href="#">Show Hitboxes</a></li>
-                    <li><a class="set-in-code" id="settings-view-audio-players-btn" href="#">Show Audio Players</a></li>
+                    <li><h3>Gameplay</h3></li>
+                    <li><a class="set-in-code" id="settings-circles-collide-btn" href="#">Meteor Collision</a></li>
+                    <li><a class="set-in-code" id="settings-player-collision-btn" href="#">Player Collision</a></li>
+                    <li><a class="set-in-code" id="settings-player-invincible-btn" href="#">Unlimited Shield</a></li>
+                </div>
+                <div class="menu-list-child">
+                    <li><h3>Audio</h3></li>
+                    <li class="audio-slider">
+                        <h4>Master Volume:</h4>
+                        <input type="range" min="0" max="100" value="50" step="1" class="slider" id="master-volume-slider">
+                    </li>
+                    <li class="audio-slider">
+                        <h4>Music Volume:</h4>
+                        <input type="range" min="0" max="100" value="50" step="1" class="slider" id="music-volume-slider">
+                    </li>
+                    <li class="audio-slider">
+                        <h4>SFX Volume:</h4>
+                        <input type="range" min="0" max="100" value="50" step="1" class="slider" id="sfx-volume-slider">
+                    </li>
                 </div>
             </div>
             <li><a class="button-simple" data-button="return-to-main-menu-btn" href="#">Back</a></li>

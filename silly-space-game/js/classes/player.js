@@ -230,8 +230,8 @@ export class Player {
             new Laser(
                 x, y,
                 inputManager.mouse.x, inputManager.mouse.y,
-                "#CC4444", 5,
-                0.7
+                "#CC4444", 6,
+                0.65
             )
         )
     }
@@ -248,9 +248,9 @@ export class Player {
             new Laser(
                 x, y,
                 inputManager.mouse.x, inputManager.mouse.y,
-                "#FF0030", 8 + Math.min(this.radius * 2 - 8, (this.shoot_charge_up_time-40) / 3),
-                // set the decay time to 25 frames
-                (8 + Math.min(this.radius * 2 - 8, (this.shoot_charge_up_time-45) / 5)) / 25
+                "#FF0030", 8 + Math.min(this.radius * 2, (this.shoot_charge_up_time-40) / 3),
+                // set the decay time to 28 frames
+                (8 + Math.min(this.radius * 2 - 8, (this.shoot_charge_up_time-45) / 5)) / 28
             )
         )
     }

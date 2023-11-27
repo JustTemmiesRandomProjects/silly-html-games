@@ -99,6 +99,11 @@ async function process() {
     })
     
     removeCompletedParticles()
+
+    // weird settings
+    if ( settings.player_invincible ) {
+        global.players[0].shield_health = 100
+    }
 }
 
 // gameTick function, called 100 ms (10 times/second)
