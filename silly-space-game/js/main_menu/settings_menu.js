@@ -63,7 +63,15 @@ class SettingsMenu {
 }
 
 function saveSettings() {
-    const settings_data = getDefaultSettings()
+    const settings_data = {}
+
+    for (const [key, value] of Object.entries(getDefaultBooleanSettingsSetup())) {
+        settings_data[value] = settings[key]
+    }
+
+    settings_data["master"] = settings.volume_mixer["master"]
+    settings_data["sfx"] = settings.volume_mixer["sfx"]
+    settings_data["music"] = settings.volume_mixer["music"]
 
     setCookie("settings_data", settings_data)
 }
@@ -71,37 +79,24 @@ function saveSettings() {
 function loadSettings() {
     const settings_data = getCookie("settings_data")
 
-
-    for (const [key, value] of Object.entries(getDefaultSettings())) {
-        console.log(key, value)
+    for (const [key, value] of Object.entries(getDefaultBooleanSettingsSetup())) {
+        settings[value] = settings_data[key]
     }
-
-    settings.show_hitboxes = settings_data["show_hitboxes"]
-    settings.visible_audio_players = settings_data["visible_audio_players"]
-    settings.circles_collide = settings_data["circles_collide"]
-    settings.player_invincible = settings_data["player_invincible"]
-    settings.player_collide = settings_data["player_collide"]
-    settings.debug_test_1 = settings_data["debug_test_1"]
-    settings.debug_test_2 = settings_data["debug_test_2"]
 
     settings.volume_mixer["master"] = settings_data["master"]
     settings.volume_mixer["sfx"] = settings_data["sfx"]
     settings.volume_mixer["music"] = settings_data["music"]
 }
 
-function getDefaultSettings() {
+function getDefaultBooleanSettingsSetup() {
     return {
-        "show_hitboxes": settings.show_hitboxes,
-        "visible_audio_players": settings.visible_audio_players,
-        "circles_collide": settings.circles_collide,
-        "player_invincible": settings.player_invincible,
-        "player_collide": settings.player_collide,
-        "debug_test_1": settings.debug_test_1,
-        "debug_test_2": settings.debug_test_2,
-    
-        "master": settings.volume_mixer["master"],
-        "sfx": settings.volume_mixer["sfx"],
-        "music": settings.volume_mixer["music"],    
+        "show_hitboxes":            "show_hitboxes",
+        "visible_audio_players":    "visible_audio_players",
+        "circles_collide":          "circles_collide",
+        "player_invincible":        "player_invincible",
+        "player_collide":           "player_collide",
+        "debug_test_1":             "debug_test_1",
+        "debug_test_2":             "debug_test_2",
     }
 }
 

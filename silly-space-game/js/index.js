@@ -10,7 +10,7 @@ import { Player } from "./classes/player.js"
 import { Coin } from "./classes/coin.js"
 import { global, ctx, backgroundCtx, inputManager, particleCtx, hudCtx } from "./global.js"
 import { drawHud } from "./hud.js"
-import { setCookie } from "./cookies.js"
+import { getCookie, setCookie } from "./cookies.js"
 
 
 
@@ -367,6 +367,7 @@ let initInterval = setInterval(async () => {
     if ( global !== null ) {
         clearInterval(initInterval)
         console.log(`player save data: ${JSON.stringify(global.save_data)}`)
+        console.log(`player settings data: ${JSON.stringify(getCookie("settings_data"))}`)
 
         await load_menu()
 
