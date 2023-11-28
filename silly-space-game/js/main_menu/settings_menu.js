@@ -65,8 +65,8 @@ class SettingsMenu {
 function saveSettings() {
     const settings_data = {}
 
-    for (const [key, value] of Object.entries(getDefaultBooleanSettingsSetup())) {
-        settings_data[value] = settings[key]
+    for ( const entry_key of getBooleanDefaults() ) {
+        settings_data[entry_key] = settings[entry_key]
     }
 
     settings_data["master"] = settings.volume_mixer["master"]
@@ -79,8 +79,10 @@ function saveSettings() {
 function loadSettings() {
     const settings_data = getCookie("settings_data")
 
-    for (const [key, value] of Object.entries(getDefaultBooleanSettingsSetup())) {
-        settings[value] = settings_data[key]
+    for ( const entry_key of getBooleanDefaults() ) {
+        if ( settings_data[entry_key] != undefined ) {
+            settings[entry_key] = settings_data[entry_key]
+        }
     }
 
     settings.volume_mixer["master"] = settings_data["master"]
@@ -88,16 +90,16 @@ function loadSettings() {
     settings.volume_mixer["music"] = settings_data["music"]
 }
 
-function getDefaultBooleanSettingsSetup() {
-    return {
-        "show_hitboxes":            "show_hitboxes",
-        "visible_audio_players":    "visible_audio_players",
-        "circles_collide":          "circles_collide",
-        "player_invincible":        "player_invincible",
-        "player_collide":           "player_collide",
-        "debug_test_1":             "debug_test_1",
-        "debug_test_2":             "debug_test_2",
-    }
+function getBooleanDefaults() {
+    return [
+        "show_hitboxes",
+        "visible_audio_players",
+        "circles_collide",
+        "player_invincible",
+        "player_collide",
+        "debug_test_1",
+        "debug_test_2",
+    ]
 }
 
 const settings_menu = new SettingsMenu()
