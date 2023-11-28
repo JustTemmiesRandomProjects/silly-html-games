@@ -22,6 +22,12 @@ class Settings {
     }
 }
 
-const settings = new Settings()
+let settings
+
+export function initSettings() {
+    settings = new Settings()
+}
+
+initSettings()
 
 export { settings }

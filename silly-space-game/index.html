@@ -8,6 +8,7 @@
 
     <link rel="stylesheet" href="index.css">
     <link rel="stylesheet" href="main_menu.css">
+    <link rel="stylesheet" href="skill_tree.css">
 </head>
 <body>
     <!-- text for users who have chosen to disable javascript -->
@@ -20,8 +21,9 @@
     <div id="misc">
         <img src="assets/sprites/loading/loading.gif" id="loading-bar">
     </div>
+    
 
-    <!-- we have a seperate canvas for the background, this is so that we don't have to render it every frame, saving tons on performance -->
+    <!-- we have a separate canvas for the background, this is so that we don't have to render it every frame, saving tons on performance -->
     <canvas id="backgroundCanvas" width="400" height="225"></canvas>
 
     <!-- main game canvas -->
@@ -50,6 +52,50 @@
     <div class="menu" id="store-menu" hidden="true">
         <h1 class="title">Welcome to the Store!</h1>
         <ul class="menu-list" style="z-index: 10;">
+            <div id="div1" style="height: 400px; width: 1200px; position:relative;">
+                <div id="div2" style="max-height:100%; overflow:auto; border:5px solid red;">
+                    <div id="div3" style="height: 800px; border:5px solid yellow;">
+                        <div class="tree-container">
+                            <ul id="skill-tree">
+                                <li>
+                                <span class="skill-node" data-skill="Beaver">
+                                    Beaver
+                                </span>
+                                <ul>
+                                    <li>
+                                    <span class="skill-node" data-skill="Adaptability">
+                                        Adaptability
+                                    </span>
+                                    </li>
+                                    <li>
+                                    <span class="skill-node" data-skill="Engineering">
+                                        Engineering Skills
+                                    </span>
+                                    <ul>
+                                        <li>
+                                        <span class="skill-node" data-skill="Dam Building">
+                                            Dam Building
+                                        </span>
+                                        </li>
+                                        <li>
+                                        <span class="skill-node" data-skill="Lodge Construction">
+                                            Lodge Construction
+                                        </span>
+                                        </li>
+                                    </ul>
+                                    </li>
+                                    <li>
+                                    <span class="skill-node" data-skill="Swimming">
+                                        Swimming Ability
+                                    </span>
+                                    </li>
+                                </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+              </div>
             <li><a class="button-simple" data-button="play-btn" href="#">Play</a></li>
             <li><a class="button-simple" data-button="return-to-main-menu-btn" href="#">Back</a></li>
         </ul>

@@ -1,6 +1,5 @@
-import { setCookie } from "../cookies.js"
 import { play_game } from "../index.js"
-import { settings_menu } from "./settings_menu.js"
+import { resetSettings, settings_menu } from "./settings_menu.js"
 
 const main_menu_element = document.getElementById("main-menu")
 const settings_menu_element = document.getElementById("settings-menu")
@@ -32,8 +31,8 @@ export async function loadMenu() {
 
     document.querySelectorAll('[data-button="settings-reset-to-defaults"]').forEach((element) => {
         element.onclick = () => {
-            setCookie("settings_data", {})
-            window.location.reload()   
+            console.log("reseting settings back to the default")
+            resetSettings()
         }
     })
     
