@@ -2,6 +2,7 @@ import { drawWithScreenWrap, randFloat, randInt } from "../tems_library/tems_lib
 import { settings } from "../tems_library/settings.js"
 import { circleOverlapping } from "../tems_library/math.js"
 import { global, ctx, inputManager } from "../global.js"
+import { stop_game } from "../index.js"
 
 // the sprite ID, defined in global.assets, and the size class
 export const meteor_sprites = {
@@ -155,57 +156,65 @@ export class Circle {
         }
 
         // collide with player
-        if (circleOverlapping(this, global.players[0])) {
-            if ( settings.player_collide ) {
-                this.handleCollision(this, global.players[0])
+        global.players.forEach((player) => {
+            if (circleOverlapping(this, player)) {
+                if ( settings.player_collide ) {
+                    this.handleCollision(this, player)
+                }
+
+                // if the player doesn't have any more shield left, die
+                if ( player.shield_health <= 0 ) {
+                    this.killPlayer(player)
+                } else {
+                    const current_speed = Math.sqrt(
+                        Math.pow(this.velocity.x, 2),
+                        Math.pow(this.velocity.y, 2)
+                    )
+
+                    const player_current_speed = Math.sqrt(
+                        Math.pow(player.velocity["x"], 2),
+                        Math.pow(player.velocity["y"], 2)
+                    )
+
+                    let damage = current_speed * player_current_speed * (Math.sqrt(this.radius) + 1)
+                    damage = Math.max(10, damage)
+
+                    // cap damage at 50
+                    damage = Math.min(
+                        // cap the meteors damage at 50
+                        // unless the player doesn't have quite that much HP left, 
+                            // if that's the case deal damage equal to the players health
+                            // but no less than 20 damage, if they have less health than that, whelp - game over
+                        Math.min(
+                            Math.max(
+                                20,
+                                player.shield_health
+                                ),
+                                50
+                                ),
+                        damage
+                        )
+                        
+                        // if the player has collision disabled, decrease the damage to make it more fair, as the player will still be inside of the meteor 
+                        if ( !settings.player_collide ) {
+                        damage *= 0.1
+                    }
+                    
+                    player.shield_health -= damage
+                    player.shield_regen_cooldown = 120
+                    
+                    if ( player.shield_health < 0 ) {
+                        this.killPlayer(player)
+                    }
+                }
             }
+        })
+    }
 
-            // if the player doesn't have any more shield left, die
-            if ( global.players[0].shield_health <= 0 ) {
-                console.log("game over!")
-                return
-            }
-
-            const current_speed = Math.sqrt(
-                Math.pow(this.velocity.x, 2),
-                Math.pow(this.velocity.y, 2)
-            )
-
-            const player_current_speed = Math.sqrt(
-                Math.pow(global.players[0].velocity["x"], 2),
-                Math.pow(global.players[0].velocity["y"], 2)
-            )
-
-            let damage = current_speed * player_current_speed * (Math.sqrt(this.radius) + 1)
-            damage = Math.max(10, damage)
-
-            // cap damage at 50
-            damage = Math.min(
-                // cap the meteors damage at 50
-                // unless the player doesn't have quite that much HP left, 
-                    // if that's the case deal damage equal to the players health
-                    // but no less than 20 damage, if they have less health than that, whelp - game over
-                Math.min(
-                    Math.max(
-                        20,
-                        global.players[0].shield_health
-                    ),
-                    50
-                ),
-                damage
-            )
-            
-            // if the player has collision disabled, decrease the damage to make it more fair, as the player will still be inside of the meteor 
-            if ( !settings.player_collide ) {
-                damage *= 0.1
-            }
-            
-            global.players[0].shield_health -= damage
-            global.players[0].shield_regen_cooldown = 120
-
-            if ( global.players[0].shield_health < 0 ) {
-                console.log("game over!")
-            }
+    killPlayer(player) {
+        global.players = global.players.filter(temp_player => temp_player.ID != player.ID)
+        if ( global.players.length == 0 ) {
+            stop_game()
         }
     }
 
@@ -219,7 +228,7 @@ export class Circle {
         this.velocity["y"] += Math.sin(direction) * speed
     }
 
-
+    
     handleCollision(circle1, circle2) {                              
         // calculate the distance between the circles
         const distanceX = circle2.position.x - circle1.position.x

@@ -65,13 +65,13 @@ class SettingsMenu {
 function saveSettings() {
     const settings_data = {}
 
-    for ( const entry_key of getBooleanDefaults() ) {
+    for ( const entry_key of getBooleanSettings() ) {
         settings_data[entry_key] = settings[entry_key]
     }
 
-    settings_data["master"] = settings.volume_mixer["master"]
-    settings_data["sfx"] = settings.volume_mixer["sfx"]
-    settings_data["music"] = settings.volume_mixer["music"]
+    for ( const entry_key of getSoundSettings() ) {
+        settings_data[entry_key] = settings.volume_mixer[entry_key]
+    }
 
     setCookie("settings_data", settings_data)
 }
@@ -79,18 +79,20 @@ function saveSettings() {
 function loadSettings() {
     const settings_data = getCookie("settings_data")
 
-    for ( const entry_key of getBooleanDefaults() ) {
+    for ( const entry_key of getBooleanSettings() ) {
         if ( settings_data[entry_key] != undefined ) {
             settings[entry_key] = settings_data[entry_key]
         }
     }
 
-    settings.volume_mixer["master"] = settings_data["master"]
-    settings.volume_mixer["sfx"] = settings_data["sfx"]
-    settings.volume_mixer["music"] = settings_data["music"]
+    for ( const entry_key of getSoundSettings() ) {
+        if ( settings_data[entry_key] != undefined ) {
+            settings.volume_mixer[entry_key] = settings_data[entry_key]
+        }
+    }
 }
 
-function getBooleanDefaults() {
+function getBooleanSettings() {
     return [
         "show_hitboxes",
         "visible_audio_players",
@@ -99,6 +101,14 @@ function getBooleanDefaults() {
         "player_collide",
         "debug_test_1",
         "debug_test_2",
+    ]
+}
+
+function getSoundSettings() {
+    return [
+        "master",
+        "sfx",
+        "music"
     ]
 }
 

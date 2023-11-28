@@ -40,15 +40,33 @@
     <div class="menu" id="main-menu" hidden="true">
         <h1 class="title">Silly Space Game</h1>
         <ul class="menu-list" style="z-index: 10;">
-            <li><a class="button-simple" id="play-btn" href="#">Play</a></li>
+            <li><a class="button-simple" data-button="play-btn" href="#">Play</a></li>
+            <li><a class="button-simple" data-button="store-btn" href="#">Store</a></li>
             <li><a class="button-simple" id="settings-btn" href="#">Settings</a></li>
             <li><a class="button-simple" id="about-btn" href="#">About</a></li>
         </ul>
     </div>
 
+    <div class="menu" id="store-menu" hidden="true">
+        <h1 class="title">Welcome to the Store!</h1>
+        <ul class="menu-list" style="z-index: 10;">
+            <li><a class="button-simple" data-button="play-btn" href="#">Play</a></li>
+            <li><a class="button-simple" data-button="return-to-main-menu-btn" href="#">Back</a></li>
+        </ul>
+    </div>
+
+    <div class="menu" id="game-over-screen" hidden="true">
+        <h1 class="title">Your ships were Slain</h1>
+        <ul class="menu-list" style="z-index: 10;">
+            <li><a class="button-simple" data-button="play-btn" href="#">Play Again</a></li>
+            <li><a class="button-simple" data-button="store-btn" href="#">To the Store</a></li>
+            <li><a class="button-simple" data-button="return-to-main-menu-btn" href="#">Main Menu</a></li>
+        </ul>
+    </div>
+
     <div class="menu" id="settings-menu" hidden="true">
         <h1 class="title">Settings</h1>
-        <ul class="menu-list" style="z-index: 10; width: 1400px; margin-top: 25px;">
+        <ul class="menu-list" style="z-index: 10; width: 1100px; margin-top: 25px;">
             <div class="menu-list-container" style="margin-bottom: -60px;">
                 <div class="menu-list-child">
                     <li><h3>Debug</h3></li>
@@ -79,13 +97,14 @@
                     </li>
                 </div>
             </div>
+            <li><a class="button-simple" data-button="settings-reset-to-defaults" href="#">Reset to Defaults</a></li>
             <li><a class="button-simple" data-button="return-to-main-menu-btn" href="#">Back</a></li>
         </ul>
     </div>
 
     <div class="menu" id="about-menu" hidden="true">
         <h1 class="title">About</h1>
-        <ul class="menu-list" style="z-index: 10; width: 1650px;">
+        <ul class="menu-list" style="z-index: 10; width: 1350px;">
             <li><h4>A simple, open-source silly space game written in bare-bones JavaScript</h4></li>
             <div class="menu-list-container">
                 <div class="menu-list-child">

@@ -3,12 +3,12 @@ console.log("index.js initialized")
 import { randFloat, randInt, resizeCanvas, canvas_centre, drawBackgroundImage } from "./tems_library/tems_library.js"
 import { checkLaserCircleCollision, circleOverlapping, pointDistanceFromPoint } from "./tems_library/math.js"
 import { settings } from "./tems_library/settings.js"
-import { load_menu } from "./main_menu/index.js"
+import { loadMenu, showGameOverScreen } from "./main_menu/index.js"
 import { LaserParticle, Particle } from "./classes/particles.js"
 import { Circle, meteor_sizes, meteor_sprites } from "./classes/circles.js"
 import { Player } from "./classes/player.js"
 import { Coin } from "./classes/coin.js"
-import { global, ctx, backgroundCtx, inputManager, particleCtx, hudCtx } from "./global.js"
+import { global, ctx, backgroundCtx, inputManager, particleCtx, hudCtx, initGlobal } from "./global.js"
 import { drawHud } from "./hud.js"
 import { getCookie, setCookie } from "./cookies.js"
 
@@ -69,12 +69,16 @@ function ready() {
     drawHud()
     
     for (let i = 0; i < 3; i ++) {
-        spawnNewCoin()
+        spawnNewCoin(global.players[0])
     }
 }
 
 // process function, called every frame
 async function process() {
+    if ( !global.is_playing ) {
+        return
+    }
+
     global.frames_processed ++
     requestAnimationFrame(process)
 
@@ -102,7 +106,9 @@ async function process() {
 
     // weird settings
     if ( settings.player_invincible ) {
-        global.players[0].shield_health = 100
+        global.players.forEach((player) => {
+            player.shield_health = 100
+        })
     }
 }
 
@@ -209,42 +215,46 @@ function drawParticles() {
 function drawCoins() {
     global.coins.forEach((coin) => {
         coin.draw()
-        if ( circleOverlapping(coin, global.players[0]) ) {
-            pickUpCoin()
-            global.coins = global.coins.filter(tempCoin => tempCoin.ID != coin.ID)
-        }
+        global.players.forEach((player) => {
+            if ( circleOverlapping(coin, player) ) {
+                pickUpCoin(player)
+                global.coins = global.coins.filter(tempCoin => tempCoin.ID != coin.ID)
+            }
+        })
     })
 }
 
-function pickUpCoin() {
+function pickUpCoin(player) {
     console.log("shiny")
     
     global.score += 20000
     global.save_data.coins += 1
     drawHud()
+    
+    global.players.push( new Player() )
 
     setCookie("save_data", global.save_data)
 
-    spawnNewCoin()
+    spawnNewCoin(player)
     spawnNewCircleOutOfBounds()
 
     for (let i = 0; i < 25; i ++) {
         // allow the shield to be overloaded above 100, at a deminishing rate, but no more than 150
-        if ( global.players[0].shield_health < 100 ) {
-            global.players[0].shield_health += 1
-        } else if ( global.players[0].shield_health > 150 ) {
+        if ( player.shield_health < 100 ) {
+            player.shield_health += 1
+        } else if ( player.shield_health > 150 ) {
         } else {
-            global.players[0].shield_health += 1 / ((global.players[0].shield_health - 50) / 30)
+            player.shield_health += 1 / ((player.shield_health - 50) / 30)
         }
     }
 }
 
-function spawnNewCoin() {
+function spawnNewCoin(player) {
     const target_x = Math.max(global.coin_radius, Math.min(ctx.canvas.width - global.coin_radius, (
-        global.players[0].position["x"] + randFloat(ctx.canvas.width * 0.3, ctx.canvas.width * 0.4)
+        player.position["x"] + randFloat(ctx.canvas.width * 0.3, ctx.canvas.width * 0.4)
     ) % ctx.canvas.width))
     const target_y = Math.max(global.coin_radius, Math.min(ctx.canvas.height - global.coin_radius, (
-        global.players[0].position["y"] + randFloat(ctx.canvas.height * 0.3, ctx.canvas.height * 0.4)
+        player.position["y"] + randFloat(ctx.canvas.height * 0.3, ctx.canvas.height * 0.4)
     ) % ctx.canvas.height))
 
     spawnNewCoinAtPos(target_x, target_y)
@@ -369,15 +379,35 @@ let initInterval = setInterval(async () => {
         console.log(`player save data: ${JSON.stringify(global.save_data)}`)
         console.log(`player settings data: ${JSON.stringify(getCookie("settings_data"))}`)
 
-        await load_menu()
+        await loadMenu()
 
         console.log("setup fully complete!")
     }
 }, 100)
 
+export async function stop_game() {
+    console.log("stopping game...")
+    global.is_playing = false
+
+    ctx.canvas.hidden = true
+    particleCtx.canvas.hidden = true
+    hudCtx.canvas.hidden = true
+
+    console.log("unregistering game ticks...")
+    clearInterval(gameTick10)
+    clearInterval(gameTick2)
+
+    console.log("resetting global variables...")
+    requestAnimationFrame(initGlobal)
+
+    console.log("displaying game over screen...")
+    showGameOverScreen(5, 12, 1924)
+
+    console.log("set..down? complete!")
+}
+
 export function play_game() {
-    const menu = document.getElementById("main-menu")
-    menu.hidden = true
+    global.is_playing = true
 
     // re-check settings and stuff
     if ( settings.visible_audio_players ) {
@@ -399,4 +429,6 @@ export function play_game() {
     ready()
     console.log("running first tick...")
     process()
+
+    // stop_game()
 }

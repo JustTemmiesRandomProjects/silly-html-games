@@ -12,6 +12,8 @@ function reset_stuff_done_this_tick () {
 export class Player {
     constructor() {
         this.size = 50
+        this.ID = global.entity_counter
+        global.entity_counter ++
 
         const skin = "sprite_player_ship_1_blue"
 

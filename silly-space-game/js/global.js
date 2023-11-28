@@ -22,6 +22,7 @@ class Global {
         this.coin_radius = 40
         // just a counter used to set a unique ID for every entity
         this.entity_counter = 0
+        this.is_playing = false
 
         this.player_acceleration = accountForDisplay(0.3)
         this.player_max_speed = accountForDisplay(5)
@@ -65,6 +66,9 @@ function readSaveFile() {
 // set these to null for now so that they can be properly exported
 var global = null
 var inputManager = null
+
+var asset_objects
+var asset_bonus_data
 
 window.onload = async function () {
     console.log("initializing input manager...")
@@ -113,8 +117,8 @@ window.onload = async function () {
         "sfx_zap": [Audio, "assets/audio/sound-effects/kenney/sfx_zap.ogg", {}],
         "sfx_lose": [Audio, "assets/audio/sound-effects/kenney/sfx_lose.ogg", {}],
     })
-    let asset_objects = asset_data[0]
-    let asset_bonus_data = asset_data[1]
+    asset_objects = asset_data[0]
+    asset_bonus_data = asset_data[1]
     console.log("completed loading images!")
 
     // asset_objects["sfx_laser_small"].updateVolume(0.7)
@@ -123,9 +127,13 @@ window.onload = async function () {
     asset_objects["sprite_space_coin"].setScale(0.6)
     console.log("completed fixing audio levels")
 
-    global = new Global(asset_objects, asset_bonus_data)
+    await initGlobal()
     console.log("completed initiating global varibles!")
+}
 
+export async function initGlobal() {
+    console.log("initing global variabes...")
+    global = new Global(asset_objects, asset_bonus_data)
 }
 
 export { ctx, particleCtx, backgroundCtx, hudCtx, global, inputManager }
