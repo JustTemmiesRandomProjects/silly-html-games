@@ -1,0 +1,103 @@
+/* Additional CSS for the Shop UI */
+
+.shop-container {
+    margin: 0;
+    text-align: center;
+}
+
+.shop-title {
+    font-size: 3rem;
+    margin-bottom: 30px;
+}
+
+.item-list {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.shop-item {
+    position: relative;
+    width: 250px;
+    height: 140px;
+    background-color: #6d5a7c;
+    padding: 15px;
+    margin: 15px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.shop-item-fake {
+    position: relative;
+    width: 250px;
+    height: 140px;
+    padding: 15px;
+    margin: 15px;
+    visibility: hidden;
+}
+
+.item-name {
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+    color: #fff;
+}
+
+.item-description {
+    font-size: 1rem;
+    color: #fff;
+    margin-bottom: 15px;
+}
+
+.buy-button-container {
+    position: absolute;
+    bottom: 15px;
+    left: 0px;
+    width: 100%;
+}
+
+.buy-button {
+    padding: 8px 20px;
+    font-size: 1.5rem;
+    border-radius: 8px;
+    background-color: #fff;
+    color: #000;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.item-cannot-afford {
+    background-color: #ff4545;
+}
+
+.item-cannot-afford:hover {
+    background-color: #ff0000 !important;
+    color: #fdd !important;
+}
+
+.buy-button:hover {
+    background-color: #60a060;
+    color: #fff;
+}
+
+.item-to-left {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.item-to-right {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.move-item-left {
+    transform: translateX(-15%);
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.move-item-right {
+    transform: translateX(15%);
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}

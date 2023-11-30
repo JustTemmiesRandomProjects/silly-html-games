@@ -8,7 +8,7 @@
 
     <link rel="stylesheet" href="index.css">
     <link rel="stylesheet" href="main_menu.css">
-    <link rel="stylesheet" href="skill_tree.css">
+    <link rel="stylesheet" href="shop.css">
 </head>
 <body>
     <!-- text for users who have chosen to disable javascript -->
@@ -52,50 +52,100 @@
     <div class="menu" id="store-menu" hidden="true">
         <h1 class="title">Welcome to the Store!</h1>
         <ul class="menu-list" style="z-index: 10;">
-            <div id="div1" style="height: 400px; width: 1200px; position:relative;">
-                <div id="div2" style="max-height:100%; overflow:auto; border:5px solid red;">
-                    <div id="div3" style="height: 800px; border:5px solid yellow;">
-                        <div class="tree-container">
-                            <ul id="skill-tree">
-                                <li>
-                                <span class="skill-node" data-skill="Beaver">
-                                    Beaver
-                                </span>
-                                <ul>
-                                    <li>
-                                    <span class="skill-node" data-skill="Adaptability">
-                                        Adaptability
-                                    </span>
-                                    </li>
-                                    <li>
-                                    <span class="skill-node" data-skill="Engineering">
-                                        Engineering Skills
-                                    </span>
-                                    <ul>
-                                        <li>
-                                        <span class="skill-node" data-skill="Dam Building">
-                                            Dam Building
-                                        </span>
-                                        </li>
-                                        <li>
-                                        <span class="skill-node" data-skill="Lodge Construction">
-                                            Lodge Construction
-                                        </span>
-                                        </li>
-                                    </ul>
-                                    </li>
-                                    <li>
-                                    <span class="skill-node" data-skill="Swimming">
-                                        Swimming Ability
-                                    </span>
-                                    </li>
-                                </ul>
-                                </li>
-                            </ul>
+            <div id="div1" style="height: 500px; width: 1600px; position:relative;">
+            <div id="div2" style="max-height:100%; max-width: 100%; overflow:auto;">
+            <div id="div3" style="height: 100%;">
+                <div class="shop-container">
+                    <div class="item-list">
+                        <div class="menu-list-container">
+                            <div class="menu-list-child">
+                                <div class="shop-item">
+                                    <h3 class="item-name">Colourful Paint</h3>
+                                    <p class="item-description">Unlocks different colours for your ship</p>
+                                    <div class="buy-button-container"><button id="shop_more_paint_1" class="buy-button button-simple">Buy</button></div>
+                                </div>
+                                <div class="shop-item">
+                                    <h3 class="item-name">Bigger Shipyard</h3>
+                                    <p class="item-description">Unlocks a new model of ship, functionally identical</p>
+                                    <div class="buy-button-container"><button id="shop_more_ships_1" class="buy-button button-simple">Buy</button></div>
+                                </div>
+                                <div class="shop-item">
+                                    <h3 class="item-name">Advanced Machinery</h3>
+                                    <p class="item-description">Unlocks yet another model of ship, functionally identical</p>
+                                    <div class="buy-button-container"><button id="shop_more_ships_2" class="buy-button button-simple">Buy</button></div>
+                                </div>
+                            </div>
+                            <div class="menu-list-child">
+                                <div class="shop-item">
+                                    <h3 class="item-name">Money Printing</h3>
+                                    <p class="item-description">Increase the maximum number of coins on the map by 1</p>
+                                    <div class="buy-button-container"><button id="shop_more_coins_1" class="buy-button button-simple">Buy</button></div>
+                                </div>
+                                <div class="shop-item-fake"></div>
+                                <div class="shop-item move-item-right">
+                                    <h3 class="item-name">Pre-emptive Clones</h3>
+                                    <p class="item-description">Start the game with one of your clones</p>
+                                    <div class="buy-button-container"><button id="shop_placeholder" class="buy-button button-simple">Buy</button></div>
+                                </div>
+                            </div>
+                            <div class="menu-list-child">
+                                <div class="shop-item">
+                                    <h3 class="item-name">Item 1</h3>
+                                    <p class="item-description">Description of Item 1</p>
+                                    <div class="buy-button-container"><button id="shop_placeholder" class="buy-button button-simple">Buy</button></div>
+                                </div>
+                                <div class="shop-item">
+                                    <h3 class="item-name">Item 2</h3>
+                                    <p class="item-description">Description of Item 2</p>
+                                    <div class="buy-button-container"><button id="shop_placeholder" class="buy-button button-simple">Buy</button></div>
+                                </div>
+                                <div class="shop-item item-to-left">
+                                    <h3 class="item-name">Item 2</h3>
+                                    <p class="item-description">Description of Item 2</p>
+                                    <div class="buy-button-container"><button id="shop_placeholder" class="buy-button button-simple">Buy</button></div>
+                                </div>
+                            </div>
+                            <div class="menu-list-child">
+                                <div class="shop-item">
+                                    <h3 class="item-name">Item 1</h3>
+                                    <p class="item-description">Description of Item 1</p>
+                                    <div class="buy-button-container"><button id="shop_placeholder" class="buy-button button-simple">Buy</button></div>
+                                </div>
+                                <div class="shop-item">
+                                    <h3 class="item-name">Item 2</h3>
+                                    <p class="item-description">Description of Item 2</p>
+                                    <div class="buy-button-container"><button id="shop_placeholder" class="buy-button button-simple">Buy</button></div>
+                                </div>
+                                <div class="shop-item">
+                                    <h3 class="item-name">Item 2</h3>
+                                    <p class="item-description">Description of Item 2</p>
+                                    <div class="buy-button-container"><button id="shop_placeholder" class="buy-button button-simple">Buy</button></div>
+                                </div>
+                            </div>
+                            <div class="menu-list-child">
+                                <div class="shop-item">
+                                    <h3 class="item-name">Item 1</h3>
+                                    <p class="item-description">Description of Item 1</p>
+                                    <div class="buy-button-container"><button id="shop_placeholder" class="buy-button button-simple">Buy</button></div>
+                                </div>
+                                <div class="shop-item">
+                                    <h3 class="item-name">Item 2</h3>
+                                    <p class="item-description">Description of Item 2</p>
+                                    <div class="buy-button-container"><button id="shop_placeholder" class="buy-button button-simple">Buy</button></div>
+                                </div>
+                                <div class="shop-item">
+                                    <h3 class="item-name">Item 2</h3>
+                                    <p class="item-description">Description of Item 2</p>
+                                    <div class="buy-button-container"><button id="shop_placeholder" class="buy-button button-simple">Buy</button></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-              </div>
+            </div>
+            </div>
+            </div>
+            <p id="shop-coin-counter" style="font-family: Arial, Helvetica, sans-serif; color: #D884C2AF; font-size: 30px; transform: translateX(80px); margin-bottom: -50px;">Coins: 4</p>
             <li><a class="button-simple" data-button="play-btn" href="#">Play</a></li>
             <li><a class="button-simple" data-button="return-to-main-menu-btn" href="#">Back</a></li>
         </ul>

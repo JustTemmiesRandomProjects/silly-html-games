@@ -1,5 +1,6 @@
 import { play_game } from "../index.js"
 import { resetSettings, settings_menu } from "./settings_menu.js"
+import { updateShopMenu } from "./shop.js"
 
 const main_menu_element = document.getElementById("main-menu")
 const settings_menu_element = document.getElementById("settings-menu")
@@ -67,6 +68,7 @@ function storeButtonClick() {
     current_menu = store_menu_element
     store_menu_element.hidden = false
     console.log("clicked on the store button on the main-menu.")
+    updateShopMenu()
 }
 
 function backButtonClick () {
