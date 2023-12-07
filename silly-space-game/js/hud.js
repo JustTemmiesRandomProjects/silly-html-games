@@ -23,6 +23,6 @@ function drawCoins() {
 
 
 // helper functions
-function handleNumber(number) {
+export function handleNumber(number) {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 }

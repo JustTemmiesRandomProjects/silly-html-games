@@ -1,14 +1,14 @@
 console.log("index.js initialized")
-
 import { randFloat, randInt, resizeCanvas, canvas_centre, drawBackgroundImage } from "./tems_library/tems_library.js"
 import { checkLaserCircleCollision, circleOverlapping, pointDistanceFromPoint } from "./tems_library/math.js"
 import { settings } from "./tems_library/settings.js"
 import { loadMenu, showGameOverScreen } from "./main_menu/index.js"
-import { LaserParticle, Particle } from "./classes/particles.js"
+import { hasUpgrade } from "./main_menu/shop.js"
+import { LaserParticle } from "./classes/particles.js"
 import { Circle, meteor_sizes, meteor_sprites } from "./classes/circles.js"
 import { Player } from "./classes/player.js"
 import { Coin } from "./classes/coin.js"
-import { global, ctx, backgroundCtx, inputManager, particleCtx, hudCtx, initGlobal } from "./global.js"
+import { global, ctx, backgroundCtx, particleCtx, hudCtx, initGlobal } from "./global.js"
 import { drawHud } from "./hud.js"
 import { getCookie, setCookie } from "./cookies.js"
 
@@ -30,7 +30,18 @@ function ready() {
     setInterval(gameTick2, 500)
 
     console.log("spawning player...")
-    global.players.push( new Player() )
+    if ( hasUpgrade("clone_start") ) {
+        global.players.push( new Player({
+            "x": ctx.canvas.width / 2 + 75,
+            "y": ctx.canvas.height / 2
+        }) )
+        global.players.push( new Player({
+            "x": ctx.canvas.width / 2 -75,
+            "y": ctx.canvas.height / 2
+        }) )
+    } else {
+        global.players.push( new Player() )
+    }
 
     console.log("spawning meteors...")
     // create circles
@@ -68,7 +79,12 @@ function ready() {
     console.log("drawing hud...")
     drawHud()
     
-    for (let i = 0; i < 3; i ++) {
+    // spawn coins
+    for (let i = 0; i < 2; i ++) {
+        spawnNewCoin(global.players[0])
+    }
+
+    if ( hasUpgrade("more_coins_1") ) {
         spawnNewCoin(global.players[0])
     }
 }
@@ -156,6 +172,14 @@ function processLasers() {
                 }
                 
                 global.score += score_awards[circle.size]
+                // spawn a clone for every 25,000 score you get
+                if ( hasUpgrade("clone_score") ) {
+                    if ( (global.score - global.coins_picked_up_this_round * 20000 - global.players_spawned_from_meteors * 25000) >= 25000) {
+                        global.players.push( new Player() )
+                        global.players_spawned_from_meteors ++
+                    }
+                }
+
                 drawHud()
                 
                 global.particles.push (new LaserParticle(
@@ -217,8 +241,11 @@ function drawCoins() {
         coin.draw()
         global.players.forEach((player) => {
             if ( circleOverlapping(coin, player) ) {
-                pickUpCoin(player)
-                global.coins = global.coins.filter(tempCoin => tempCoin.ID != coin.ID)
+                if ( coin.picked_up != true ) {
+                    coin.picked_up = true
+                    pickUpCoin(player)
+                    global.coins = global.coins.filter(tempCoin => tempCoin.ID != coin.ID)
+                }
             }
         })
     })
@@ -229,9 +256,8 @@ function pickUpCoin(player) {
     
     global.score += 20000
     global.save_data.coins += 1
+    global.coins_picked_up_this_round ++
     drawHud()
-    
-    global.players.push( new Player() )
 
     setCookie("save_data", global.save_data)
 
@@ -245,6 +271,23 @@ function pickUpCoin(player) {
         } else if ( player.shield_health > 150 ) {
         } else {
             player.shield_health += 1 / ((player.shield_health - 50) / 30)
+        }
+    }
+
+    // store upgrades
+    if ( hasUpgrade("clone_every_1_coins") ) {
+        global.players.push( new Player() )
+    } else {
+        if ( hasUpgrade("clone_every_5_coins") ) {
+            if ( global.coins_picked_up_this_round % 5 == 0 ) {
+                global.players.push( new Player() )
+            }
+        } else {
+            if ( hasUpgrade("clone_first_5_coins")) {
+                if ( global.coins_picked_up_this_round == 5 ) {
+                    global.players.push( new Player() )
+                }
+            }
         }
     }
 }
@@ -401,7 +444,7 @@ export async function stop_game() {
     requestAnimationFrame(initGlobal)
 
     console.log("displaying game over screen...")
-    showGameOverScreen(5, 12, 1924)
+    showGameOverScreen(global.score, 12, 1924)
 
     console.log("set..down? complete!")
 }

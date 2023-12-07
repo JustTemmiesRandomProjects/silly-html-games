@@ -46,9 +46,9 @@ export class Circle {
         this.colour = bonus_data["hitboxColour"]
         
         this.rotation = randFloat(0, Math.PI*2)
-        this.d_rotation = randFloat(-0.004, 0.008)
+        this.d_rotation = randFloat(-0.006, 0.012)
         
-        this.immunity_frames = 10
+        this.immunity_frames = 6
         this.wrap_around = true
         
         if ( speed == undefined ) {

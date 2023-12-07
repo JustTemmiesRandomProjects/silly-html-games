@@ -19,7 +19,7 @@
 .shop-item {
     position: relative;
     width: 250px;
-    height: 140px;
+    height: 180px;
     background-color: #6d5a7c;
     padding: 15px;
     margin: 15px;
@@ -30,7 +30,7 @@
 .shop-item-fake {
     position: relative;
     width: 250px;
-    height: 140px;
+    height: 180px;
     padding: 15px;
     margin: 15px;
     visibility: hidden;
@@ -73,6 +73,10 @@
 .item-cannot-afford:hover {
     background-color: #ff0000 !important;
     color: #fdd !important;
+}
+
+.item-owned {
+    background-color: #48b048 !important;
 }
 
 .buy-button:hover {

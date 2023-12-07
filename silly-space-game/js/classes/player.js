@@ -1,6 +1,7 @@
 import { randFloat, randInt, canvas_centre, drawWithScreenWrap } from "../tems_library/tems_library.js"
 import { settings } from "../tems_library/settings.js"
 import { circleOverlapping } from "../tems_library/math.js"
+import { hasUpgrade } from "../main_menu/shop.js"
 import { global, ctx, inputManager } from "../global.js"
 import { Laser } from "./lasers.js"
 
@@ -10,12 +11,22 @@ function reset_stuff_done_this_tick () {
     }
 }
 export class Player {
-    constructor() {
+    constructor(position) {
         this.size = 50
         this.ID = global.entity_counter
         global.entity_counter ++
 
-        const skin = "sprite_player_ship_1_blue"
+        let colour = "blue"
+        if ( hasUpgrade("more_paint_1") ) {
+            colour = ["blue", "green", "orange", "red"][randInt(0, 4)]
+        }
+
+        let max_size = 1
+        if ( hasUpgrade("more_ships_1") ) { max_size ++ }
+        if ( hasUpgrade("more_ships_2") ) { max_size ++ }
+        const size_class = randInt(1, max_size)
+
+        const skin = `sprite_player_ship_${size_class}_${colour}`
 
         this.sprite = global.assets[skin]
         this.colour = global.asset_bonus_data[skin]
@@ -30,13 +41,18 @@ export class Player {
 
         this.stuff_done_this_tick = reset_stuff_done_this_tick()
 
+        this.max_shield_health = 100
         this.shield_health = 100
         this.shield_regen_cooldown = 0
         this.shield_sprite = global.assets["sprite_player_shield_blue"]
 
-        this.position = {
-            "x": ctx.canvas.width/2,
-            "y": ctx.canvas.height/2
+        if ( position == undefined ) {
+            this.position = {
+                "x": ctx.canvas.width/2,
+                "y": ctx.canvas.height/2
+            }
+        } else {
+            this.position = position
         }
 
         this.velocity = {
@@ -75,7 +91,7 @@ export class Player {
             ctx.arc(x, y, self.radius * 2.6, 0, 2 * Math.PI)
             // make the shield flicker a bit if it's under 28% health
             if ( self.shield_health > 28 ) {
-                ctx.fillStyle = `#5f78ef${Math.floor(self.shield_health * 1.5).toString(16)}`
+                ctx.fillStyle = `#5f78ef${Math.floor(self.shield_health).toString(16)}`
             } else if ( global.frames_processed % (32 - Math.floor(self.shield_health)) == 0 ) { // flicker logic
                 ctx.fillStyle = `#5f78ef1f`
             } else {
@@ -233,7 +249,7 @@ export class Player {
                 x, y,
                 inputManager.mouse.x, inputManager.mouse.y,
                 "#CC4444", 6,
-                0.65
+                1
             )
         )
     }
@@ -265,7 +281,7 @@ export class Player {
         // regen shield
         if ( this.shield_regen_cooldown > 0) {
             this.shield_regen_cooldown -= 1
-        } else if ( this.shield_health < 100 ) {
+        } else if ( this.shield_health < this.max_shield_health ) {
             this.shield_health += 0.025
         }
         

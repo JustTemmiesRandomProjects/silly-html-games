@@ -13,6 +13,7 @@ export function InputManager(canvas) {
     this.controllers = []
 
     this.isUsingController = false
+    this.platform = ""
 
 
     // set up event listeners
@@ -40,8 +41,13 @@ InputManager.prototype.setupListeners = function () {
 // handle controller connected
 InputManager.prototype.handleControllerConnected = function (event) {
     // check for browser compatability, granted this event might not be fired in the first place
-    if ( navigator.userAgent.indexOf("Firefox") != -1 ) {console.log("Firefox browser detected")}
-    else if ( window.chrome ) {console.log("Chromium browser detected")}
+    if ( navigator.userAgent.indexOf("Firefox") != -1 ) {
+        console.log("Firefox browser detected")
+        this.platform = "firefox"
+    } else if ( window.chrome ) {
+        console.log("Chromium browser detected")
+        this.platform = "chromium"
+    }
     else { alert("sorry, controller don't seem to be officially supported for your browser, you might encounter issues with them") }
 
     this.controllers.push(event.gamepad)

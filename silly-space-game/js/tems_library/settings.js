@@ -5,7 +5,7 @@ class Settings {
         this.volume_mixer = {
             "master": 0.8,
             "music": 0.5,
-            "sfx": 0.3,
+            "sfx": 0.5,
         }
         this.visible_audio_players = false
 

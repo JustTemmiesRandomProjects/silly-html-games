@@ -107,4 +107,6 @@ export function play_game() {
     ready()
     console.log("running first tick...")
     process()
+    
+    console.log("game setup complete!")
 }

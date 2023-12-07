@@ -1,3 +1,4 @@
+import { handleNumber } from "../hud.js"
 import { play_game } from "../index.js"
 import { resetSettings, settings_menu } from "./settings_menu.js"
 import { updateShopMenu } from "./shop.js"
@@ -82,5 +83,6 @@ export function showGameOverScreen(score, coins, time) {
     current_menu.hidden = true
     current_menu = game_over_screen_element
     game_over_screen_element.hidden = false
+    document.getElementById("score-display").textContent = `You got a score of ${handleNumber(score)}`
     console.log("displaying the game over screen.")
 }

@@ -15,7 +15,7 @@ class Global {
     constructor(asset_objects, asset_bonus_data) {
         // adjust everything depending on the screen's largest dimension, for a consistent experience accross displays
         this.circle_speed_rand = accountForDisplay(0.13)
-        this.circle_speed_offset = accountForDisplay(0.02)
+        this.circle_speed_offset = accountForDisplay(0.04)
 
         this.circle_count = 30
         this.player_spawn_safe_radius = 350
@@ -31,6 +31,9 @@ class Global {
 
         this.score = 0
         this.frames_processed = 0
+
+        this.coins_picked_up_this_round = 0
+        this.players_spawned_from_meteors = 0
 
         this.circles = []
         this.players = []

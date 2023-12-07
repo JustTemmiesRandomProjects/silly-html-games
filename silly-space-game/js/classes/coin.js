@@ -14,6 +14,7 @@ export class Coin {
         
         this.position = this.sprite.position
         this.radius = global.coin_radius
+        this.picked_up = false
     }
 
     draw() {

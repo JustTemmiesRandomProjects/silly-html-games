@@ -4,11 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="image">
-    <title>Silly Space Game</title>
+    <title>Silly Game</title>
 
     <link rel="stylesheet" href="index.css">
     <link rel="stylesheet" href="main_menu.css">
-    <link rel="stylesheet" href="shop.css">
 </head>
 <body>
     <!-- text for users who have chosen to disable javascript -->
@@ -26,7 +25,7 @@
     <!-- we have a separate canvas for the background, this is so that we don't have to render it every frame, saving tons on performance -->
     <canvas id="backgroundCanvas" width="400" height="225"></canvas>
 
-    <!-- main game canvas -->
+    <!-- main game canvas, assets we expect to move every frame -->
     <canvas id="gameCanvas" width="400" height="225" hidden="true"></canvas>
 
     <!-- particle canvas, for drawing particles -->
