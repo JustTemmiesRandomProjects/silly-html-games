@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="image">
+    <title>Silly Game</title>
+
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="main_menu.css">
+</head>
+
+<body>
+    <!-- text for users who have chosen to disable javascript -->
+    <noscript id="noscript">
+        <h1>you seem to have JS disabled</h1>
+        <h2>meaning that this game won't work :(</h2>
+    </noscript>
+
+    <!-- displaying a loading gif whilst the assets for the game are loading -->
+    <div id="misc">
+        <img src="assets/sprites/loading/loading.gif" id="loading-bar">
+    </div>
+
+
+    <!-- we have a separate canvas for the background, this is so that we don't have to render it every frame, saving tons on performance -->
+    <canvas id="backgroundCanvas" width="400" height="225"></canvas>
+
+    <!-- main game canvas, assets we expect to move every frame -->
+    <canvas id="gameCanvas" width="400" height="225" hidden="true"></canvas>
+
+    <!-- particle canvas, for drawing particles -->
+    <canvas id="particleCanvas" class="ignore-mouse" width="400" height="225" hidden="true"></canvas>
+
+    <!-- HUD canvas, for drawing the HUD -->
+    <canvas id="hudCanvas" class="ignore-mouse" width="400" height="225" hidden="true"></canvas>
+
+    <!-- javascript -->
+    <script type="module" src="./js/index.js"></script>
+
+    <!-- main menu -->
+    <div class="menu" id="main-menu" hidden="true">
+        <h1 class="title">Single Player Pong (kinda)</h1>
+        <ul class="menu-list" style="z-index: 10;">
+            <li><a class="button-simple" data-button="play-btn" href="#">Play</a></li>
+            <li><a class="button-simple" id="about-btn" href="#">About</a></li>
+        </ul>
+    </div>
+
+    <div class="menu" id="game-over-screen" hidden="true">
+        <h1 class="title">Your were Slain</h1>
+        <ul class="menu-list" style="z-index: 10;">
+            <h2 id="score-display">You got X points</h2>
+            <li><a class="button-simple" style="display: none;"></a></li>
+            <li><a class="button-simple" data-button="play-btn" href="#">Play Again</a></li>
+            <li><a class="button-simple" data-button="store-btn" href="#">To the Store</a></li>
+            <li><a class="button-simple" data-button="return-to-main-menu-btn" href="#">Main Menu</a></li>
+        </ul>
+    </div>
+
+    <div class="menu" id="about-menu" hidden="true">
+        <h1 class="title">About</h1>
+        <ul class="menu-list" style="z-index: 10;">
+            <li>
+                <h4>A simple, silly game written in bare-bones JavaScript</h4>
+            </li>
+            <div class="menu-list-container">
+                <div class="menu-list-child">
+                    <li style="margin: 0px;">
+                        <h2>Credits</h2>
+                    </li>
+                    <a href="https://opengameart.org/content/loading">
+                        <li style="margin: 0px;">"Loading..." by Top Rascal on OpenGameArt.org
+                    </a></li>
+                    <a href="https://www.kenney.nl">
+                        <li style="margin: 0px;">"Dark Purple" background by Kenney (www.kenney.nl)
+                    </a></li>
+                </div>
+            </div>
+            <li><a class="button-simple" data-button="return-to-main-menu-btn" href="#">Back</a></li>
+        </ul>
+    </div>
+</body>
+
+</html>
