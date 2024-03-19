@@ -3,7 +3,7 @@ import { Entity } from "../baseEntity.js"
 
 export class MiscRoom extends Entity {
     constructor() {
-        super({})
+        super()
         
     }
 

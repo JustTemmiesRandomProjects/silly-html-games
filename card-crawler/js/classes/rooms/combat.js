@@ -1,9 +1,11 @@
+import { ctx, global } from "../../global.js";
 import { sleep } from "../../tems_library/tems_library.js"
-import { Entity } from "../baseEntity.js"
+import { Entity } from "../baseEntity.js";
+import { Button } from "../scenes/button.js";
 
 export class CombatRoom extends Entity {
     constructor() {
-        super({})
+        super()
         
         this.turn_count = 0
         this.enemies = []
@@ -19,10 +21,25 @@ export class CombatRoom extends Entity {
 
         this.phase = this.PHASES["playerStart"]
         this.phase()
+
+        let button = ( 
+            new Button(
+                {x: 100, y: 200},
+                {x: 150, y: 100}
+            )
+        )
+        
+        button.hover_colour = "#e8e8e8"
+        button.standard_colour = "#4e4e4e"
+        global.entities["hud"].push(button)
     }
     
     end_turn() {
-        this.phase = this.PHASES["playerEnd"]
+        if (this.phase == this.PHASES["playerControl"]) {
+            this.phase = this.PHASES["playerEnd"]
+        } else {
+            console.log("can't end turn, it's not the players' turn yet")
+        }
     }
 
     async _setPhase(phase) {
@@ -42,11 +59,12 @@ export class CombatRoom extends Entity {
     
     async _playerControl() {
         console.log("player is in control")
-        await this._setPhase("playerEnd")
+
     }
 
     async _playerEnd() {
         console.log("player turn ending")
+
         await this._setPhase("enemyStart")
     }
     

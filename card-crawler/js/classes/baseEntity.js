@@ -2,13 +2,9 @@ import { randFloat, randInt, canvas_centre, drawWithScreenWrap } from "../tems_l
 import { global, ctx, inputManager } from "../global.js"
 
 export class Entity {
-    constructor(position) {
+    constructor() {
         this.ID = global.entity_counter
         global.entity_counter ++
-        
-        this.visible = false;
-
-        this.position = position
     }
 
     tick() {}
