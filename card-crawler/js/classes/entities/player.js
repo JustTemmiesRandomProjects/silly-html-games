@@ -4,7 +4,7 @@ import { Entity } from "../baseEntity.js";
 
 export class Player extends Entity {
     constructor() {
-        super({})
+        super()
 
         this.hand = []
         this.deck = []

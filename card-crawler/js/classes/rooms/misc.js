@@ -3,7 +3,7 @@ import { BaseRoom } from "./baseRoom.js"
 
 export class MiscRoom extends BaseRoom {
     constructor() {
-        super({})
+        super()
         
     }
 

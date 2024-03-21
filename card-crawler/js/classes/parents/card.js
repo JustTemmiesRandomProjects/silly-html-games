@@ -1,22 +1,18 @@
-import { randFloat, randInt, canvas_centre, drawWithScreenWrap } from "../tems_library/tems_library.js"
-import { global, ctx, inputManager } from "../global.js"
-import { Entity } from "./baseEntity.js";
+import { randFloat, randInt, canvas_centre, drawWithScreenWrap } from "../../tems_library/tems_library.js"
+import { global, ctx, inputManager } from "../../global.js"
+import { UIElement } from "./UI_element.js";
 
-export class Card extends Entity {
+export class Card extends UIElement {
     constructor(colour, number) {
         super(
-            {"x": ctx.canvas.width/2, "y": ctx.canvas.height/2}
+            {x: ctx.canvas.width/2, y: ctx.canvas.height/2},
+            {x: 150, y: 100}
         )
         
         this.colour = colour;
         this.number = number;
         
         this.hovering = false;
-
-        this.size = {
-            "x": 100,
-            "y": 150
-        }
     }
 
     isMouseOver(mouseX, mouseY) {

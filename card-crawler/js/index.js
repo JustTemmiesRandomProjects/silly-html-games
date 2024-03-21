@@ -3,7 +3,7 @@ import { randFloat, randInt, resizeCanvas, canvas_centre, drawBackgroundImage } 
 import { loadMenu, showGameOverScreen } from "./main_menu/index.js"
 
 import { Background } from "./classes/background.js"
-import { Card } from "./classes/card.js"
+import { Card } from "./classes/parents/card.js"
 import { Player } from "./classes/entities/player.js"
 
 import { drawHud } from "./hud.js"

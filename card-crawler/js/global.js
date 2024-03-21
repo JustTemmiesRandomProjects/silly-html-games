@@ -27,6 +27,7 @@ class Global {
         
         this.entities = {
             backgrounds: [],
+            hud: [],
             cards: [],
             misc: [],
         }

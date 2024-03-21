@@ -3,23 +3,23 @@ import { Entity } from "./baseEntity.js";
 
 export class Background extends Entity{
     constructor() {
-        super({})
+        super()
 
         this.zones = [
             {
                 "xStart": 0 * ctx.canvas.width, "xEnd": 1/6 * ctx.canvas.width,
                 "yStart": 0 * ctx.canvas.height, 'yEnd': 1 * ctx.canvas.height,
-                "colour": "#eef8fe"
+                "colour": "#222222"
             },
             {
                 "xStart": 1/6 * ctx.canvas.width, "xEnd": 5/6 * ctx.canvas.width,
                 "yStart": 0 * ctx.canvas.height, 'yEnd': 1 * ctx.canvas.height,
-                "colour": "#cfe7f7"
+                "colour": "#2e2e2e"
             },
             {
                 "xStart": 5/6 * ctx.canvas.width, "xEnd": 1 * ctx.canvas.width,
                 "yStart": 0 * ctx.canvas.height, 'yEnd': 1 * ctx.canvas.height,
-                "colour": "#eef8fe"
+                "colour": "#222222"
             }
         ]
         
