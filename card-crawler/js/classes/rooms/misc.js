@@ -1,7 +1,7 @@
 import { global } from "../../global.js"
-import { Entity } from "../baseEntity.js"
+import { BaseRoom } from "./baseRoom.js"
 
-export class MiscRoom extends Entity {
+export class MiscRoom extends BaseRoom {
     constructor() {
         super({})
         

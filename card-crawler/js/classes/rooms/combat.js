@@ -1,21 +1,12 @@
 import { sleep } from "../../tems_library/tems_library.js"
-import { Entity } from "../baseEntity.js"
+import { BaseRoom } from "./baseRoom.js"
 
-export class CombatRoom extends Entity {
+export class CombatRoom extends BaseRoom {
     constructor() {
         super({})
         
         this.turn_count = 0
         this.enemies = []
-        
-        this.PHASES = {
-            "playerStart": this._playerStart,
-            "playerControl": this._playerControl,
-            "playerEnd": this._playerEnd,
-            "enemyStart": this._enemyStart,
-            "enemyControl": this._enemyControl,
-            "enemyEnd": this._enemyEnd,
-        }
 
         this.phase = this.PHASES["playerStart"]
         this.phase()
@@ -28,7 +19,7 @@ export class CombatRoom extends Entity {
     async _setPhase(phase) {
         this.phase = this.PHASES[phase]
 
-        await sleep(200)
+        await sleep(400)
 
         await this.phase()
     }
