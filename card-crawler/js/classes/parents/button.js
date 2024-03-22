@@ -36,9 +36,7 @@ export class Button extends UIElement {
     }
 
     tick() {
-        if (this.visible) {
-            this.draw()
-        }
+        this.draw()
     }
 }
 

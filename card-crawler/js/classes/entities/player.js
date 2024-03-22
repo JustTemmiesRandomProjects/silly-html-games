@@ -34,6 +34,7 @@ export class Player extends Entity {
         for (let i = 0; i < this.hand.length; i++) {
             let card = this.hand[i]
             card.position.x = (1000 / this.hand.length) * (i+1) + 260
+            card.position.y = ctx.canvas.height/2 - card.size.x/2
         }
     }
 
@@ -45,11 +46,16 @@ export class Player extends Entity {
         }
 
         let card = this.deck_pile.pop()
+        card.processing = true
         this.hand.push(card)
         this.discard_pile.push(card)
     }
 
     discardHand() {
+        this.hand.forEach(card => {
+            card.processing = false
+        })
+
         this.hand = []
     }
 

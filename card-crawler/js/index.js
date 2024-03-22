@@ -37,7 +37,9 @@ function ready() {
     let colours = ["red", "yellow", "green", "blue"]
     colours.forEach(colour => {
         [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].forEach((number) => {
-            global.player.deck.push( new Card(colour, number) )
+            let card = new Card(colour, number)
+            card.processing = false
+            global.player.deck.push(card)
         })
     });
 

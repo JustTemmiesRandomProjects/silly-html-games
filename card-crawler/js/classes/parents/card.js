@@ -14,6 +14,10 @@ export class Card extends UIElement {
         
         this.hovering = false;
         this.font_size = 64
+
+        this.handleUIClick = async function(event) {
+            console.log(colour)
+        }
     }
 
     draw(x, y) {
@@ -40,7 +44,7 @@ export class Card extends UIElement {
     }
 
     tick() {
-        if (this.visible) {
+        if (this.processing) {
             this.draw()
         }
     }
