@@ -1,8 +1,7 @@
 import { ctx, global } from "../../global.js";
 import { sleep } from "../../tems_library/tems_library.js"
 import { BaseRoom } from "./baseRoom.js"
-import { Entity } from "../baseEntity.js";
-import { Button } from "../scenes/button.js";
+import { EndTurnButton } from "../scenes/pre_made_elements/buttons/end_turn_button.js";
 
 export class CombatRoom extends BaseRoom {
     constructor() {
@@ -14,21 +13,17 @@ export class CombatRoom extends BaseRoom {
         this.phase = this.PHASES["playerStart"]
         this.phase()
 
-        let button = ( 
-            new Button(
-                {x: 100, y: 200},
-                {x: 150, y: 100}
-            )
-        )
-        
-        button.hover_colour = "#e8e8e8"
-        button.standard_colour = "#4e4e4e"
+
+        let button = new EndTurnButton(this)
         global.entities["hud"].push(button)
+
+        global.player.deck_pile = global.player.deck
     }
     
-    end_turn() {
+    async end_turn() {
         if (this.phase == this.PHASES["playerControl"]) {
             this.phase = this.PHASES["playerEnd"]
+            await this.phase()
         } else {
             console.log("can't end turn, it's not the players' turn yet")
         }
@@ -37,7 +32,7 @@ export class CombatRoom extends BaseRoom {
     async _setPhase(phase) {
         this.phase = this.PHASES[phase]
 
-        await sleep(400)
+        await sleep(40)
 
         await this.phase()
     }
@@ -51,11 +46,13 @@ export class CombatRoom extends BaseRoom {
     
     async _playerControl() {
         console.log("player is in control")
+        global.player.turnStart()
 
     }
 
     async _playerEnd() {
         console.log("player turn ending")
+        global.player.turnEnd()
 
         await this._setPhase("enemyStart")
     }

@@ -1,5 +1,5 @@
 import { ctx } from "../../global.js";
-import { UIElement } from "../parents/UI_element.js";
+import { UIElement } from "./UI_element.js";
 
 export class Button extends UIElement {
     constructor(position, size) {
@@ -7,8 +7,9 @@ export class Button extends UIElement {
 
         this.hover_colour = this.colour
         this.standard_colour = this.colour
-        this.text_colour = "ff4400"
-        this.text = ""
+        this.text_colour = "#ff4400"
+        this.text = "bah gah"
+        this.font_size = 12
     }
 
     draw() {
@@ -23,8 +24,15 @@ export class Button extends UIElement {
         );
 
         ctx.fillStyle = this.text_colour;
-        ctx.font = "20px Arial";
-        ctx.fillText(text, this.position["x"] + 10, this.position["y"] + 30);
+
+        ctx.font = `${this.font_size}px Arial`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(
+            this.text,
+            this.position.x + (this.size.x / 2),
+            this.position.y + (this.size.y / 2),
+        );
     }
 
     tick() {

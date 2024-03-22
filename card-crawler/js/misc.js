@@ -13,20 +13,7 @@ export const canvases = [
 ]
 
 export function miscSetup() {
-    ctx.canvas.addEventListener('mousemove', (event) => {
-        const rect = ctx.canvas.getBoundingClientRect();
-        const mouseX = event.clientX - rect.left;
-        const mouseY = event.clientY - rect.top;
-
-        global.player.hand.forEach(card => {
-            if (card.isMouseOver(mouseX, mouseY)) {
-                card.hovering = true
-                // Trigger any action you want when the card is hovered
-            } else {
-                card.hovering = false
-            }
-        });
-    });
+    
 }
 
 // gameTick function, called 100 ms (10 times/second)
