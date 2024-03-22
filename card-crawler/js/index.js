@@ -11,9 +11,12 @@ import { global, ctx, backgroundCtx, particleCtx, hudCtx, initGlobal } from "./g
 import { miscSetup, gameTick10, gameTick2, updateBackground, canvases } from "./misc.js"
 import { CombatRoom } from "./classes/rooms/combat.js"
 import { MiscRoom } from "./classes/rooms/misc.js"
+import { cardManagerInit, full_card_list } from "./card_manager.js"
 
 // ready function, called when the program is ready, before the first game tick
 function ready() {
+    cardManagerInit()
+
     resizeCanvas(canvases, [updateBackground, drawHud])
     ctx.imageSmoothingEnabled = false
 
@@ -34,14 +37,12 @@ function ready() {
     
     global.current_room = new MiscRoom
     
-    let colours = ["red", "yellow", "green", "blue"]
-    colours.forEach(colour => {
-        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].forEach((number) => {
-            let card = new Card(colour, number)
-            card.processing = false
-            global.player.deck.push(card)
-        })
-    });
+    for (let i = 0; i < 50; i++) {
+        let card = full_card_list[randInt(0, full_card_list.length)]
+        let card_instace = new card()
+        card_instace.processing = false
+        global.player.deck.push(card_instace)
+    }
 
     global.entities["backgrounds"].push( new Background() )
 

@@ -8,9 +8,9 @@ export function drawHud () {
 
 // draw features
 function drawScore() {
-    hudCtx.font = "48px Arial"
-    hudCtx.fillStyle = "#FFA500AF"
-    hudCtx.fillText(`Score: ${handleNumber(global.score)}` , 10, 54) 
+    // hudCtx.font = "48px Arial"
+    // hudCtx.fillStyle = "#FFA500AF"
+    // hudCtx.fillText(`Score: ${handleNumber(global.score)}` , 10, 54) 
 }
 
 
