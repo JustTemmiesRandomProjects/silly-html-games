@@ -19,16 +19,21 @@ export class Card extends UIElement {
         this.name = "Default Name"
         this.description = "gravida cum sociis natoque penatibus et magnis dis parturient montes nascetur ridiculus mus mauris vitae"
 
-        this.handleUIClick = async function(event) {
-            console.log(colour)
+        this.play = function() {
+            console.log(`guh?`)
         }
     }
 
-    postSetup() {
-        this.display_description = splitTextToFit(this.description, 120)
+    register() {
+        this.display_description = splitTextToFit(this.description, 110)
+
+        const card = this
+        this.handleUIClick = async function(event) {
+            global.player.play_queue.push(card)
+        }
     }
 
-    draw(x, y) {
+    draw() {
         // Border
         if (this.hovering) {
             ctx.fillStyle = "#efcf8f"

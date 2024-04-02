@@ -12,6 +12,7 @@ import { miscSetup, gameTick10, gameTick2, updateBackground, canvases } from "./
 import { CombatRoom } from "./classes/rooms/combat.js"
 import { MiscRoom } from "./classes/rooms/misc.js"
 import { cardManagerInit, full_card_list } from "./card_manager.js"
+import { Enemy } from "./classes/entities/enemy.js"
 
 // ready function, called when the program is ready, before the first game tick
 function ready() {
@@ -33,11 +34,12 @@ function ready() {
 
 
     global.player = new Player
-    global.entities["misc"].push(global.player)
+    global.entities["actors"].push(global.player)
+    global.entities["actors"].push(new Enemy)
     
     global.current_room = new MiscRoom
     
-    for (let i = 0; i < 12; i++) {
+    for (let i = 0; i < 10000; i++) {
         let card = full_card_list[randInt(0, full_card_list.length)]
         let card_instace = new card()
         card_instace.processing = false

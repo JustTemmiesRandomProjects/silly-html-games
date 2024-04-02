@@ -29,6 +29,7 @@ class Global {
             backgrounds: [],
             hud: [],
             cards: [],
+            actors: [],
             misc: [],
         }
 
@@ -68,22 +69,12 @@ window.onload = async function () {
     // "ID": [Type of asset, "path to file", Bonus data] 
     let asset_data = await loadAssets({
         "sprite_background": [Image, "assets/sprites/kenney/Backgrounds/black.png", {}],
-        "sprite_space_coin": [GIF, [
-            "assets/sprites/original/space-coin-1.png", "assets/sprites/original/space-coin-2.png",
-            "assets/sprites/original/space-coin-3.png", "assets/sprites/original/space-coin-4.png",
-            "assets/sprites/original/space-coin-5.png", "assets/sprites/original/space-coin-6.png",
-            "assets/sprites/original/space-coin-7.png", "assets/sprites/original/space-coin-8.png",
-        ], {}],
         "sfx_zap": [Audio, "assets/audio/sound-effects/kenney/sfx_zap.ogg", {}],
 
-        "sprite_player_idle": [Image, "assets/sprites/kenney/kenney_tiny-ski/ski_idle.png", {}],
+        "sprite_player_idle": [GIF, ["assets/sprites/kenney/kenney_tiny-ski/ski_idle.png"], {}],
         "sprite_player_active": [GIF, [
             "assets/sprites/kenney/kenney_tiny-ski/ski_walk.png",
             "assets/sprites/kenney/kenney_tiny-ski/ski_idle.png",
-        ], {}],
-        "sprite_ghost": [GIF, [
-            "assets/sprites/ghosts/ghost0.png", "assets/sprites/ghosts/ghost1.png",
-            "assets/sprites/ghosts/ghost2.png", "assets/sprites/ghosts/ghost3.png",
         ], {}],
     })
     asset_objects = asset_data[0]

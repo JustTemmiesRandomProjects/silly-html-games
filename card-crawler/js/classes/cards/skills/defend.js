@@ -8,6 +8,6 @@ export class DefendCard extends SkillCard {
         this.name = "Defend"
         this.description = "Gain 5 block"
         
-        this.postSetup()
+        this.register()
     }
 }
