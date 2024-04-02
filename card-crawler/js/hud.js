@@ -1,16 +1,26 @@
 import { global, hudCtx } from "./global.js"
+import { randInt } from "./tems_library/tems_library.js"
 
 export function drawHud () {
     hudCtx.clearRect(0, 0, hudCtx.canvas.width, hudCtx.canvas.height)
 
-    drawScore()
+    if (global.player != null) {
+        drawDrawPile()
+        drawDiscardPile()
+    }
 }
 
 // draw features
-function drawScore() {
-    // hudCtx.font = "48px Arial"
-    // hudCtx.fillStyle = "#FFA500AF"
-    // hudCtx.fillText(`Score: ${handleNumber(global.score)}` , 10, 54) 
+function drawDrawPile() {
+    hudCtx.font = "32px Arial"
+    hudCtx.fillStyle = "#FFA500AF"
+    hudCtx.fillText(`Draw Pile: ${global.player.deck_pile.length}` , 20, 880) 
+}
+
+function drawDiscardPile() {
+    hudCtx.font = "32px Arial"
+    hudCtx.fillStyle = "#FFA500AF"
+    hudCtx.fillText(`Discard Pile: ${global.player.discard_pile.length}` , 20, 920) 
 }
 
 

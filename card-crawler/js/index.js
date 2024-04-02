@@ -37,7 +37,7 @@ function ready() {
     
     global.current_room = new MiscRoom
     
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 12; i++) {
         let card = full_card_list[randInt(0, full_card_list.length)]
         let card_instace = new card()
         card_instace.processing = false
@@ -66,6 +66,8 @@ async function process() {
             entity.tick()
         }
     }
+
+    drawHud()
 
     // finally, run the combat-room tick
     global.current_room.tick()
