@@ -1,6 +1,6 @@
 console.log("index.js initialized")
 import { randFloat, randInt, resizeCanvas, canvas_centre, drawBackgroundImage } from "./tems_library/tems_library.js"
-import { loadMenu, showGameOverScreen } from "./main_menu/index.js"
+import { loadMenu, playButtonClick, showGameOverScreen } from "./main_menu/index.js"
 
 import { Background } from "./classes/background.js"
 import { Card } from "./classes/parents/card.js"
@@ -39,7 +39,7 @@ function ready() {
     
     global.current_room = new MiscRoom
     
-    for (let i = 0; i < 10000; i++) {
+    for (let i = 0; i < 100; i++) {
         let card = full_card_list[randInt(0, full_card_list.length)]
         let card_instace = new card()
         card_instace.processing = false
@@ -84,6 +84,9 @@ let initInterval = setInterval(async () => {
         await loadMenu()
 
         console.log("setup fully complete!")
+
+        // whilst in development, this skips the main menu
+        playButtonClick()
     }
 }, 100)
 

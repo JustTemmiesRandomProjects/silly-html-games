@@ -28,7 +28,7 @@ export async function loadMenu() {
     document.getElementById("loading-bar").remove()
 }
 
-function playButtonClick () {
+export function playButtonClick () {
     current_menu.hidden = true
     console.log("clicked on the play button on the main-menu.")
     play_game()

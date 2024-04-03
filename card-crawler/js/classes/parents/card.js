@@ -12,16 +12,15 @@ export class Card extends UIElement {
         
         this.colour = colour;
         
+        this.rotation = 0
+        this.hand_ratio = 0.5
+
         this.hovering = false;
         this.name_font_size = 28
         this.description_font_size = 18
         
         this.name = "Default Name"
         this.description = "gravida cum sociis natoque penatibus et magnis dis parturient montes nascetur ridiculus mus mauris vitae"
-
-        this.play = function() {
-            console.log(`guh?`)
-        }
     }
 
     register() {
@@ -30,19 +29,33 @@ export class Card extends UIElement {
         const card = this
         this.handleUIClick = async function(event) {
             global.player.play_queue.push(card)
+            console.log(`playing "${card.name}"...`)
+        }
+        
+        if (this.play == null) {
+            this.play = function() {
+                console.log(`the card "${card.name}" doesn't have any play function`)
+            }
         }
     }
 
     draw() {
+        const y_offset = Math.abs((0.5-this.hand_ratio)*100)
+        const rotation_offset = 0.2
+        
+        ctx.translate(this.position.x + this.size.x/2, this.position.y + y_offset)
+        ctx.rotate(this.rotation * rotation_offset)
+        ctx.translate(-this.size.x/2, 0)
+
         // Border
         if (this.hovering) {
             ctx.fillStyle = "#efcf8f"
-            ctx.fillRect(this.position["x"]-3, this.position["y"]-3, this.size["x"]+6, this.size["y"]+6);
+            ctx.fillRect(-3, -3, this.size.x+6, this.size.y+6);
         }
 
         // Background
         ctx.fillStyle = this.colour;
-        ctx.fillRect(this.position["x"], this.position["y"], this.size["x"], this.size["y"]);
+        ctx.fillRect(0, 0, this.size.x, this.size.y);
 
         // Text
         ctx.fillStyle = "white";
@@ -57,8 +70,8 @@ export class Card extends UIElement {
             let shift_down_amount = (i+1)*(this.description_font_size + 2)
             ctx.fillText(
                 line,
-                this.position.x + (this.size.x / 2),
-                this.position.y + (this.size.y / 2) - shift_up_amount + shift_down_amount,
+                (this.size.x / 2),
+                (this.size.y / 2) - shift_up_amount + shift_down_amount,
             )
         }
 
@@ -66,9 +79,12 @@ export class Card extends UIElement {
         ctx.font = `${this.name_font_size}px Arial`;
         ctx.fillText(
             this.name,
-            this.position.x + (this.size.x / 2),
-            this.position.y + this.name_font_size + 8,
+            this.size.x / 2,
+            this.name_font_size + 8,
         );
+
+
+        ctx.setTransform(1, 0, 0, 1, 0, 0)
     }
     
     tick() {

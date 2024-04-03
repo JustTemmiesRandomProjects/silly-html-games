@@ -51,3 +51,53 @@ export function checkLaserCircleCollision(laser, circle) {
     // check if the distance is less than or equal to the circle's radius
     return distance <= circle.radius
 }
+
+export function cubicBezierX(x, p) {
+    const EPSILON = 1e-6; // small value for convergence
+    let t = x; // initial guess for t
+
+    // newton's method for root-finding
+    for (let i = 0; i < 1000; i++) {
+        const f = bezierCurvePoint(t, p).x - x;
+        if (Math.abs(f) < EPSILON) {
+            break; // we achieved convergence
+        }
+        const df = (bezierCurvePoint(t + EPSILON, p).x - bezierCurvePoint(t - EPSILON, p).x) / (2 * EPSILON);
+        t -= f / df; // update t using newton's method
+    }
+
+    return t;
+}
+
+export function cubicBezierY(y, p) {
+    const EPSILON = 1e-6; // small value for convergence
+    let t = y; // initial guess for t
+
+    // newton's method for root-finding
+    for (let i = 0; i < 1000; i++) {
+        const f = bezierCurvePoint(t, p).y - y;
+        if (Math.abs(f) < EPSILON) {
+            break; // we achieved convergence
+        }
+        const df = (bezierCurvePoint(t + EPSILON, p).y - bezierCurvePoint(t - EPSILON, p).y) / (2 * EPSILON);
+        t -= f / df; // update t using newton's method
+    }
+
+    return t;
+}
+
+export function bezierCurvePointAxis(t, p) {
+    return Math.pow(1 - t, 3) * p[0]
+            + 3 * Math.pow(1 - t, 2) * t * p[1]
+            + 3 * (1 - t) * Math.pow(t, 2) * p[2]
+            + Math.pow(t, 3) * p[3];
+}
+
+export function bezierCurvePoint(t, p) {
+    const a = {
+        x: bezierCurvePointAxis(t, [p[0].x, p[1].x, p[2].x, p[3].x]),
+        y: bezierCurvePointAxis(t, [p[0].y, p[1].y, p[2].y, p[3].y])
+    };
+
+    return a
+}
