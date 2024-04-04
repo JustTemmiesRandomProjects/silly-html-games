@@ -1,5 +1,4 @@
-import { ctx } from "../../../global.js";
-import { AttackCard } from "../../parents/card_types/attack.js";
+import { AttackCard } from "../../../classes/parents/card_types/attack.js"
 
 export class ThunderclapCard extends AttackCard {
     constructor() {

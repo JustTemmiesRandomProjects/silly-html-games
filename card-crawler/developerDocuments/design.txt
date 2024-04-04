@@ -1,0 +1,12 @@
+palettes:
+    cards: https://www.color-hex.com/color-palette/5361
+    background: https://www.color-hex.com/color-palette/68923
+
+colour palette values:
+    # ff b3 ba <- attack
+    # ba ff c9 <- skill
+    # ba e1 ff <- power
+    # 45 4f 45 <- text
+
+    # e0 f0 e3 <- background centre
+    # d2 e7 d6 <- background edges

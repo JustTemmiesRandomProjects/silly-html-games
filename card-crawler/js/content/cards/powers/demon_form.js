@@ -1,5 +1,4 @@
-import { ctx } from "../../../global.js";
-import { PowerCard } from "../../parents/card_types/power.js";
+import { PowerCard } from "../../../classes/parents/card_types/power.js"
 
 export class DemonFormCard extends PowerCard {
     constructor() {

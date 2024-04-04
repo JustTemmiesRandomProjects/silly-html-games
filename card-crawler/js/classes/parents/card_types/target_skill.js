@@ -4,7 +4,7 @@ import { TargetCard } from "../target_card.js";
 export class TargetSkillCard extends TargetCard {
     constructor() {
         super(
-            "#4848ff"
+            "#baffc9"
         )
     }
 }

@@ -9,17 +9,17 @@ export class Background extends Entity{
             {
                 "xStart": 0 * ctx.canvas.width, "xEnd": 1/6 * ctx.canvas.width,
                 "yStart": 0 * ctx.canvas.height, 'yEnd': 1 * ctx.canvas.height,
-                "colour": "#282828"
+                "colour": "#d2e7d6"
             },
             {
                 "xStart": 1/6 * ctx.canvas.width, "xEnd": 5/6 * ctx.canvas.width,
                 "yStart": 0 * ctx.canvas.height, 'yEnd': 1 * ctx.canvas.height,
-                "colour": "#2e2e2e"
+                "colour": "#e0f0e3"
             },
             {
                 "xStart": 5/6 * ctx.canvas.width, "xEnd": 1 * ctx.canvas.width,
                 "yStart": 0 * ctx.canvas.height, 'yEnd': 1 * ctx.canvas.height,
-                "colour": "#282828"
+                "colour": "#d2e7d6"
             }
         ]
         

@@ -66,44 +66,13 @@ export class Player extends Entity {
         const screen_width = ctx.canvas.width
         const screen_height = ctx.canvas.height
 
-        function width_curve(x) {
+        function width_curve(x, hand_length) {
+            // const hand_width = Math.log((hand_length/4)+0.8) / Math.log(1.0025)
             // function * const + offset
             return (x * 2 - 1)
                     * ((screen_width/6) * 1.5)
                     + screen_width/2
         }
-
-        // function height_curve(x) {
-        //     // function * const + offset
-        //     return ((x - Math.pow(x, 2) - 0.25) * 2.5)
-        //             * -(screen_height/10)
-        //             + (screen_height/4) * 3
-        // }
-
-        function height_curve(t) {
-            // bezier curve :3
-            return Math.pow(1 - t, 3) * 2
-                    + 3 * Math.pow(1 - t, 2) * t * 0
-                    + 3 * (1 - t) * Math.pow(t, 2) * 0
-                    + Math.pow(t, 3) * 2
-        }
-
-        function fan_curve(t) {
-            // bezier curve :3
-            return Math.pow(1 - t, 3) * -2
-                    + 3 * Math.pow(1 - t, 2) * t * 1
-                    + 3 * (1 - t) * Math.pow(t, 2) * -1
-                    + Math.pow(t, 3) * 2
-        }
-
-
-        // for (let i = 0; i < 1; i += 0.01) {
-        //     sum += bezierCurvePoint(i, p0, p1, p2, p3).y
-        //     console.log(bezierCurvePoint(i, p0, p1, p2, p3).y)
-        // }
-        // console.log(sum)
-        // console.log(p0, p1, p2, p3)
-
 
         const card_y_position_constant = [screen_height / 50, 0, 0, screen_height / 50]
         const card_rotation_constants = [-1, 1, -1, 1]
@@ -116,10 +85,10 @@ export class Player extends Entity {
                 hand_ratio = i / (hand_length-1) 
             }
             
-            card.position.x = width_curve(hand_ratio) - card.size.x/2
-            card.position.y = bezierCurvePointAxis(hand_ratio, card_y_position_constant) - card.size.y/2 + (screen_height/4) * 3.7
+            card.position.x = width_curve(hand_ratio, hand_length) - card.size.x/2
+            card.position.y = bezierCurvePointAxis(hand_ratio, card_y_position_constant) - card.size.y/2 + (screen_height/4) * 3.5
             card.rotation = bezierCurvePointAxis(hand_ratio, card_rotation_constants)
-            console.log(bezierCurvePointAxis(hand_ratio, card_y_position_constant))
+            // console.log(bezierCurvePointAxis(hand_ratio, card_y_position_constant))
             card.hand_ratio = hand_ratio
             // console.log(card.rotation)
 

@@ -1,6 +1,4 @@
-import { ctx } from "../../../global.js";
-import { PowerCard } from "../../parents/card_types/power.js";
-import { TargetPowerCard } from "../../parents/card_types/target_power.js";
+import { TargetPowerCard } from "../../../classes/parents/card_types/target_power.js"
 
 export class TerrorCard extends TargetPowerCard {
     constructor() {

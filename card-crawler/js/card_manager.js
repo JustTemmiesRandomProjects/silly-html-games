@@ -1,11 +1,11 @@
-import { StrikeCard } from "./classes/cards/attacks/strike.js"
-import { ThunderclapCard } from "./classes/cards/attacks/thunderclap.js"
+import { StrikeCard } from "./content/cards/attacks/strike.js"
+import { ThunderclapCard } from "./content/cards/attacks/thunderclap.js"
 
-import { TerrorCard } from "./classes/cards/powers/terror.js"
-import { DemonFormCard } from "./classes/cards/powers/demon_form.js"
+import { TerrorCard } from "./content/cards/powers/terror.js"
+import { DemonFormCard } from "./content/cards/powers/demon_form.js"
 
-import { DefendCard } from "./classes/cards/skills/defend.js"
-import { LegSweepCard } from "./classes/cards/skills/leg_sweep.js"
+import { DefendCard } from "./content/cards/skills/defend.js"
+import { LegSweepCard } from "./content/cards/skills/leg_sweep.js"
 
 export var full_card_list = []
 

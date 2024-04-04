@@ -41,25 +41,25 @@ export class Card extends UIElement {
 
     draw() {
         const y_offset = Math.abs((0.5-this.hand_ratio)*100)
-        const rotation_offset = 0.2
+        const rotation_offset = 0.1
         
         ctx.translate(this.position.x + this.size.x/2, this.position.y + y_offset)
         ctx.rotate(this.rotation * rotation_offset)
         ctx.translate(-this.size.x/2, 0)
 
-        // Border
+        // border
         if (this.hovering) {
-            ctx.fillStyle = "#efcf8f"
+            ctx.fillStyle = "#f8f8f8"
             ctx.fillRect(-3, -3, this.size.x+6, this.size.y+6);
         }
 
-        // Background
+        // background
         ctx.fillStyle = this.colour;
         ctx.fillRect(0, 0, this.size.x, this.size.y);
 
-        // Text
-        ctx.fillStyle = "white";
-        ctx.font = `${this.description_font_size}px Arial`;
+        // text 
+        ctx.fillStyle = "#454f45";
+        ctx.font = `${this.description_font_size}px kalam-regular`;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         let line_count = this.display_description.length
@@ -76,7 +76,7 @@ export class Card extends UIElement {
         }
 
 
-        ctx.font = `${this.name_font_size}px Arial`;
+        ctx.font = `${this.name_font_size}px kalam-bold`;
         ctx.fillText(
             this.name,
             this.size.x / 2,

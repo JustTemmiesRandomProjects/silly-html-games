@@ -4,7 +4,7 @@ import { Card } from "../card.js";
 export class PowerCard extends Card {
     constructor() {
         super(
-            "#485848"
+            "#bae1ff"
         )
     }
 }

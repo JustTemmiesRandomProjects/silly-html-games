@@ -1,5 +1,4 @@
-import { ctx } from "../../../global.js";
-import { SkillCard } from "../../parents/card_types/skill.js";
+import { SkillCard } from "../../../classes/parents/card_types/skill.js"
 
 export class DefendCard extends SkillCard {
     constructor() {

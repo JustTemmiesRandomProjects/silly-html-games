@@ -1,6 +1,4 @@
-import { ctx } from "../../../global.js";
-import { AttackCard } from "../../parents/card_types/attack.js";
-import { TargetAttackCard } from "../../parents/card_types/target_attack.js";
+import { TargetAttackCard } from "../../../classes/parents/card_types/target_attack.js"
 
 export class StrikeCard extends TargetAttackCard {
     constructor() {

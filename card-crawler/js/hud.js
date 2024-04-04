@@ -12,13 +12,13 @@ export function drawHud () {
 
 // draw features
 function drawDrawPile() {
-    hudCtx.font = "32px Arial"
+    hudCtx.font = "32px kalam-light"
     hudCtx.fillStyle = "#2d8dff"
     hudCtx.fillText(`Draw Pile: ${global.player.deck_pile.length}` , 20, 880) 
 }
 
 function drawDiscardPile() {
-    hudCtx.font = "32px Arial"
+    hudCtx.font = "32px kalam-light"
     hudCtx.fillStyle = "#a038c8"
     hudCtx.fillText(`Discard Pile: ${global.player.discard_pile.length}` , 20, 920) 
 }

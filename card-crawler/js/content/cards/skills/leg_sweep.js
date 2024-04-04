@@ -1,5 +1,4 @@
-import { ctx, global } from "../../../global.js";
-import { TargetSkillCard } from "../../parents/card_types/target_skill.js";
+import { TargetSkillCard } from "../../../classes/parents/card_types/target_skill.js"
 
 export class LegSweepCard extends TargetSkillCard {
     constructor() {

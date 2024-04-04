@@ -1,3 +1,18 @@
+@font-face {
+    font-family: 'kalam-bold';
+    src: url('/assets/fonts/Kalam/Kalam-Bold.ttf');
+}
+
+@font-face {
+    font-family: 'kalam-light';
+    src: url('/assets/fonts/Kalam/Kalam-Light.ttf');
+}
+
+@font-face {
+    font-family: 'kalam-regular';
+    src: url('/assets/fonts/Kalam/Kalam-Regular.ttf');
+}
+
 canvas {
     image-rendering: pixelated;
     image-rendering: crisp-edges;
