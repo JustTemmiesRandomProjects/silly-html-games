@@ -18,8 +18,8 @@ export function checkLaserCircleCollision(laser, circle) {
     const dy = laser.targetY - laser.y
 
     // vector from the laser start point to the center of the circle
-    const fx = circle.position["x"] - laser.x
-    const fy = circle.position["y"] - laser.y
+    const fx = circle.position.x - laser.x
+    const fy = circle.position.y - laser.y
 
     // calculate the length of the direction vector
     const length = Math.sqrt(dx * dx + dy * dy)
@@ -46,7 +46,7 @@ export function checkLaserCircleCollision(laser, circle) {
     }
 
     // calculate the distance between the closest point on the laser, and the circle center
-    const distance = Math.sqrt((closestX - circle.position["x"]) ** 2 + (closestY - circle.position["y"]) ** 2)
+    const distance = Math.sqrt((closestX - circle.position.x) ** 2 + (closestY - circle.position.y) ** 2)
 
     // check if the distance is less than or equal to the circle's radius
     return distance <= circle.radius

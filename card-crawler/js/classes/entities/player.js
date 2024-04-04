@@ -86,8 +86,8 @@ export class Player extends Entity {
             }
             
             card.position.x = width_curve(hand_ratio, hand_length) - card.size.x/2
-            card.position.y = bezierCurvePointAxis(hand_ratio, card_y_position_constant) - card.size.y/2 + (screen_height/4) * 3.5
-            card.rotation = bezierCurvePointAxis(hand_ratio, card_rotation_constants)
+            card.position.y = bezierCurvePointAxis(hand_ratio, card_y_position_constant) - card.size.y/2 + (screen_height/4) * 3
+            card.rotation = bezierCurvePointAxis(hand_ratio, card_rotation_constants) * 0.1
             // console.log(bezierCurvePointAxis(hand_ratio, card_y_position_constant))
             card.hand_ratio = hand_ratio
             // console.log(card.rotation)

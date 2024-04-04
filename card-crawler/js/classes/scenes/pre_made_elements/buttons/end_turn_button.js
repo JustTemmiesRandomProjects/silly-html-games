@@ -1,4 +1,4 @@
-import { Button } from "../../../parents/button.js"
+import { Button } from "../../../parents/UI/button.js"
 
 // this is used in the combat segment to end the player's turn
 export class EndTurnButton extends Button {
@@ -8,9 +8,10 @@ export class EndTurnButton extends Button {
             {x: 200, y: 80}
         )
 
-        this.hover_colour = "#4e4e4e"
-        this.standard_colour = "#404040"
-        this.text_colour = "#d8d8d8"
+        this.hover_colour = "#bbcbc0"
+        this.standard_colour = "#c6dac9"
+        this.text_colour = "#454f45"
+        this.font = "kalam-regular"
         this.text = "End Turn"
         this.font_size = 28
 

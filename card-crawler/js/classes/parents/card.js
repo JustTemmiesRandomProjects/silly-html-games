@@ -12,7 +12,6 @@ export class Card extends UIElement {
         
         this.colour = colour;
         
-        this.rotation = 0
         this.hand_ratio = 0.5
 
         this.hovering = false;
@@ -41,10 +40,9 @@ export class Card extends UIElement {
 
     draw() {
         const y_offset = Math.abs((0.5-this.hand_ratio)*100)
-        const rotation_offset = 0.1
         
         ctx.translate(this.position.x + this.size.x/2, this.position.y + y_offset)
-        ctx.rotate(this.rotation * rotation_offset)
+        ctx.rotate(this.rotation)
         ctx.translate(-this.size.x/2, 0)
 
         // border

@@ -394,8 +394,8 @@ export class GIF {
     }
 
     setPosition(x, y) {
-        this.position["x"] = x
-        this.position["y"] = y
+        this.position.x = x
+        this.position.y = y
     }
 
     setTicksPerFrame(n) {
@@ -412,7 +412,7 @@ export class GIF {
     }
 
     draw() {
-        if ( this.position["x"] == null || this.position["y"] == null) {
+        if ( this.position.x == null || this.position.y == null) {
             alert(`my position is null :( ${this}`)
         }
         this.current_frame = Math.floor(global.frames_processed/this.ticks_per_frame) % this.frames.length
@@ -426,15 +426,15 @@ export class GIF {
                 /*      skew x */ 0,
                 /*      skew y */ 0,
                 /*     scale y */ this.scale,
-                /* translate x */ (this.position["x"] - (this_frame.width/2) * this.scale),
-                /* translate y */ (this.position["y"] - (this_frame.height/2) * this.scale),
+                /* translate x */ (this.position.x - (this_frame.width/2) * this.scale),
+                /* translate y */ (this.position.y - (this_frame.height/2) * this.scale),
             )
         
             // this.sprite.draw()
             this.ctx.drawImage(this_frame, 0, 0)
             this.ctx.setTransform(1, 0, 0, 1, 0, 0)
         } else {
-            this.ctx.drawImage(this_frame, this.position["x"] - this_frame.width/2, this.position["y"] - this_frame.height/2)
+            this.ctx.drawImage(this_frame, this.position.x - this_frame.width/2, this.position.y - this_frame.height/2)
         }
     }
 }

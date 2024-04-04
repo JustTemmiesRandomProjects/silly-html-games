@@ -56,6 +56,7 @@ async function process() {
     if ( !global.is_playing ) {
         return
     }
+    console.log("tick!")
 
     global.frames_processed ++
     requestAnimationFrame(process)
