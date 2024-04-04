@@ -39,7 +39,8 @@ export class Card extends UIElement {
     }
 
     draw() {
-        const y_offset = Math.abs((0.5-this.hand_ratio)*100)
+        // const y_offset = Math.abs((0.5-this.hand_ratio)*100)
+        const y_offset = 0
         
         ctx.translate(this.position.x + this.size.x/2, this.position.y + y_offset)
         ctx.rotate(this.rotation)
@@ -47,7 +48,7 @@ export class Card extends UIElement {
 
         // border
         if (this.hovering) {
-            ctx.fillStyle = "#f8f8f8"
+            ctx.fillStyle = "#102f10"
             ctx.fillRect(-3, -3, this.size.x+6, this.size.y+6);
         }
 

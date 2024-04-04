@@ -16,6 +16,13 @@ export class Player extends Entity {
         this.playing = null
         this.play_cooldown = 0
         this.play_queue = []
+
+        this.constants = {
+            draw_amount: 4,
+            max_hand_size: 10,
+            max_distance_between_cards: 175,
+            max_hand_width: (ctx.canvas.width / 6) * 3.3
+        }  
     }
 
 
@@ -48,44 +55,52 @@ export class Player extends Entity {
 
     drawHand() {
         shuffleArray(this.deck_pile)
-        let cards_to_draw = 6
-        for (let i = 0; i < cards_to_draw; i++) {
-            this.drawCard()
-        }
+        this.drawCards(this.constants.draw_amount)
 
         console.log(this.hand)
         console.log(`current hand: ${this.hand.length}`)
         console.log(`current deck: ${this.deck_pile.length}`)
         console.log(`current discard_pile: ${this.discard_pile.length}`)
-
-        this.renderHand()
     }
     
     renderHand() {
-        const hand_length = this.hand.length
+        const hand_size = this.hand.length
         const screen_width = ctx.canvas.width
         const screen_height = ctx.canvas.height
-
-        function width_curve(x, hand_length) {
-            // const hand_width = Math.log((hand_length/4)+0.8) / Math.log(1.0025)
+        
+        function width_curve(x) {
+            // const hand_width = Math.log((hand_size/4)+0.8) / Math.log(1.0025)
             // function * const + offset
             return (x * 2 - 1)
-                    * ((screen_width/6) * 1.5)
-                    + screen_width/2
         }
+
+        const dist_between_cards = Math.min(
+            Math.min(
+                hand_size * 200,
+                this.constants.max_hand_width
+            ) / hand_size,
+            // cap it at the actual max hand size
+            this.constants.max_distance_between_cards)
+        const horizontal_space = dist_between_cards * hand_size
+
+
+        const x_start_pos = (screen_width - horizontal_space) / 2
+
+        console.log(dist_between_cards, horizontal_space, x_start_pos, screen_width, hand_size * dist_between_cards + x_start_pos, screen_width-x_start_pos)
 
         const card_y_position_constant = [screen_height / 50, 0, 0, screen_height / 50]
         const card_rotation_constants = [-1, 1, -1, 1]
 
-        for (let i = 0; i < hand_length; i++) {
+        for (let i = 0; i < hand_size; i++) {
             let card = this.hand[i]
 
             let hand_ratio = 0.5
-            if (hand_length > 1) {
-                hand_ratio = i / (hand_length-1) 
+            if (hand_size > 1) {
+                hand_ratio = i / (hand_size-1) 
             }
             
-            card.position.x = width_curve(hand_ratio, hand_length) - card.size.x/2
+            card.position.x = x_start_pos + i * dist_between_cards - card.size.x / 4
+            // card.position.y = (screen_height/4) * 2.5
             card.position.y = bezierCurvePointAxis(hand_ratio, card_y_position_constant) - card.size.y/2 + (screen_height/4) * 3
             card.rotation = bezierCurvePointAxis(hand_ratio, card_rotation_constants) * 0.1
             // console.log(bezierCurvePointAxis(hand_ratio, card_y_position_constant))
@@ -99,18 +114,27 @@ export class Player extends Entity {
         }
     }
 
-    drawCard() {
-        if (this.deck_pile.length == 0) {
-            // return early if both discard and deck piles are empty
-            if (this.discard_pile.length == 0) { return }
-            this.deck_pile = this.discard_pile
-            this.discard_pile = []
-            shuffleArray(this.deck_pile)
+    drawCards(num) {
+        function drawCard(self) {
+            if (self.deck_pile.length == 0) return
+            if (self.hand.length >= self.constants.max_hand_size) return
+            
+            let card = self.deck_pile.pop()
+            card.processing = true
+            self.hand.push(card)
         }
 
-        let card = this.deck_pile.pop()
-        card.processing = true
-        this.hand.push(card)
+        for (let i = 0; i < num; i++) {
+            if (this.deck_pile.length == 0) {
+                this.deck_pile = this.discard_pile
+                this.discard_pile = []
+                shuffleArray(this.deck_pile)
+            }
+            
+            drawCard(this)
+        }
+
+        this.renderHand()
     }
 
     discardHand() {
