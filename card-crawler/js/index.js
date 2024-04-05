@@ -56,7 +56,7 @@ async function process() {
     if ( !global.is_playing ) {
         return
     }
-    // console.log("tick!")
+    console.log("tick!")
 
     global.frames_processed ++
     requestAnimationFrame(process)
@@ -70,6 +70,7 @@ async function process() {
         }
     }
 
+    // used for deferred ticks
     global.deferred_calls.forEach((e) => {
         e.namespace[e.func]()
     })

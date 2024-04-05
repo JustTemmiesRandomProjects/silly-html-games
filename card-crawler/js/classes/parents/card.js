@@ -59,7 +59,6 @@ export class Card extends UIElement {
             )
         }
 
-
         ctx.font = `${this.name_font_size}px kalam-bold`;
         ctx.fillText(
             this.name,
@@ -69,8 +68,14 @@ export class Card extends UIElement {
     }
 
     hoverDraw() {
+        // doublecheck that the condition is still true, this is needed to fix a bug involving card-flixering
+        if (global.player.hovering != this) {
+            this.draw()
+            return
+        }
+        
         const hand = global.player.hand
-        const scale = 1.3
+        const scale = global.player.constants.focused_card_multiplier
         ctx.setTransform(scale, 0, 0, scale, 0, 0)
         ctx.translate(
             // this just works, don't worry about it
@@ -79,9 +84,10 @@ export class Card extends UIElement {
             // 2 scale, 2/12 + 2/24 == 6/24 == 1/4
             // bro i don't know at this point anymore
             this.position.x / scale - this.size.x * (scale / 11),
+
             // get the y position of the centre hand in the hand
             hand[Math.floor(hand.length / 2)].position.y / scale
-                - this.size.y / 2
+                - this.size.y / 2.5
         )
 
         // border
@@ -110,10 +116,10 @@ export class Card extends UIElement {
     
     tick() {
         if (this.processing) {
-            if (!this.hovering) {
-                this.draw()
-            } else {
+            if (global.player.hovering == this) {
                 call_deferred(this, "hoverDraw")
+            } else {
+                this.draw()
             }
         }
     }

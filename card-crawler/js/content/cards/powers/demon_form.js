@@ -4,8 +4,8 @@ export class DemonFormCard extends PowerCard {
     constructor() {
         super()
 
-        this.name = "Demon Form"
-        this.description = "At the start of your turn, gain 2 strength"
+        this.name = "Power Power!!"
+        this.description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
 
         this.register()
     }

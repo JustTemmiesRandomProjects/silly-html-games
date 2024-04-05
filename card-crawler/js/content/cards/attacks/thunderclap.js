@@ -4,8 +4,8 @@ export class ThunderclapCard extends AttackCard {
     constructor() {
         super()
 
-        this.name = "Thunderclap"
-        this.description = "Deal 10 damage to all enemies"
+        this.name = "Die"
+        this.description = "Kill all enemies"
 
         this.register()
     }
