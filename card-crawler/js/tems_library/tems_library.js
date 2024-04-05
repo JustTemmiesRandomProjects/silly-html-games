@@ -168,6 +168,10 @@ export function resizeCanvas(canvases, callbackFunctions) {
     }
 }
 
+export function call_deferred(namespace, func) {
+    global.deferred_calls.push({namespace, func})
+}
+
 export function drawSquircle(ctx, x, y, width, height, cornerRadius, colour) {
     ctx.beginPath();
     ctx.moveTo(x + cornerRadius, y);

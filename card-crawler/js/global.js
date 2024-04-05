@@ -33,6 +33,9 @@ class Global {
             misc: [],
         }
 
+        // functions to run after the ticks are done processing
+        this.deferred_calls = []
+
 
         this.assets = asset_objects
         this.asset_bonus_data = asset_bonus_data

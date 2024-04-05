@@ -70,6 +70,12 @@ async function process() {
         }
     }
 
+    global.deferred_calls.forEach((e) => {
+        e.namespace[e.func]()
+    })
+
+    global.deferred_calls = []
+
     drawHud()
 
     // finally, run the combat-room tick

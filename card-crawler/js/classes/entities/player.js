@@ -18,9 +18,9 @@ export class Player extends Entity {
         this.play_queue = []
 
         this.constants = {
-            draw_amount: 4,
-            max_hand_size: 10,
-            max_distance_between_cards: 210,
+            draw_amount: 7,
+            max_hand_size: 7,
+            max_distance_between_cards: 215,
             max_hand_width: (ctx.canvas.width / 6) * 3.3
         }  
     }
@@ -81,7 +81,7 @@ export class Player extends Entity {
         
         const dist_between_cards = Math.min(
             Math.min(
-                hand_size * 200,
+                hand_size * this.constants.max_distance_between_cards * 1.2,
                 this.constants.max_hand_width
             ) / hand_size,
             // cap it at the actual max hand size
@@ -102,7 +102,7 @@ export class Player extends Entity {
                 hand_ratio = i / (hand_size-1) 
             }
 
-            card.position.x = x_start_pos + i * dist_between_cards + screen_width / 5 - ((screen_width / 140) * hand_size) 
+            card.position.x = x_start_pos + i * dist_between_cards + screen_width / 6.3
             card.position.y = (Math.abs(hand_ratio - 0.5) * 350) * hand_rotation_ratio + (screen_height/4) * 2.85
             card.rotation = hand_ratio * hand_rotation_ratio - hand_rotation_ratio/2
 
