@@ -1,5 +1,5 @@
 import { global, ctx, inputManager } from "../../global.js"
-import { Entity } from "../baseEntity.js";
+import { Entity } from "../parents/baseEntity.js";
 
 export class Enemy extends Entity {
     constructor() {

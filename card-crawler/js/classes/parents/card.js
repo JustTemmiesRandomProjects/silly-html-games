@@ -1,4 +1,4 @@
-import { randFloat, randInt, canvas_centre, drawWithScreenWrap } from "../../tems_library/tems_library.js"
+import { randFloat, randInt, canvas_centre, drawWithScreenWrap, drawSquircle } from "../../tems_library/tems_library.js"
 import { global, ctx, inputManager } from "../../global.js"
 import { UIElement } from "./UI_element.js";
 import { splitTextToFit } from "../../misc.js";
@@ -7,7 +7,7 @@ export class Card extends UIElement {
     constructor(colour) {
         super(
             {x: 0, y: 0},
-            {x: 190, y: 280}
+            {x: 240, y: 330}
         )
         
         this.colour = colour;
@@ -15,8 +15,8 @@ export class Card extends UIElement {
         this.hand_ratio = 0.5
 
         this.hovering = false;
-        this.name_font_size = 28
-        this.description_font_size = 18
+        this.name_font_size = 36
+        this.description_font_size = 24
         
         this.name = "Default Name"
         this.description = "gravida cum sociis natoque penatibus et magnis dis parturient montes nascetur ridiculus mus mauris vitae"
@@ -29,6 +29,8 @@ export class Card extends UIElement {
         this.handleUIClick = async function(event) {
             global.player.play_queue.push(card)
             console.log(`playing "${card.name}"...`)
+
+            ctx.canvas.removeEventListener("click", card.handleUIClick)
         }
         
         if (this.play == null) {
@@ -48,13 +50,12 @@ export class Card extends UIElement {
 
         // border
         if (this.hovering) {
-            ctx.fillStyle = "#102f10"
-            ctx.fillRect(-3, -3, this.size.x+6, this.size.y+6);
+            drawSquircle(ctx, -3, -3, this.size.x+6, this.size.y+6, 18, "#102f10")
         }
 
         // background
-        ctx.fillStyle = this.colour;
-        ctx.fillRect(0, 0, this.size.x, this.size.y);
+
+        drawSquircle(ctx, 0, 0, this.size.x, this.size.y, 16, this.colour)
 
         // text 
         ctx.fillStyle = "#454f45";

@@ -6,10 +6,6 @@ export class LegSweepCard extends TargetSkillCard {
 
         this.name = "Leg Sweep"
         this.description = "Gain 10 block, Apply 2 weak to an enemy"
-
-        this.play = function() {
-            console.log("hii")
-        }
         
         this.register()
     }

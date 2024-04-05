@@ -168,6 +168,18 @@ export function resizeCanvas(canvases, callbackFunctions) {
     }
 }
 
+export function drawSquircle(ctx, x, y, width, height, cornerRadius, colour) {
+    ctx.beginPath();
+    ctx.moveTo(x + cornerRadius, y);
+    ctx.arcTo(x + width, y, x + width, y + height, cornerRadius);
+    ctx.arcTo(x + width, y + height, x, y + height, cornerRadius);
+    ctx.arcTo(x, y + height, x, y, cornerRadius);
+    ctx.arcTo(x, y, x + width, y, cornerRadius);
+    ctx.closePath();
+    ctx.fillStyle = colour;
+    ctx.fill();
+}
+
 // draw an image to cover the screen, crop the image if needed to fill the screen
 // the transformations took me too fucking long lmao
 export function drawBackgroundImage(context, image) {

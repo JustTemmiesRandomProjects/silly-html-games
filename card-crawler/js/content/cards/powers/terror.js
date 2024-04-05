@@ -6,10 +6,6 @@ export class TerrorCard extends TargetPowerCard {
 
         this.name = "Terror"
         
-        this.play = function() {
-            console.log("nuh uh!!")
-        }
-
         this.register()
     }
 }

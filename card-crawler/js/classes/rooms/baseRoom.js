@@ -1,5 +1,5 @@
 import { sleep } from "../../tems_library/tems_library.js"
-import { Entity } from "../baseEntity.js"
+import { Entity } from "../parents/baseEntity.js"
 
 export class BaseRoom extends Entity {
     constructor() {

@@ -1,5 +1,5 @@
-import { global, ctx, inputManager } from "../global.js"
-import { Entity } from "./baseEntity.js";
+import { global, ctx, inputManager } from "../../global.js"
+import { Entity } from "../parents/baseEntity.js";
 
 export class Background extends Entity{
     constructor() {
@@ -7,20 +7,20 @@ export class Background extends Entity{
 
         this.zones = [
             {
-                "xStart": 0 * ctx.canvas.width, "xEnd": 1/6 * ctx.canvas.width,
+                "xStart": 0 * ctx.canvas.width, "xEnd": 1/4 * ctx.canvas.width,
                 "yStart": 0 * ctx.canvas.height, 'yEnd': 1 * ctx.canvas.height,
                 "colour": "#d2e7d6"
             },
             {
-                "xStart": 1/6 * ctx.canvas.width, "xEnd": 5/6 * ctx.canvas.width,
+                "xStart": 1/4 * ctx.canvas.width, "xEnd": 1 * ctx.canvas.width,
                 "yStart": 0 * ctx.canvas.height, 'yEnd': 1 * ctx.canvas.height,
                 "colour": "#e0f0e3"
             },
-            {
-                "xStart": 5/6 * ctx.canvas.width, "xEnd": 1 * ctx.canvas.width,
-                "yStart": 0 * ctx.canvas.height, 'yEnd': 1 * ctx.canvas.height,
-                "colour": "#d2e7d6"
-            }
+            // {
+            //     "xStart": 5/6 * ctx.canvas.width, "xEnd": 1 * ctx.canvas.width,
+            //     "yStart": 0 * ctx.canvas.height, 'yEnd': 1 * ctx.canvas.height,
+            //     "colour": "#d2e7d6"
+            // }
         ]
         
         this.zones.forEach(zone => {

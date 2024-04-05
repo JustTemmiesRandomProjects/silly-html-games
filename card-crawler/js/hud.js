@@ -12,15 +12,15 @@ export function drawHud () {
 
 // draw features
 function drawDrawPile() {
-    hudCtx.font = "32px kalam-light"
+    hudCtx.font = "36px kalam-light"
     hudCtx.fillStyle = "#2d8dff"
-    hudCtx.fillText(`Draw Pile: ${global.player.deck_pile.length}` , 20, 880) 
+    hudCtx.fillText(`Draw Pile: ${global.player.deck_pile.length}` , 40, 870) 
 }
 
 function drawDiscardPile() {
-    hudCtx.font = "32px kalam-light"
+    hudCtx.font = "36px kalam-light"
     hudCtx.fillStyle = "#a038c8"
-    hudCtx.fillText(`Discard Pile: ${global.player.discard_pile.length}` , 20, 920) 
+    hudCtx.fillText(`Discard Pile: ${global.player.discard_pile.length}` , 40, 920) 
 }
 
 

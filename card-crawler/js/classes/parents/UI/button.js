@@ -7,10 +7,15 @@ export class Button extends UIElement {
 
         this.hover_colour = this.colour
         this.standard_colour = this.colour
+
         this.text_colour = "#454f45"
+
         this.font = "kalam-regular"
         this.text = "bah gah"
+        this.text_y_offset = 0
+        this.text_x_offset = 0
         this.font_size = 12
+
     }
 
     draw() {
@@ -35,8 +40,8 @@ export class Button extends UIElement {
         ctx.textBaseline = 'middle';
         ctx.fillText(
             this.text,
-            this.size.x / 2,
-            this.size.y / 2,
+            this.size.x / 2 + this.text_x_offset,
+            this.size.y / 2 + this.text_y_offset,
         );
 
         ctx.setTransform(1, 0, 0, 1, 0, 0)

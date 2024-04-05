@@ -1,5 +1,5 @@
 import { ctx } from "../../global.js";
-import { Entity } from "../baseEntity.js";
+import { Entity } from "./baseEntity.js";
 
 export class UIElement extends Entity {
     constructor(position, size) {

@@ -2,7 +2,7 @@ console.log("index.js initialized")
 import { randFloat, randInt, resizeCanvas, canvas_centre, drawBackgroundImage } from "./tems_library/tems_library.js"
 import { loadMenu, playButtonClick, showGameOverScreen } from "./main_menu/index.js"
 
-import { Background } from "./classes/background.js"
+import { Background } from "./classes/entities/background.js"
 import { Card } from "./classes/parents/card.js"
 import { Player } from "./classes/entities/player.js"
 
@@ -56,7 +56,7 @@ async function process() {
     if ( !global.is_playing ) {
         return
     }
-    console.log("tick!")
+    // console.log("tick!")
 
     global.frames_processed ++
     requestAnimationFrame(process)
