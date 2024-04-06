@@ -49,3 +49,13 @@ export function splitTextToFit(text, maxWidth) {
     lines.push(currentLine);
     return lines;
 }
+
+document.addEventListener("visibilitychange", function() {
+    if (document.visibilityState === 'hidden') {
+        global.is_focused = false
+    } else {
+        global.is_focused = true
+    }
+
+    console.log(`window visibility changed to ${document.visibilityState}, is_focused is now set to ${global.is_focused}`)
+});

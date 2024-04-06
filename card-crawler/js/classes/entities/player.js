@@ -15,7 +15,8 @@ export class Player extends Entity {
 
         this.playing = null
         this.hovering = null
-        this.hovering_card_index = null
+        this.hovering_card_index = 0
+        this.hand_x_start_pos = 0
         this.play_cooldown = 0
         this.play_queue = []
 
@@ -25,7 +26,7 @@ export class Player extends Entity {
             max_hand_size: 7,
             max_distance_between_cards: 215,
             max_hand_width: (ctx.canvas.width / 6) * 3.3,
-            focused_card_multiplier: 1.3,
+            focused_card_multiplier: 0.3, // 0.3, as in 1 + 0.3
             focused_card_margins: 130,
         }
     }
@@ -85,22 +86,31 @@ export class Player extends Entity {
         const hand_size = this.hand.length
         const screen_width = ctx.canvas.width
         const screen_height = ctx.canvas.height
+        
+        if (hand_size == 0) { return }
 
         let max_hand_width = this.constants.max_hand_width
-        
-        this.hovering_card_index = null
+
+        // if (    true || hand_size <= 3
+        //         // if mouse to the left
+        //     ||  this.hand[0].position.x * 0.85 > inputManager.mouse.x
+        //         // if mouse is to the right
+        //     ||  this.hand[hand_size - 1].position.x * 1.22 < inputManager.mouse.x
+        //         // if mouse is above the hand
+        //     ||  this.hand[Math.floor(this.hand.length / 2)].position.y - 15 > inputManager.mouse.y
+        //     ) {
+            
         this.hovering = null
+        this.hovering_card_index = null
+
         for (let i = 0; i < hand_size; i++) {
             if (this.hand[i].hovering) {
-                this.hovering_card_index = i
                 this.hovering = this.hand[i]
+                this.hovering_card_index = i
             }
         }
-        if (this.hovering_card_index != null) {
-            max_hand_width -= this.constants.focused_card_margins * 2
-        }
 
-        const dist_between_cards = Math.min(
+        this.dist_between_cards = Math.min(
             Math.min(
                 hand_size * this.constants.max_distance_between_cards * 1.2,
                 max_hand_width
@@ -109,39 +119,32 @@ export class Player extends Entity {
             this.constants.max_distance_between_cards
         )
 
-        const horizontal_space = dist_between_cards * hand_size
-        const x_start_pos = (screen_width - horizontal_space) / 2
+        this.horizontal_space = this.dist_between_cards * hand_size
+        this.hand_x_start_pos = (screen_width - this.horizontal_space) / 2
         
         const hand_rotation_ratio = 0.001 * Math.pow(hand_size, 2) + hand_size/30
+
 
         for (let i = 0; i < hand_size; i++) {
             let card = this.hand[i]
 
             let hover_above_or_below = 0
-            if (this.hovering_card_index == null) {
-
-            } else if (i > this.hovering_card_index) {
-                hover_above_or_below = 1
-            } else if (i < this.hovering_card_index) {
-                hover_above_or_below = -1
-            }
+            if (this.hovering_card_index != null) {
+                if (i > this.hovering_card_index) {
+                    hover_above_or_below = 1
+                } if (i < this.hovering_card_index) {
+                    hover_above_or_below = -1
+                }
+            } 
 
             let hand_ratio = 0.5
             if (hand_size > 1) {
                 hand_ratio = i / (hand_size-1)
             }
             
-
-            let x_offset = Math.min(
-                Math.abs(hover_above_or_below * this.constants.focused_card_margins),
-                this.constants.max_distance_between_cards - dist_between_cards
-            ) * hover_above_or_below
-
-            console.log(x_offset)
-
-            card.position.x = x_start_pos + i * dist_between_cards + screen_width / 6.3 + x_offset
+            card.position.x = this.hand_x_start_pos + i * this.dist_between_cards + screen_width / 6.3
             card.position.y = (Math.abs(hand_ratio - 0.5) * 350) * hand_rotation_ratio + (screen_height/4) * 2.85
-            card.rotation = (hand_ratio + hover_above_or_below * 0.3) * hand_rotation_ratio - hand_rotation_ratio/2
+            card.rotation = hand_ratio * hand_rotation_ratio - hand_rotation_ratio/2
 
             card.hand_ratio = hand_ratio
         }

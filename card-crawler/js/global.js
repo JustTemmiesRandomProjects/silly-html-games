@@ -16,9 +16,12 @@ const hudCtx = hudCanvas.getContext("2d")
 class Global {
     constructor(asset_objects, asset_bonus_data) {
         this.entity_counter = 0
-        
         this.frames_processed = 0
+        this.delta_time = 1
+        this.last_frame_timestamp = Date.now()
+
         this.is_playing = false
+        this.is_focused = true
 
         this.score = 0
 

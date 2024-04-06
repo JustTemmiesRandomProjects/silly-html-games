@@ -55,7 +55,13 @@ function ready() {
 async function process() {
     if ( !global.is_playing ) {
         return
+    } else if ( !global.is_focused ) {
+        requestAnimationFrame(process)
+        return
     }
+
+    global.delta_time = Date.now() - global.last_frame_timestamp
+    global.last_frame_timestamp = Date.now()
     console.log("tick!")
 
     global.frames_processed ++

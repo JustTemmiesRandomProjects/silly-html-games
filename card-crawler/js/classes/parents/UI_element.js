@@ -1,4 +1,4 @@
-import { ctx, inputManager } from "../../global.js";
+import { ctx, global, inputManager } from "../../global.js";
 import { Entity } from "./baseEntity.js";
 
 export class UIElement extends Entity {

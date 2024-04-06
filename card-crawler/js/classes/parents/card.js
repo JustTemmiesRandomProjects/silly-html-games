@@ -13,7 +13,8 @@ export class Card extends UIElement {
         this.colour = colour;
         
         this.hand_ratio = 0.5
-
+        this.miliseconds_hovered = 0
+        
         this.hovering = false;
         this.name_font_size = 36
         this.description_font_size = 24
@@ -75,7 +76,11 @@ export class Card extends UIElement {
         }
         
         const hand = global.player.hand
-        const scale = global.player.constants.focused_card_multiplier
+        const scale = 1 + (global.player.constants.focused_card_multiplier * Math.min(90, this.miliseconds_hovered) / 90)
+        const scale_time_value = (scale - 1) / global.player.constants.focused_card_multiplier
+
+        console.log(scale_time_value)
+
         ctx.setTransform(scale, 0, 0, scale, 0, 0)
         ctx.translate(
             // this just works, don't worry about it
@@ -83,12 +88,19 @@ export class Card extends UIElement {
             // scale / 6 + scale / 12 / 2?
             // 2 scale, 2/12 + 2/24 == 6/24 == 1/4
             // bro i don't know at this point anymore
-            this.position.x / scale - this.size.x * (scale / 11),
+            this.position.x / scale - this.size.x * (scale / 11) + this.size.x/2,
 
             // get the y position of the centre hand in the hand
-            hand[Math.floor(hand.length / 2)].position.y / scale
-                - this.size.y / 2.5
+            // hand[Math.floor(hand.length / 2)].position.y / scale
+            //     - this.size.y / 2.5
+            this.position.y * (1 - scale_time_value)
+            + hand[Math.floor(hand.length / 2)].position.y * scale_time_value
+            - this.size.y*(scale * 3 - 3)
         )
+
+
+        ctx.rotate(this.rotation * (1 - scale_time_value))
+        ctx.translate(-this.size.x/2, 0)
 
         // border
         drawSquircle(ctx, -3, -3, this.size.x+6, this.size.y+6, 18, "#102f10")
@@ -117,8 +129,11 @@ export class Card extends UIElement {
     tick() {
         if (this.processing) {
             if (global.player.hovering == this) {
+                this.miliseconds_hovered += global.delta_time
+                console.log(this.miliseconds_hovered)
                 call_deferred(this, "hoverDraw")
             } else {
+                this.miliseconds_hovered = 0
                 this.draw()
             }
         }
