@@ -99,7 +99,7 @@ let initInterval = setInterval(async () => {
         console.log("setup fully complete!")
 
         // whilst in development, this skips the main menu
-        playButtonClick()
+        // playButtonClick()
     }
 }, 100)
 
