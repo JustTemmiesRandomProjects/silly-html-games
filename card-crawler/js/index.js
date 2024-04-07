@@ -62,7 +62,6 @@ async function process() {
 
     global.delta_time = Date.now() - global.last_frame_timestamp
     global.last_frame_timestamp = Date.now()
-    console.log("tick!")
 
     global.frames_processed ++
     requestAnimationFrame(process)

@@ -28,6 +28,12 @@ export class Card extends UIElement {
 
         const card = this
         this.handleUIClick = async function(event) {
+            console.log(global.player.hovering == card)
+            if (global.player.hovering != card) {
+                console.log(`${card.name} is not being hovered, returning early`)
+                return
+            }
+
             global.player.play_queue.push(card)
             console.log(`playing "${card.name}"...`)
 
@@ -79,9 +85,14 @@ export class Card extends UIElement {
         const scale = 1 + (global.player.constants.focused_card_multiplier * Math.min(90, this.miliseconds_hovered) / 90)
         const scale_time_value = (scale - 1) / global.player.constants.focused_card_multiplier
 
-        console.log(scale_time_value)
-
         ctx.setTransform(scale, 0, 0, scale, 0, 0)
+
+        let this_card_y = this.position.y
+        let middle_card_y = this_card_y
+        if (hand.length > 0) {
+            middle_card_y = hand[Math.floor(hand.length / 2)].position.y
+        }
+
         ctx.translate(
             // this just works, don't worry about it
             // 1.5 scale, (0.25 + 0.125) / 2 == 0.1875
@@ -93,11 +104,10 @@ export class Card extends UIElement {
             // get the y position of the centre hand in the hand
             // hand[Math.floor(hand.length / 2)].position.y / scale
             //     - this.size.y / 2.5
-            this.position.y * (1 - scale_time_value)
-            + hand[Math.floor(hand.length / 2)].position.y * scale_time_value
+            this_card_y * (1 - scale_time_value)
+            + middle_card_y * scale_time_value
             - this.size.y*(scale * 3 - 3)
         )
-
 
         ctx.rotate(this.rotation * (1 - scale_time_value))
         ctx.translate(-this.size.x/2, 0)
@@ -130,7 +140,6 @@ export class Card extends UIElement {
         if (this.processing) {
             if (global.player.hovering == this) {
                 this.miliseconds_hovered += global.delta_time
-                console.log(this.miliseconds_hovered)
                 call_deferred(this, "hoverDraw")
             } else {
                 this.miliseconds_hovered = 0
