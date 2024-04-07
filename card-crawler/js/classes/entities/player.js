@@ -1,4 +1,4 @@
-import { randFloat, randInt, canvas_centre, drawWithScreenWrap, shuffleArray, call_deferred } from "../../tems_library/tems_library.js"
+import { randFloat, randInt, canvas_centre, drawWithScreenWrap, shuffleArray, call_deferred, sleep } from "../../tems_library/tems_library.js"
 import { global, ctx, inputManager } from "../../global.js"
 import { Entity } from "../parents/baseEntity.js";
 import { bezierCurvePointAxis } from "../../tems_library/math.js";
@@ -32,7 +32,7 @@ export class Player extends Entity {
     }
 
 
-    tick() {
+    async tick() {
         global.player.hand.forEach(card => {
             card.tick()
         });
@@ -66,9 +66,16 @@ export class Player extends Entity {
                 this.hand = this.hand.filter((card) => card != this.playing)
                 this.playing = null
 
-                // this.play_cooldown = 60
+                const event = new MouseEvent('mousemove', {
+                    clientX: inputManager.mouse.x + 1,
+                    clientY: inputManager.mouse.y + 1,
+                });
+                
+                // render hand MUST be before the dispatchEvent call
+                call_deferred(this, "renderHand")
+                call_deferred(ctx.canvas, "dispatchEvent", [event]);
 
-                this.renderHand()
+                // this.play_cooldown = 60
             }
         }
     }

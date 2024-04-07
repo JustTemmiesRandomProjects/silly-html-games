@@ -136,3 +136,13 @@ InputManager.prototype.normalize = function (x, y) {
     
     return { x, y }
 }
+
+// this one forces the distance to equal 1, it cannot be less
+InputManager.prototype.hard_normalize = function (x, y) {
+    const distance = Math.sqrt(x * x + y * y)
+
+    x /= distance
+    y /= distance
+
+    return { x, y }
+}

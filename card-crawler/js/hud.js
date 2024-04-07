@@ -20,7 +20,7 @@ function drawDrawPile() {
 function drawDiscardPile() {
     hudCtx.font = "36px kalam-light"
     hudCtx.fillStyle = "#a038c8"
-    hudCtx.fillText(`Discard Pile: ${global.player.discard_pile.length}` , 40, 920) 
+    hudCtx.fillText(`Restock Pile: ${global.player.discard_pile.length}` , 40, 920) 
 }
 
 

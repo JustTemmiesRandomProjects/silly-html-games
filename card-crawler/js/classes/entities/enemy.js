@@ -9,14 +9,13 @@ export class Enemy extends Entity {
         this.position = {x:1300, y:200}
 
         this.HP = 20
-        this.sprite = global.assets["sprite_player_idle"]
+        this.sprite = global.assets["beaver"]
         this.sprite.setPosition(this.position.x, this.position.y)
-        this.sprite.setTicksPerFrame(7)
         this.sprite.setScale(12, 12)
     }
 
     tick() {
-        // this.sprite.draw()
+        this.sprite.draw()
     }
 
     turnStart() {

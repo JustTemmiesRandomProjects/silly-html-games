@@ -100,6 +100,14 @@ export async function loadAssets(assetSources) {
                 })
             }
 
+            else if ( value[0] == SVG ) {
+                assetReady[key] = false
+                assetObjects[key] = new SVG(value[1], ctx, function () {
+                    console.log(`[ASSETS] [SVG] ${key} is done loading`)
+                    assetReady[key] = true
+                })
+            }
+
             // handling images
             else if ( value[0] == Image ) {
                 assetObjects[key] = new Image
@@ -168,8 +176,9 @@ export function resizeCanvas(canvases, callbackFunctions) {
     }
 }
 
-export function call_deferred(namespace, func) {
-    global.deferred_calls.push({namespace, func})
+export function call_deferred(namespace, func, optional_arguments) {
+    if ( optional_arguments == undefined ) { optional_arguments = [] }
+    global.deferred_calls.push({namespace, func, optional_arguments})
 }
 
 export function drawSquircle(ctx, x, y, width, height, cornerRadius, colour) {
@@ -452,5 +461,64 @@ export class GIF {
         } else {
             this.ctx.drawImage(this_frame, this.position.x - this_frame.width/2, this.position.y - this_frame.height/2)
         }
+    }
+}
+
+
+
+
+
+
+// SVG
+export class SVG {
+    constructor(url, ctx, post_load, scale) {
+        this.url = url
+        this.ctx = ctx
+
+        this.current_frame = 0
+        this.ticks_per_frame = 10
+
+        if ( scale == undefined ) {
+            this.scale = 1
+        } else {
+            this.scale = scale
+        }
+
+        this.position = {
+            "x": null,
+            "y": null
+        }
+
+        this.img = new Image();
+        this.img.src = url
+        this.img.onload = function() {
+            if (typeof post_load === 'function') {
+                post_load() // Execute the onload callback if defined
+            } else {
+                alert(`onload function not assigned for SVG ${url}`)
+            }
+        }
+    }
+
+    setPosition(x, y) {
+        this.position.x = x
+        this.position.y = y
+    }
+
+    setScale(scale) {
+        this.scale = scale
+    }
+
+    newClone() {
+        // return a copy of this
+        return new SVG(this.url, this.ctx, null, this.scale)
+    }
+
+    draw() {
+        if ( this.position.x == null || this.position.y == null) {
+            alert(`my position is null :( ${this}`)
+        }
+
+        this.ctx.drawImage(this.img, this.position.x, this.position.y);
     }
 }

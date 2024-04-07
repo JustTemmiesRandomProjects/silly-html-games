@@ -1,4 +1,4 @@
-import { GIF, accountForDisplay, loadAssets } from "./tems_library/tems_library.js"
+import { GIF, SVG, accountForDisplay, loadAssets } from "./tems_library/tems_library.js"
 import { InputManager } from "./tems_library/input_manager.js"
 
 import { CombatRoom } from "./classes/rooms/combat.js"
@@ -75,6 +75,7 @@ window.onload = async function () {
     // "ID": [Type of asset, "path to file", Bonus data] 
     let asset_data = await loadAssets({
         "sprite_background": [Image, "assets/sprites/kenney/Backgrounds/black.png", {}],
+        "beaver": [SVG, "assets/sprites/original/beaver.svg", {}],
         "sfx_zap": [Audio, "assets/audio/sound-effects/kenney/sfx_zap.ogg", {}],
 
         "sprite_player_idle": [GIF, ["assets/sprites/kenney/kenney_tiny-ski/ski_idle.png"], {}],

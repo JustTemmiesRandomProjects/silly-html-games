@@ -19,7 +19,7 @@ function ready() {
     cardManagerInit()
 
     resizeCanvas(canvases, [updateBackground, drawHud])
-    ctx.imageSmoothingEnabled = false
+    ctx.imageSmoothingEnabled = true
 
     // console.log("playing audio...")
     // global.assets["music_fight"].play()
@@ -77,7 +77,7 @@ async function process() {
 
     // used for deferred ticks
     global.deferred_calls.forEach((e) => {
-        e.namespace[e.func]()
+        e.namespace[e.func](...e.optional_arguments)
     })
 
     global.deferred_calls = []
