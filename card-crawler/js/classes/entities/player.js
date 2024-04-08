@@ -97,15 +97,6 @@ export class Player extends Entity {
         if (hand_size == 0) { return }
 
         let max_hand_width = this.constants.max_hand_width
-
-        // if (    true || hand_size <= 3
-        //         // if mouse to the left
-        //     ||  this.hand[0].position.x * 0.85 > inputManager.mouse.x
-        //         // if mouse is to the right
-        //     ||  this.hand[hand_size - 1].position.x * 1.22 < inputManager.mouse.x
-        //         // if mouse is above the hand
-        //     ||  this.hand[Math.floor(this.hand.length / 2)].position.y - 15 > inputManager.mouse.y
-        //     ) {
             
         this.hovering = null
         this.hovering_card_index = null

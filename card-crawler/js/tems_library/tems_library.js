@@ -100,10 +100,10 @@ export async function loadAssets(assetSources) {
                 })
             }
 
-            else if ( value[0] == SVG ) {
+            else if ( value[0] == customImage ) {
                 assetReady[key] = false
-                assetObjects[key] = new SVG(value[1], ctx, function () {
-                    console.log(`[ASSETS] [SVG] ${key} is done loading`)
+                assetObjects[key] = new customImage(value[1], ctx, function () {
+                    console.log(`[ASSETS] [customImage] ${key} is done loading`)
                     assetReady[key] = true
                 })
             }
@@ -469,8 +469,8 @@ export class GIF {
 
 
 
-// SVG
-export class SVG {
+// customImage
+export class customImage {
     constructor(url, ctx, post_load, scale) {
         this.url = url
         this.ctx = ctx
@@ -485,8 +485,13 @@ export class SVG {
         }
 
         this.position = {
-            "x": null,
-            "y": null
+            x: null,
+            y: null
+        }
+
+        this.size = {
+            x: 64,
+            y: 64
         }
 
         this.img = new Image();
@@ -495,7 +500,7 @@ export class SVG {
             if (typeof post_load === 'function') {
                 post_load() // Execute the onload callback if defined
             } else {
-                alert(`onload function not assigned for SVG ${url}`)
+                alert(`onload function not assigned for customImage ${url}`)
             }
         }
     }
@@ -505,13 +510,18 @@ export class SVG {
         this.position.y = y
     }
 
+    setSize(x, y) {
+        this.size.x = x
+        this.size.y = y
+    }
+
     setScale(scale) {
         this.scale = scale
     }
 
     newClone() {
         // return a copy of this
-        return new SVG(this.url, this.ctx, null, this.scale)
+        return new customImage(this.url, this.ctx, null, this.scale)
     }
 
     draw() {
@@ -519,6 +529,9 @@ export class SVG {
             alert(`my position is null :( ${this}`)
         }
 
-        this.ctx.drawImage(this.img, this.position.x, this.position.y);
+        this.ctx.drawImage(
+            this.img,
+            this.position.x, this.position.y,
+            this.size.x, this.size.y);
     }
 }

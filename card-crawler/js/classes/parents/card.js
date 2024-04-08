@@ -93,15 +93,12 @@ export class Card extends UIElement {
         );
     }
 
-    hoverDraw() {
-        // doublecheck that the condition is still true, this is needed to fix a bug involving card-flixering
-        if (global.player.hovering != this) {
-            this.draw()
-            return
-        }
-        
+    draw() {        
         const hand = global.player.hand
-        const scale = 1 + (global.player.constants.focused_card_multiplier * Math.min(90, this.miliseconds_hovered) / 90)
+        // cap it at 90
+        this.miliseconds_hovered = Math.min(90, this.miliseconds_hovered)
+
+        const scale = 1 + (global.player.constants.focused_card_multiplier * this.miliseconds_hovered / 90)
         const scale_time_value = (scale - 1) / global.player.constants.focused_card_multiplier
 
         ctx.setTransform(scale, 0, 0, scale, 0, 0)
@@ -114,15 +111,8 @@ export class Card extends UIElement {
 
         ctx.translate(
             // this just works, don't worry about it
-            // 1.5 scale, (0.25 + 0.125) / 2 == 0.1875
-            // scale / 6 + scale / 12 / 2?
-            // 2 scale, 2/12 + 2/24 == 6/24 == 1/4
-            // bro i don't know at this point anymore
             this.position.x / scale - this.size.x * (scale / 11) + this.size.x/2,
 
-            // get the y position of the centre hand in the hand
-            // hand[Math.floor(hand.length / 2)].position.y / scale
-            //     - this.size.y / 2.5
             this_card_y * (1 - scale_time_value)
             + middle_card_y * scale_time_value
             - this.size.y*(scale * 3 - 3)
@@ -132,20 +122,9 @@ export class Card extends UIElement {
         ctx.translate(-this.size.x/2, 0)
 
         // border
-        drawSquircle(ctx, -3, -3, this.size.x+6, this.size.y+6, 18, "#102f10")
-
-        // background
-        drawSquircle(ctx, 0, 0, this.size.x, this.size.y, 16, this.colour)
-
-        this.drawText()
-
-        ctx.setTransform(1, 0, 0, 1, 0, 0)
-    }
-
-    draw() {
-        ctx.translate(this.position.x + this.size.x/2, this.position.y)
-        ctx.rotate(this.rotation)
-        ctx.translate(-this.size.x/2, 0)
+        if (global.player.hovering == this) {
+            drawSquircle(ctx, -3, -3, this.size.x+6, this.size.y+6, 19, "#102f10")
+        }
 
         // background
         drawSquircle(ctx, 0, 0, this.size.x, this.size.y, 16, this.colour)
@@ -158,10 +137,11 @@ export class Card extends UIElement {
     tick() {
         if (this.processing) {
             if (global.player.hovering == this) {
-                this.miliseconds_hovered += global.delta_time
-                call_deferred(this, "hoverDraw")
+                this.miliseconds_hovered += global.delta_time * 2
+                this.draw()
+
             } else {
-                this.miliseconds_hovered = 0
+                this.miliseconds_hovered = Math.max(0, this.miliseconds_hovered - global.delta_time)
                 this.draw()
             }
         }
