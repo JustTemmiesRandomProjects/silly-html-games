@@ -13,9 +13,9 @@ export function cardManagerInit(){
     full_card_list.push(StrikeCard)
     full_card_list.push(ThunderclapCard)
     
-    full_card_list.push(TerrorCard)
-    full_card_list.push(DemonFormCard)
+    // full_card_list.push(TerrorCard)
+    // full_card_list.push(DemonFormCard)
 
-    full_card_list.push(DefendCard)
-    full_card_list.push(LegSweepCard)
+    // full_card_list.push(DefendCard)
+    // full_card_list.push(LegSweepCard)
 }

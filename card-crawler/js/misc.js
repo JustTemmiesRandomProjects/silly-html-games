@@ -1,10 +1,11 @@
-import { randFloat, randInt, resizeCanvas, canvas_centre, drawBackgroundImage } from "./tems_library/tems_library.js"
+import { randFloat, randInt, resizeCanvas, canvas_centre } from "./tems_library/tems_library.js"
 import { loadMenu, showGameOverScreen } from "./main_menu/index.js"
 
 import { Background } from "./classes/entities/background.js"
 
 import { global, ctx, backgroundCtx, particleCtx, hudCtx, initGlobal } from "./global.js"
 import { drawHud } from "./hud.js"
+import { drawBackgroundImage } from "./tems_library/rendering.js"
 
 export const canvases = [
     ctx.canvas,

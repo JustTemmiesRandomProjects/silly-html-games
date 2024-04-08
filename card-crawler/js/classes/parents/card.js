@@ -1,7 +1,8 @@
-import { randFloat, randInt, canvas_centre, drawWithScreenWrap, drawSquircle, call_deferred } from "../../tems_library/tems_library.js"
 import { global, ctx, inputManager } from "../../global.js"
 import { UIElement } from "./UI_element.js";
 import { splitTextToFit } from "../../misc.js";
+import { drawBezierArrow, drawSquircle } from "../../tems_library/rendering.js";
+import { call_deferred } from "../../tems_library/tems_library.js";
 
 class CardHelper {
     constructor() {
@@ -9,7 +10,7 @@ class CardHelper {
     }
 
     damageEnemy(enemy, damage) {
-        console.log(`dealing ${damage} to ${enemy}`)
+        console.log(`dealing ${damage} damage to ${enemy.name}`)
         enemy.HP -= damage
     }
 
@@ -47,13 +48,16 @@ export class Card extends UIElement {
 
         const card = this
         this.handleUIClick = async function(event) {
-            console.log(global.player.hovering == card)
             if (global.player.hovering != card) {
-                console.log(`${card.name} is not being hovered, returning early`)
+                if (global.debug_mode) {
+                    console.log(`${card.name} is not being hovered, returning early`)
+                }
                 return
             }
 
             global.player.play_queue.push(card)
+            global.player.hand = global.player.hand.filter((local_card) => local_card != card)
+
             console.log(`playing "${card.name}"...`)
 
             ctx.canvas.removeEventListener("click", card.handleUIClick)
@@ -138,8 +142,8 @@ export class Card extends UIElement {
         if (this.processing) {
             if (global.player.hovering == this) {
                 this.miliseconds_hovered += global.delta_time * 2
-                this.draw()
-
+                call_deferred(this, "draw")
+                
             } else {
                 this.miliseconds_hovered = Math.max(0, this.miliseconds_hovered - global.delta_time)
                 this.draw()

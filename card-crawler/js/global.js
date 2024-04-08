@@ -1,8 +1,9 @@
-import { GIF, accountForDisplay, customImage, loadAssets } from "./tems_library/tems_library.js"
+import { accountForDisplay, loadAssets } from "./tems_library/tems_library.js"
 import { InputManager } from "./tems_library/input_manager.js"
 
 import { CombatRoom } from "./classes/rooms/combat.js"
 import { MiscRoom } from "./classes/rooms/misc.js"
+import { GIF, customImage } from "./tems_library/custom_data_types.js"
 
 const canvas = document.getElementById("gameCanvas")
 const particlesCanvas = document.getElementById("particleCanvas")
@@ -22,6 +23,8 @@ class Global {
 
         this.is_playing = false
         this.is_focused = true
+
+        this.debug_mode = false
 
         this.score = 0
 

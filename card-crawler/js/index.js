@@ -1,5 +1,5 @@
 console.log("index.js initialized")
-import { randFloat, randInt, resizeCanvas, canvas_centre, drawBackgroundImage } from "./tems_library/tems_library.js"
+import { randFloat, randInt, resizeCanvas, canvas_centre } from "./tems_library/tems_library.js"
 import { loadMenu, playButtonClick, showGameOverScreen } from "./main_menu/index.js"
 
 import { Background } from "./classes/entities/background.js"
@@ -13,6 +13,7 @@ import { CombatRoom } from "./classes/rooms/combat.js"
 import { MiscRoom } from "./classes/rooms/misc.js"
 import { cardManagerInit, full_card_list } from "./card_manager.js"
 import { Enemy } from "./classes/entities/enemy.js"
+import { StrikeCard } from "./content/cards/attacks/strike.js"
 
 // ready function, called when the program is ready, before the first game tick
 function ready() {

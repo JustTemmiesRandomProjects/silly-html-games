@@ -1,5 +1,5 @@
 import { ctx } from "../../../global.js";
-import { drawSquircle } from "../../../tems_library/tems_library.js";
+import { drawSquircle } from "../../../tems_library/rendering.js";
 import { UIElement } from "../UI_element.js";
 
 export class Button extends UIElement {
