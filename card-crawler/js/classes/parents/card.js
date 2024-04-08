@@ -3,6 +3,23 @@ import { global, ctx, inputManager } from "../../global.js"
 import { UIElement } from "./UI_element.js";
 import { splitTextToFit } from "../../misc.js";
 
+class CardHelper {
+    constructor() {
+
+    }
+
+    damageEnemy(enemy, damage) {
+        console.log(`dealing ${damage} to ${enemy}`)
+        enemy.HP -= damage
+    }
+
+    damageAllEnemies(damage) {
+        global.current_room.enemies.forEach((enemy) => {
+            this.damageEnemy(enemy, damage)
+        })
+    }
+}
+
 export class Card extends UIElement {
     constructor(colour) {
         super(
@@ -11,7 +28,7 @@ export class Card extends UIElement {
         )
         
         this.colour = colour;
-        
+
         this.hand_ratio = 0.5
         this.miliseconds_hovered = 0
         
@@ -21,6 +38,8 @@ export class Card extends UIElement {
         
         this.name = "Default Name"
         this.description = "gravida cum sociis natoque penatibus et magnis dis parturient montes nascetur ridiculus mus mauris vitae"
+        
+        this.card_helper = new CardHelper()
     }
 
     register() {

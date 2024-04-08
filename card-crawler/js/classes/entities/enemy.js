@@ -16,6 +16,7 @@ export class Enemy extends Entity {
 
     tick() {
         this.sprite.draw()
+        console.log(this.HP)
     }
 
     turnStart() {

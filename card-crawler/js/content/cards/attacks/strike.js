@@ -7,6 +7,10 @@ export class StrikeCard extends TargetAttackCard {
         this.name = "Strike"
         this.description = "Deal 6 damage"
 
+        this.play = function() {
+            this.card_helper.damageAllEnemies(5)
+        }
+
         this.register()
     }
 }

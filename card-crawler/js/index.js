@@ -35,7 +35,6 @@ function ready() {
 
     global.player = new Player
     global.entities["actors"].push(global.player)
-    global.entities["actors"].push(new Enemy)
     
     global.current_room = new MiscRoom
     
