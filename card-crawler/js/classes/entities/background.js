@@ -1,4 +1,4 @@
-import { global, ctx, inputManager } from "../../global.js"
+import { global, ctx, inputManager, backgroundCtx } from "../../global.js"
 import { Entity } from "../parents/baseEntity.js";
 
 export class Background extends Entity{
@@ -33,8 +33,8 @@ export class Background extends Entity{
 
     draw() {
         this.zones.forEach(zone => {
-            ctx.fillStyle = zone["colour"];
-            ctx.fillRect(
+            backgroundCtx.fillStyle = zone["colour"];
+            backgroundCtx.fillRect(
                 zone["xStart"], zone["yStart"],
                 zone["xEnd"] - zone["xStart"], zone["yEnd"] - zone["yStart"]
             );

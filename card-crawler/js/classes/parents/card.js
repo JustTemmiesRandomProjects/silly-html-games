@@ -1,4 +1,4 @@
-import { global, ctx, inputManager } from "../../global.js"
+import { global, ctx, inputManager, hoveringCardCtx } from "../../global.js"
 import { UIElement } from "./UI_element.js";
 import { splitTextToFit } from "../../misc.js";
 import { drawBezierArrow, drawSquircle } from "../../tems_library/rendering.js";
@@ -37,7 +37,7 @@ export class Card extends UIElement {
         this.name_font_size = 36
         this.description_font_size = 24
         
-        this.name = "Default Name"
+        this.name = "Bepis"
         this.description = "gravida cum sociis natoque penatibus et magnis dis parturient montes nascetur ridiculus mus mauris vitae"
         
         this.card_helper = new CardHelper()
@@ -45,32 +45,63 @@ export class Card extends UIElement {
 
     register() {
         this.display_description = splitTextToFit(this.description, 110)
+        
+        if (this.play == null) {
+            console.log(`[WARNING] the card "${card.name}" doesn't have any play function`)
+            this.play = function() {
+                return
+            }
+        }
 
-        const card = this
+        const self = this
         this.handleUIClick = async function(event) {
-            if (global.player.hovering != card) {
+            if (global.player.hovering_card != self) {
                 if (global.debug_mode) {
-                    console.log(`${card.name} is not being hovered, returning early`)
+                    console.log(`${self.name} is not being hovered, returning early`)
+                }
+                return
+            }
+            
+            // self.becomeDraged(self)
+
+            // ctx.canvas.removeEventListener("click", self.handleUIClick)
+        }
+
+        this.handleUIMouseDown = async function(event) {
+            if (global.player.hovering_card != self) {
+                if (global.debug_mode) {
+                    console.log(`${self.name} is not being hovered, returning early`)
                 }
                 return
             }
 
-            global.player.play_queue.push(card)
-            global.player.hand = global.player.hand.filter((local_card) => local_card != card)
-
-            console.log(`playing "${card.name}"...`)
-
-            ctx.canvas.removeEventListener("click", card.handleUIClick)
+            self.becomeDraged(self)
         }
-        
-        if (this.play == null) {
-            this.play = function() {
-                console.log(`the card "${card.name}" doesn't have any play function`)
+
+        this.handleDragingClick = async function(event) {
+            console.log(self.position.y, ctx.canvas.height * 0.7)
+            if (self.position.y > 0 && self.position.y < ctx.canvas.height * 0.7) {
+                global.player.play_queue.push(self)
+                global.player.hand = global.player.hand.filter((local_card) => local_card != self)
+    
+                self.cleanDragingCard()
             }
         }
     }
 
-    drawText() {
+    becomeDraged(self) {
+        global.player.draging_card = self
+
+        ctx.canvas.addEventListener("click", self.handleDragingClick)
+        
+        self.handleUIRightClick = async function(event) {
+
+
+            self.cleanDragingCard()
+        }
+    }
+
+    drawText(ctx) {
         // text 
         ctx.fillStyle = "#454f45";
         ctx.font = `${this.description_font_size}px kalam-regular`;
@@ -95,6 +126,40 @@ export class Card extends UIElement {
             this.size.x / 2,
             this.name_font_size + 8,
         );
+    }
+
+    cleanDragingCard() {
+        ctx.canvas.removeEventListener("click", this.handleDragingClick)
+        global.player.draging_card = null
+        global.player.hovering = null
+
+        this.UIExit()
+        hoveringCardCtx.clearRect(0, 0, hoveringCardCtx.canvas.width, hoveringCardCtx.canvas.height)
+    }
+
+    drawDragingCard() {
+        hoveringCardCtx.clearRect(0, 0, hoveringCardCtx.canvas.width, hoveringCardCtx.canvas.height)
+
+        const scale = 1 + (global.player.constants.focused_card_multiplier)
+        hoveringCardCtx.setTransform(scale, 0, 0, scale, 0, 0)
+        
+        this.position.x = inputManager.mouse.x
+        this.position.y = inputManager.mouse.y
+
+        hoveringCardCtx.translate(
+            this.position.x / scale - this.size.x / 2,
+            this.position.y / scale - this.size.y / 2
+        )
+
+        // border
+        drawSquircle(hoveringCardCtx, -3, -3, this.size.x+6, this.size.y+6, 19, "#102f10")
+
+        // background
+        drawSquircle(hoveringCardCtx, 0, 0, this.size.x, this.size.y, 16, this.colour)
+
+        this.drawText(hoveringCardCtx)
+
+        hoveringCardCtx.setTransform(1, 0, 0, 1, 0, 0)
     }
 
     draw() {        
@@ -126,21 +191,30 @@ export class Card extends UIElement {
         ctx.translate(-this.size.x/2, 0)
 
         // border
-        if (global.player.hovering == this) {
+        if (global.player.hovering_card == this) {
             drawSquircle(ctx, -3, -3, this.size.x+6, this.size.y+6, 19, "#102f10")
         }
 
         // background
         drawSquircle(ctx, 0, 0, this.size.x, this.size.y, 16, this.colour)
 
-        this.drawText()
+        this.drawText(ctx)
 
         ctx.setTransform(1, 0, 0, 1, 0, 0)
     }
     
     tick() {
-        if (this.processing) {
-            if (global.player.hovering == this) {
+        if (this.processing) {            
+            if (global.player.draging_card == this ){
+                // if the card is low enough to "be out of play"
+                if (this.position.y > ctx.canvas.height * 0.945) {
+                    this.cleanDragingCard()
+                    return
+                }
+
+                call_deferred(this, "drawDragingCard")
+                
+            } else if (global.player.hovering_card == this) {
                 this.miliseconds_hovered += global.delta_time * 2
                 call_deferred(this, "draw")
                 

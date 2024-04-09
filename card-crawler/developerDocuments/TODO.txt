@@ -1,0 +1,4 @@
+rework how cards are played
+
+the player should be able to drag them around, if they are taken above the hand they get "played"
+this might involve just playing it, if it's a simple card, or activating it's targeting mode if it's a target card

@@ -7,13 +7,14 @@ import { Card } from "./classes/parents/card.js"
 import { Player } from "./classes/entities/player.js"
 
 import { drawHud } from "./hud.js"
-import { global, ctx, backgroundCtx, particleCtx, hudCtx, initGlobal } from "./global.js"
+import { global, ctx, backgroundCtx, particleCtx, hudCtx, initGlobal, hoveringCardCtx, debugHudCtx } from "./global.js"
 import { miscSetup, gameTick10, gameTick2, updateBackground, canvases } from "./misc.js"
 import { CombatRoom } from "./classes/rooms/combat.js"
 import { MiscRoom } from "./classes/rooms/misc.js"
 import { cardManagerInit, full_card_list } from "./card_manager.js"
 import { Enemy } from "./classes/entities/enemy.js"
 import { StrikeCard } from "./content/cards/attacks/strike.js"
+
 
 // ready function, called when the program is ready, before the first game tick
 function ready() {
@@ -60,8 +61,14 @@ async function process() {
         return
     }
 
-    global.delta_time = Date.now() - global.last_frame_timestamp
-    global.last_frame_timestamp = Date.now()
+    global.delta_time = window.performance.now() - global.last_frame_timestamp
+    global.last_frame_timestamp = window.performance.now()
+
+    global.frame_times.push(global.delta_time)
+
+    if (global.frame_times.length > 120) {
+        global.frame_times.splice(0, 1)
+    }
 
     global.frames_processed ++
     requestAnimationFrame(process)
@@ -77,7 +84,12 @@ async function process() {
 
     // used for deferred ticks
     global.deferred_calls.forEach((e) => {
-        e.namespace[e.func](...e.optional_arguments)
+        // dispatchEvent seemed to crash this, idk, this might be a lil buggy
+        if (e.namespace[e.func] != dispatchEvent) {
+            e.namespace[e.func](...e.optional_arguments)
+        } else {
+            console.log("e.namespace[e.func] is of type dispatchEvent, ignoring call")
+        }
     })
 
     global.deferred_calls = []
@@ -110,6 +122,8 @@ export function play_game() {
     ctx.canvas.hidden = false
     particleCtx.canvas.hidden = false
     hudCtx.canvas.hidden = false
+    debugHudCtx.canvas.hidden = false
+    hoveringCardCtx.canvas.hidden = false
 
     console.log("running ready() function...")
     ready()

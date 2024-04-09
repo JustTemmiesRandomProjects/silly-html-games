@@ -12,7 +12,7 @@ export class Enemy extends Entity {
         this.HP = this.MAX_HP
         this.display_HP = this.HP
 
-        this.name = "pipis"
+        this.name = "bipis"
         this.sprite = global.assets["beaver"]
 
         this.register()

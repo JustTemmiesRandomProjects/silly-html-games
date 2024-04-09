@@ -14,7 +14,10 @@ export class Player extends Entity {
         this.discard_pile = []
 
         this.playing = null
-        this.hovering = null
+        this.target_card = null
+        this.draging_card = null
+        this.hovering_card = null
+
         this.hovering_card_index = 0
         this.hand_x_start_pos = 0
         this.play_cooldown = 0
@@ -64,11 +67,6 @@ export class Player extends Entity {
                 this.discard_pile.push(this.playing);
                 
                 this.playing = null
-
-                const event = new MouseEvent('mousemove', {
-                    clientX: inputManager.mouse.x + 1,
-                    clientY: inputManager.mouse.y + 1,
-                });
                 
                 // render hand MUST be before the dispatchEvent call
                 call_deferred(this, "renderHand")
@@ -97,13 +95,15 @@ export class Player extends Entity {
 
         let max_hand_width = this.constants.max_hand_width
             
-        this.hovering = null
+        this.hovering_card = null
         this.hovering_card_index = null
 
-        for (let i = 0; i < hand_size; i++) {
-            if (this.hand[i].hovering) {
-                this.hovering = this.hand[i]
-                this.hovering_card_index = i
+        if (this.draging_card == null) {
+            for (let i = 0; i < hand_size; i++) {
+                if (this.hand[i].hovering) {
+                    this.hovering_card = this.hand[i]
+                    this.hovering_card_index = i
+                }
             }
         }
 

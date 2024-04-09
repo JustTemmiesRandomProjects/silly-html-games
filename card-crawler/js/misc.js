@@ -3,14 +3,16 @@ import { loadMenu, showGameOverScreen } from "./main_menu/index.js"
 
 import { Background } from "./classes/entities/background.js"
 
-import { global, ctx, backgroundCtx, particleCtx, hudCtx, initGlobal } from "./global.js"
-import { drawHud } from "./hud.js"
+import { global, ctx, backgroundCtx, particleCtx, hudCtx, initGlobal, hoveringCardCtx, debugHudCtx } from "./global.js"
+import { drawDebug, drawHud } from "./hud.js"
 import { drawBackgroundImage } from "./tems_library/rendering.js"
 
 export const canvases = [
     ctx.canvas,
     backgroundCtx.canvas,
-    hudCtx.canvas
+    hudCtx.canvas,
+    debugHudCtx.canvas,
+    hoveringCardCtx.canvas,
 ]
 
 export function miscSetup() {
@@ -20,11 +22,11 @@ export function miscSetup() {
 // gameTick function, called 100 ms (10 times/second)
 export function gameTick10() {
     resizeCanvas(canvases, [updateBackground, drawHud])
+    drawDebug()
 }
 
 // gameTick function, called every 500 ms (2 times/second)
 export function gameTick2() {
-
 }
 
 export function updateBackground() {
@@ -59,4 +61,8 @@ document.addEventListener("visibilitychange", function() {
     }
 
     console.log(`window visibility changed to ${document.visibilityState}, is_focused is now set to ${global.is_focused}`)
+});
+
+document.addEventListener('contextmenu', event => {
+    event.preventDefault();
 });

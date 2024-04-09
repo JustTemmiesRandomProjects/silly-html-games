@@ -9,17 +9,22 @@ const canvas = document.getElementById("gameCanvas")
 const particlesCanvas = document.getElementById("particleCanvas")
 const backgroundCanvas = document.getElementById("backgroundCanvas")
 const hudCanvas = document.getElementById("hudCanvas")
+const debugHudCanvas = document.getElementById("debugHudCanvas")
+const hoveringCardCanvas = document.getElementById("hoveringCardCanvas")
 const ctx = canvas.getContext("2d")
 const particleCtx = particlesCanvas.getContext("2d")
 const backgroundCtx = backgroundCanvas.getContext("2d")
 const hudCtx = hudCanvas.getContext("2d")
+const debugHudCtx = debugHudCanvas.getContext("2d")
+const hoveringCardCtx = hoveringCardCanvas.getContext("2d")
 
 class Global {
     constructor(asset_objects, asset_bonus_data) {
         this.entity_counter = 0
         this.frames_processed = 0
         this.delta_time = 1
-        this.last_frame_timestamp = Date.now()
+        this.last_frame_timestamp = window.performance.now()
+        this.frame_times = []
 
         this.is_playing = false
         this.is_focused = true
@@ -31,11 +36,12 @@ class Global {
         this.player = null
         this.current_room = null
         
+        
         this.entities = {
             backgrounds: [],
             hud: [],
-            cards: [],
             actors: [],
+            cards: [],
             misc: [],
         }
 
@@ -105,4 +111,4 @@ export async function initGlobal() {
     global = new Global(asset_objects, asset_bonus_data)
 }
 
-export { ctx, particleCtx, backgroundCtx, hudCtx, global, inputManager }
+export { ctx, particleCtx, backgroundCtx, hudCtx, debugHudCtx, hoveringCardCtx, global, inputManager }
