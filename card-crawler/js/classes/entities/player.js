@@ -14,9 +14,13 @@ export class Player extends Entity {
         this.discard_pile = []
 
         this.playing = null
-        this.target_card = null
-        this.draging_card = null
-        this.hovering_card = null
+        this.focused_card = null
+        // this is either "targeted", "draging", "hovering", etc.
+        this.focused_card_state = null
+
+        // this.target_card = null
+        // this.draging_card = null
+        // this.hovering_card = null
 
         this.hovering_card_index = 0
         this.hand_x_start_pos = 0
@@ -29,7 +33,7 @@ export class Player extends Entity {
             max_hand_size: 7,
             max_distance_between_cards: 215,
             max_hand_width: (ctx.canvas.width / 6) * 3.3,
-            focused_card_multiplier: 0.3, // 0.3, as in 1 + 0.3
+            focused_card_multiplier: 0.2, // 0.3, as in 1 + 0.3
             focused_card_margins: 130,
         }
     }
@@ -95,13 +99,14 @@ export class Player extends Entity {
 
         let max_hand_width = this.constants.max_hand_width
             
-        this.hovering_card = null
-        this.hovering_card_index = null
-
-        if (this.draging_card == null) {
+        
+        if ([null, "hovering"].includes(this.focused_card_state)) {
+            this.focused_card = null
+            this.hovering_card_index = null
             for (let i = 0; i < hand_size; i++) {
                 if (this.hand[i].hovering) {
-                    this.hovering_card = this.hand[i]
+                    this.focused_card = this.hand[i]
+                    this.focused_card_state = "hovering"
                     this.hovering_card_index = i
                 }
             }
@@ -140,7 +145,7 @@ export class Player extends Entity {
             }
             
             card.position.x = this.hand_x_start_pos + i * this.dist_between_cards + screen_width / 6.3
-            card.position.y = (Math.abs(hand_ratio - 0.5) * 350) * hand_rotation_ratio + (screen_height/4) * 2.85
+            card.position.y = (Math.abs(hand_ratio - 0.5) * 350) * hand_rotation_ratio + (screen_height/4) * 3
             card.rotation = hand_ratio * hand_rotation_ratio - hand_rotation_ratio/2
 
             card.hand_ratio = hand_ratio

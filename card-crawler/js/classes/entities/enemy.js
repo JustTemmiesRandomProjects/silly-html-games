@@ -8,7 +8,7 @@ export class Enemy extends Entity {
 
         this.position = {x:1300, y:200}
 
-        this.MAX_HP = 200
+        this.MAX_HP = 20
         this.HP = this.MAX_HP
         this.display_HP = this.HP
 
@@ -26,8 +26,8 @@ export class Enemy extends Entity {
 
     tick() {
         if (this.display_HP > this.HP) {
-            const difference = this.HP - this.display_HP
-            this.display_HP += (difference / 300) * global.delta_time - 0.02
+            const difference = Math.abs(this.HP - this.display_HP)
+            this.display_HP -= (difference / 350) * global.delta_time + 0.03
         }
         this.sprite.draw()
         this.drawHealthBar()

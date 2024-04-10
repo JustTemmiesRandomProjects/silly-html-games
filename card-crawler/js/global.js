@@ -10,13 +10,13 @@ const particlesCanvas = document.getElementById("particleCanvas")
 const backgroundCanvas = document.getElementById("backgroundCanvas")
 const hudCanvas = document.getElementById("hudCanvas")
 const debugHudCanvas = document.getElementById("debugHudCanvas")
-const hoveringCardCanvas = document.getElementById("hoveringCardCanvas")
+const focusingCardCanvas = document.getElementById("focusingCardCanvas")
 const ctx = canvas.getContext("2d")
 const particleCtx = particlesCanvas.getContext("2d")
 const backgroundCtx = backgroundCanvas.getContext("2d")
 const hudCtx = hudCanvas.getContext("2d")
 const debugHudCtx = debugHudCanvas.getContext("2d")
-const hoveringCardCtx = hoveringCardCanvas.getContext("2d")
+const focusingCardCtx = focusingCardCanvas.getContext("2d")
 
 class Global {
     constructor(asset_objects, asset_bonus_data) {
@@ -29,7 +29,7 @@ class Global {
         this.is_playing = false
         this.is_focused = true
 
-        this.debug_mode = false
+        this.debug_mode = true
 
         this.score = 0
 
@@ -111,4 +111,4 @@ export async function initGlobal() {
     global = new Global(asset_objects, asset_bonus_data)
 }
 
-export { ctx, particleCtx, backgroundCtx, hudCtx, debugHudCtx, hoveringCardCtx, global, inputManager }
+export { ctx, particleCtx, backgroundCtx, hudCtx, debugHudCtx, focusingCardCtx, global, inputManager }

@@ -1,4 +1,4 @@
-import { global, ctx, inputManager, hoveringCardCtx } from "../../global.js"
+import { global, ctx, inputManager, focusingCardCtx } from "../../global.js"
 import { UIElement } from "./UI_element.js";
 import { splitTextToFit } from "../../misc.js";
 import { drawBezierArrow, drawSquircle } from "../../tems_library/rendering.js";
@@ -25,13 +25,13 @@ export class Card extends UIElement {
     constructor(colour) {
         super(
             {x: 0, y: 0},
-            {x: 240, y: 330}
+            {x: 240, y: 335}
         )
         
         this.colour = colour;
 
         this.hand_ratio = 0.5
-        this.miliseconds_hovered = 0
+        this.miliseconds_focused = 0
         
         this.hovering = false;
         this.name_font_size = 36
@@ -47,17 +47,17 @@ export class Card extends UIElement {
         this.display_description = splitTextToFit(this.description, 110)
         
         if (this.play == null) {
-            console.log(`[WARNING] the card "${card.name}" doesn't have any play function`)
+            console.log(`[WARNING] the card "${self.name}" doesn't have any play function`)
             this.play = function() {
                 return
             }
         }
 
-        const self = this
+        const self = this 
         this.handleUIClick = async function(event) {
-            if (global.player.hovering_card != self) {
+            if (global.player.focused_card != self) {
                 if (global.debug_mode) {
-                    console.log(`${self.name} is not being hovered, returning early`)
+                    console.log(`${self.name} is not being focused, returning early`)
                 }
                 return
             }
@@ -68,9 +68,9 @@ export class Card extends UIElement {
         }
 
         this.handleUIMouseDown = async function(event) {
-            if (global.player.hovering_card != self) {
+            if (global.player.focused_card != self) {
                 if (global.debug_mode) {
-                    console.log(`${self.name} is not being hovered, returning early`)
+                    console.log(`${self.name} is not being focused, returning early`)
                 }
                 return
             }
@@ -79,7 +79,6 @@ export class Card extends UIElement {
         }
 
         this.handleDragingClick = async function(event) {
-            console.log(self.position.y, ctx.canvas.height * 0.7)
             if (self.position.y > 0 && self.position.y < ctx.canvas.height * 0.7) {
                 global.player.play_queue.push(self)
                 global.player.hand = global.player.hand.filter((local_card) => local_card != self)
@@ -87,16 +86,8 @@ export class Card extends UIElement {
                 self.cleanDragingCard()
             }
         }
-    }
 
-    becomeDraged(self) {
-        global.player.draging_card = self
-
-        ctx.canvas.addEventListener("click", self.handleDragingClick)
-        
-        self.handleUIRightClick = async function(event) {
-
-
+        this.handleUIRightClick = async function(event) {
             self.cleanDragingCard()
         }
     }
@@ -128,46 +119,97 @@ export class Card extends UIElement {
         );
     }
 
+    becomeDraged(self) {
+        global.player.focused_card = self
+        global.player.focused_card_state = "draging"
+
+        ctx.canvas.addEventListener("click", self.handleDragingClick)
+    }
+
     cleanDragingCard() {
+        console.log("clean!")
         ctx.canvas.removeEventListener("click", this.handleDragingClick)
-        global.player.draging_card = null
-        global.player.hovering = null
+        this.miliseconds_focused = 0
+        global.player.focused_card = null
+        global.player.focused_card_state = null
 
         this.UIExit()
-        hoveringCardCtx.clearRect(0, 0, hoveringCardCtx.canvas.width, hoveringCardCtx.canvas.height)
+        focusingCardCtx.clearRect(0, 0, focusingCardCtx.canvas.width, focusingCardCtx.canvas.height)
+    }
+
+    drawTargetingCard() {
+        const player = global.player
+
+
+        if (player.hand.length % 2 == 0) {
+            const middle_card1 = player.hand[player.hand.length / 2 - 1]
+            const middle_card2 = player.hand[player.hand.length / 2]
+            
+
+            this.position.x = (middle_card1.position.x + middle_card2.position.x) / 2 + 66.7 - this.size.x / 2
+            this.position.y = (middle_card1.position.y + middle_card2.position.y) / 2 - this.size.y / 4
+            this.rotation = (middle_card1.rotation + middle_card2.rotation) / 2
+            
+        } else {
+            const middle_card = player.hand[Math.floor(player.hand.length / 2)]
+
+
+            this.position.x = middle_card.position.x + 100 - this.size.x/2
+            this.position.y = middle_card.position.y - 120
+            this.rotation = middle_card.rotation
+        }
+
+        ctx.translate(
+            this.position.x,
+            this.position.y
+        )
+
+        // border
+        if (global.player.focused_card == this) {
+            drawSquircle(ctx, -3, -3, this.size.x+6, this.size.y+6, 19, "#102f10")
+        }
+
+        // background
+        drawSquircle(ctx, 0, 0, this.size.x, this.size.y, 16, this.colour)
+
+        this.drawText(ctx)
+
+        ctx.setTransform(1, 0, 0, 1, 0, 0)
+
+        this.renderArrow()
     }
 
     drawDragingCard() {
-        hoveringCardCtx.clearRect(0, 0, hoveringCardCtx.canvas.width, hoveringCardCtx.canvas.height)
+        focusingCardCtx.clearRect(0, 0, focusingCardCtx.canvas.width, focusingCardCtx.canvas.height)
 
         const scale = 1 + (global.player.constants.focused_card_multiplier)
-        hoveringCardCtx.setTransform(scale, 0, 0, scale, 0, 0)
+        focusingCardCtx.setTransform(scale, 0, 0, scale, 0, 0)
         
         this.position.x = inputManager.mouse.x
         this.position.y = inputManager.mouse.y
 
-        hoveringCardCtx.translate(
+        focusingCardCtx.translate(
             this.position.x / scale - this.size.x / 2,
             this.position.y / scale - this.size.y / 2
         )
 
         // border
-        drawSquircle(hoveringCardCtx, -3, -3, this.size.x+6, this.size.y+6, 19, "#102f10")
+        drawSquircle(focusingCardCtx, -3, -3, this.size.x+6, this.size.y+6, 19, "#102f10")
 
         // background
-        drawSquircle(hoveringCardCtx, 0, 0, this.size.x, this.size.y, 16, this.colour)
+        drawSquircle(focusingCardCtx, 0, 0, this.size.x, this.size.y, 16, this.colour)
 
-        this.drawText(hoveringCardCtx)
+        this.drawText(focusingCardCtx)
 
-        hoveringCardCtx.setTransform(1, 0, 0, 1, 0, 0)
+        focusingCardCtx.setTransform(1, 0, 0, 1, 0, 0)
     }
 
-    draw() {        
+    draw() {
         const hand = global.player.hand
         // cap it at 90
-        this.miliseconds_hovered = Math.min(90, this.miliseconds_hovered)
+        this.miliseconds_focused = Math.min(90, this.miliseconds_focused)
 
-        const scale = 1 + (global.player.constants.focused_card_multiplier * this.miliseconds_hovered / 90)
+        const scale = 1 + (global.player.constants.focused_card_multiplier * this.miliseconds_focused / 90)
         const scale_time_value = (scale - 1) / global.player.constants.focused_card_multiplier
 
         ctx.setTransform(scale, 0, 0, scale, 0, 0)
@@ -183,17 +225,17 @@ export class Card extends UIElement {
             this.position.x / scale - this.size.x * (scale / 11) + this.size.x/2,
 
             this_card_y * (1 - scale_time_value)
-            + middle_card_y * scale_time_value
-            - this.size.y*(scale * 3 - 3)
+            + (ctx.canvas.height - this.size.y * 1.50) * scale_time_value
+            // - this.size.y*(scale * 3 - 3)
         )
 
         ctx.rotate(this.rotation * (1 - scale_time_value))
         ctx.translate(-this.size.x/2, 0)
 
         // border
-        if (global.player.hovering_card == this) {
+        // if (global.player.focused_card == this) {
             drawSquircle(ctx, -3, -3, this.size.x+6, this.size.y+6, 19, "#102f10")
-        }
+        // }
 
         // background
         drawSquircle(ctx, 0, 0, this.size.x, this.size.y, 16, this.colour)
@@ -204,24 +246,42 @@ export class Card extends UIElement {
     }
     
     tick() {
-        if (this.processing) {            
-            if (global.player.draging_card == this ){
-                // if the card is low enough to "be out of play"
-                if (this.position.y > ctx.canvas.height * 0.945) {
-                    this.cleanDragingCard()
-                    return
-                }
+        if (this.processing) {  
+            const player = global.player
 
-                call_deferred(this, "drawDragingCard")
-                
-            } else if (global.player.hovering_card == this) {
-                this.miliseconds_hovered += global.delta_time * 2
-                call_deferred(this, "draw")
+            if (player.focused_card == this ){
+                this.miliseconds_focused += global.delta_time * 2
+
+                if (player.focused_card_state == "draging" ) {
+                    // if the card is low enough to "be out of play"
+                    if (inputManager.mouse.y > ctx.canvas.height * 0.945) {
+                        this.cleanDragingCard()
+                        return
+                    }
+
+                    call_deferred(this, "drawDragingCard")
+                } else if (player.focused_card_state == "hovering") {
+                    call_deferred(this, "draw")
+                } else if (player.focused_card_state == "targeting") {
+                    if (inputManager.mouse.y > ctx.canvas.height * 0.945) {
+                        this.cleanDragingCard()
+                        return
+                    }
+
+                    call_deferred(this, "drawTargetingCard")
+                }
                 
             } else {
-                this.miliseconds_hovered = Math.max(0, this.miliseconds_hovered - global.delta_time)
+                this.miliseconds_focused = Math.max(0, this.miliseconds_focused - global.delta_time)
                 this.draw()
             }
         }
+    }
+
+
+    renderArrow() {
+        drawBezierArrow(focusingCardCtx, 
+            {x: this.position.x + this.size.x / 2, y: this.position.y + this.size.y / 2},
+            inputManager.mouse)
     }
 }

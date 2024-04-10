@@ -7,7 +7,7 @@ import { Card } from "./classes/parents/card.js"
 import { Player } from "./classes/entities/player.js"
 
 import { drawHud } from "./hud.js"
-import { global, ctx, backgroundCtx, particleCtx, hudCtx, initGlobal, hoveringCardCtx, debugHudCtx } from "./global.js"
+import { global, ctx, backgroundCtx, particleCtx, hudCtx, initGlobal, focusingCardCtx, debugHudCtx } from "./global.js"
 import { miscSetup, gameTick10, gameTick2, updateBackground, canvases } from "./misc.js"
 import { CombatRoom } from "./classes/rooms/combat.js"
 import { MiscRoom } from "./classes/rooms/misc.js"
@@ -66,7 +66,7 @@ async function process() {
 
     global.frame_times.push(global.delta_time)
 
-    if (global.frame_times.length > 120) {
+    if (global.frame_times.length > 90) {
         global.frame_times.splice(0, 1)
     }
 
@@ -123,7 +123,7 @@ export function play_game() {
     particleCtx.canvas.hidden = false
     hudCtx.canvas.hidden = false
     debugHudCtx.canvas.hidden = false
-    hoveringCardCtx.canvas.hidden = false
+    focusingCardCtx.canvas.hidden = false
 
     console.log("running ready() function...")
     ready()

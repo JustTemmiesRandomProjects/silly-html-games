@@ -3,7 +3,7 @@ import { loadMenu, showGameOverScreen } from "./main_menu/index.js"
 
 import { Background } from "./classes/entities/background.js"
 
-import { global, ctx, backgroundCtx, particleCtx, hudCtx, initGlobal, hoveringCardCtx, debugHudCtx } from "./global.js"
+import { global, ctx, backgroundCtx, particleCtx, hudCtx, initGlobal, focusingCardCtx, debugHudCtx } from "./global.js"
 import { drawDebug, drawHud } from "./hud.js"
 import { drawBackgroundImage } from "./tems_library/rendering.js"
 
@@ -12,7 +12,7 @@ export const canvases = [
     backgroundCtx.canvas,
     hudCtx.canvas,
     debugHudCtx.canvas,
-    hoveringCardCtx.canvas,
+    focusingCardCtx.canvas,
 ]
 
 export function miscSetup() {
