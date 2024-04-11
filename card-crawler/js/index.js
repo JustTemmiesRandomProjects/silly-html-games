@@ -12,10 +12,9 @@ import { miscSetup, gameTick10, gameTick2, updateBackground, contexts } from "./
 import { CombatRoom } from "./classes/rooms/combat.js"
 import { MiscRoom } from "./classes/rooms/misc.js"
 import { cardManagerInit, full_card_list } from "./card_manager.js"
-import { Enemy } from "./classes/entities/enemy.js"
-import { StrikeCard } from "./content/cards/attacks/strike.js"
-import { testShader } from "./tems_library/shaders.js"
+import { Shader } from "./tems_library/shaders.js"
 
+import rainbow_shader from "./shaders/testing/rainbow_shader.js"
 
 // ready function, called when the program is ready, before the first game tick
 function ready() {
@@ -35,6 +34,14 @@ function ready() {
     // make the gameTick2 function run every 500 ms
     setInterval(gameTick2, 500)
 
+    const positions = [
+        -0.7, -0.9,
+        0.9, -0.7,
+        -0.9, 0.7,
+        0.7, 0.9,
+    ];
+    const test_shader = new Shader(WebGLTopCtx, positions, rainbow_shader)
+    global.entities["shaders"].push(test_shader)
 
     global.player = new Player
     global.entities["actors"].push(global.player)
@@ -96,7 +103,6 @@ async function process() {
     global.deferred_calls = []
 
     drawHud()
-    testShader()
 
     // finally, run the combat-room tick
     global.current_room.tick()

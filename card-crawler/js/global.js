@@ -46,6 +46,7 @@ class Global {
             hud: [],
             actors: [],
             cards: [],
+            shaders: [],
             misc: [],
         }
 
