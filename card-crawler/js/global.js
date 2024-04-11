@@ -10,13 +10,17 @@ const particlesCanvas = document.getElementById("particleCanvas")
 const backgroundCanvas = document.getElementById("backgroundCanvas")
 const hudCanvas = document.getElementById("hudCanvas")
 const debugHudCanvas = document.getElementById("debugHudCanvas")
+const WebGLHudCanvas = document.getElementById("WebGLHudCanvas")
 const focusingCardCanvas = document.getElementById("focusingCardCanvas")
+const WebGLTopCanvas = document.getElementById("WebGLTopCanvas")
 const ctx = canvas.getContext("2d")
 const particleCtx = particlesCanvas.getContext("2d")
 const backgroundCtx = backgroundCanvas.getContext("2d")
 const hudCtx = hudCanvas.getContext("2d")
 const debugHudCtx = debugHudCanvas.getContext("2d")
+const WebGLHudCtx = WebGLHudCanvas.getContext("webgl2")
 const focusingCardCtx = focusingCardCanvas.getContext("2d")
+const WebGLTopCtx = WebGLTopCanvas.getContext("webgl2")
 
 class Global {
     constructor(asset_objects, asset_bonus_data) {
@@ -76,6 +80,11 @@ var inputManager = null
 var asset_objects
 var asset_bonus_data
 
+if (!WebGLHudCtx) {
+    console.error('WebGL not supported');
+    alert("WebGL is not supported by your current browser, this game won't work")
+}
+
 window.onload = async function () {
     console.log("initializing input manager...")
     inputManager = new InputManager(ctx.canvas)
@@ -111,4 +120,6 @@ export async function initGlobal() {
     global = new Global(asset_objects, asset_bonus_data)
 }
 
-export { ctx, particleCtx, backgroundCtx, hudCtx, debugHudCtx, focusingCardCtx, global, inputManager }
+export {
+    ctx, particleCtx, backgroundCtx, hudCtx, debugHudCtx, WebGLHudCtx, focusingCardCtx, WebGLTopCtx,
+    global, inputManager }

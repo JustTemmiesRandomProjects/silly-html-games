@@ -32,12 +32,16 @@
     <!-- particle canvas, for drawing particles -->
     <canvas id="particleCanvas" class="ignore-mouse" width="400" height="225" hidden="true"></canvas>
     
-    <!-- HUD canvas, for drawing the HUD -->
+    <!-- HUD canvases, one is for generic HUD elements, one is for debug hud elements , and the last is a GLSL canvas-->
     <canvas id="hudCanvas" class="ignore-mouse" width="400" height="225" hidden="true"></canvas>
     <canvas id="debugHudCanvas" class="ignore-mouse" width="400" height="225" hidden="true"></canvas>
-
+    <canvas id="WebGLHudCanvas" class="ignore-mouse" width="400" height="225" hidden="true"></canvas>
+    
     <!-- UNUSED hovering card canvas, for drawing the hovering cards -->
     <canvas id="focusingCardCanvas" class="ignore-mouse" width="400" height="225" hidden="true"></canvas>
+    
+    <!-- GLSL canvas to render on top of the screen -->
+    <canvas id="WebGLTopCanvas" class="ignore-mouse" width="400" height="225" hidden="true"></canvas>
     
 
     <!-- javascript -->

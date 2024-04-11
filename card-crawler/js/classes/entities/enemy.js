@@ -1,12 +1,13 @@
 import { global, ctx, inputManager } from "../../global.js"
 import { drawSquircle } from "../../tems_library/rendering.js";
-import { Entity } from "../parents/baseEntity.js";
+import { UIElement } from "../parents/UI_element.js";
 
-export class Enemy extends Entity {
+export class Enemy extends UIElement {
     constructor() {
-        super()
-
-        this.position = {x:1300, y:200}
+        super(
+            {x: 1000, y:220},
+            {x: 240,  y:240}
+        )
 
         this.MAX_HP = 20
         this.HP = this.MAX_HP
@@ -20,8 +21,7 @@ export class Enemy extends Entity {
 
     register() {
         this.sprite.setPosition(this.position.x, this.position.y)
-        const size = 180
-        this.sprite.setSize(size, size)
+        this.sprite.setSize(this.size.x, this.size.y)
     }
 
     tick() {

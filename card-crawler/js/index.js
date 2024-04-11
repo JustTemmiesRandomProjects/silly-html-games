@@ -7,20 +7,21 @@ import { Card } from "./classes/parents/card.js"
 import { Player } from "./classes/entities/player.js"
 
 import { drawHud } from "./hud.js"
-import { global, ctx, backgroundCtx, particleCtx, hudCtx, initGlobal, focusingCardCtx, debugHudCtx } from "./global.js"
-import { miscSetup, gameTick10, gameTick2, updateBackground, canvases } from "./misc.js"
+import { global, ctx, backgroundCtx, particleCtx, hudCtx, initGlobal, focusingCardCtx, debugHudCtx, WebGLHudCtx, WebGLTopCtx } from "./global.js"
+import { miscSetup, gameTick10, gameTick2, updateBackground, contexts } from "./misc.js"
 import { CombatRoom } from "./classes/rooms/combat.js"
 import { MiscRoom } from "./classes/rooms/misc.js"
 import { cardManagerInit, full_card_list } from "./card_manager.js"
 import { Enemy } from "./classes/entities/enemy.js"
 import { StrikeCard } from "./content/cards/attacks/strike.js"
+import { testShader } from "./tems_library/shaders.js"
 
 
 // ready function, called when the program is ready, before the first game tick
 function ready() {
     cardManagerInit()
 
-    resizeCanvas(canvases, [updateBackground, drawHud])
+    resizeCanvas(contexts, [updateBackground, drawHud])
     ctx.imageSmoothingEnabled = true
 
     // console.log("playing audio...")
@@ -95,6 +96,7 @@ async function process() {
     global.deferred_calls = []
 
     drawHud()
+    testShader()
 
     // finally, run the combat-room tick
     global.current_room.tick()
@@ -123,7 +125,9 @@ export function play_game() {
     particleCtx.canvas.hidden = false
     hudCtx.canvas.hidden = false
     debugHudCtx.canvas.hidden = false
+    WebGLHudCtx.canvas.hidden = false
     focusingCardCtx.canvas.hidden = false
+    WebGLTopCtx.canvas.hidden = false
 
     console.log("running ready() function...")
     ready()

@@ -3,16 +3,18 @@ import { loadMenu, showGameOverScreen } from "./main_menu/index.js"
 
 import { Background } from "./classes/entities/background.js"
 
-import { global, ctx, backgroundCtx, particleCtx, hudCtx, initGlobal, focusingCardCtx, debugHudCtx } from "./global.js"
+import { global, ctx, backgroundCtx, particleCtx, hudCtx, initGlobal, focusingCardCtx, debugHudCtx, WebGLTopCtx, WebGLHudCtx } from "./global.js"
 import { drawDebug, drawHud } from "./hud.js"
 import { drawBackgroundImage } from "./tems_library/rendering.js"
 
-export const canvases = [
-    ctx.canvas,
-    backgroundCtx.canvas,
-    hudCtx.canvas,
-    debugHudCtx.canvas,
-    focusingCardCtx.canvas,
+export const contexts = [
+    ctx,
+    backgroundCtx,
+    hudCtx,
+    debugHudCtx,
+    WebGLHudCtx,
+    focusingCardCtx,
+    WebGLTopCtx,
 ]
 
 export function miscSetup() {
@@ -21,7 +23,7 @@ export function miscSetup() {
 
 // gameTick function, called 100 ms (10 times/second)
 export function gameTick10() {
-    resizeCanvas(canvases, [updateBackground, drawHud])
+    resizeCanvas(contexts, [updateBackground, drawHud])
     drawDebug()
 }
 

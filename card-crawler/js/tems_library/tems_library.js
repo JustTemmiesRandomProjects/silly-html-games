@@ -165,12 +165,18 @@ export async function loadAssets(assetSources) {
     })
 }
 
-export function resizeCanvas(canvases, callbackFunctions) {
+export function resizeCanvas(contexts, callbackFunctions) {
     if (user_current_screen_height != 963) {
         console.log("resizing canvas...")
-        for (let i = 0; i < canvases.length; i++) {
-            canvases[i].width = 1920
-            canvases[i].height = 963
+        for (let i = 0; i < contexts.length; i++) {
+            const context = contexts[i]
+            context.canvas.width = 1920
+            context.canvas.height = 963
+
+            if (context instanceof WebGL2RenderingContext) {
+                console.debug(`updating WebGL context to 0, 0, ${context.canvas.width}, ${context.canvas.height}`)
+                context.viewport(0, 0, context.canvas.width, context.canvas.height);
+            }
         }
 
         user_current_screen_width = 1920
