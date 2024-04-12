@@ -14,7 +14,7 @@ import { MiscRoom } from "./classes/rooms/misc.js"
 import { cardManagerInit, full_card_list } from "./card_manager.js"
 import { Shader } from "./tems_library/shaders.js"
 
-import rainbow_shader from "./shaders/testing/rainbow_shader.js"
+import shader_data from "./shaders/testing/test.js"
 
 // ready function, called when the program is ready, before the first game tick
 function ready() {
@@ -34,14 +34,14 @@ function ready() {
     // make the gameTick2 function run every 500 ms
     setInterval(gameTick2, 500)
 
-    const positions = [
-        -0.7, -0.9,
-        0.9, -0.7,
-        -0.9, 0.7,
-        0.7, 0.9,
-    ];
-    const test_shader = new Shader(WebGLTopCtx, positions, rainbow_shader)
-    global.entities["shaders"].push(test_shader)
+    // const positions = [
+    //     -0.7, -0.9,
+    //     0.9, -0.7,
+    //     -0.9, 0.7,
+    //     0.7, 0.9,
+    // ];
+    // const test_shader = new Shader(WebGLTopCtx, positions, shader_data)
+    // global.entities["shaders"].push(test_shader)
 
     global.player = new Player
     global.entities["actors"].push(global.player)
