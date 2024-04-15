@@ -60,8 +60,8 @@ export class Enemy extends UIElement {
             const difference = Math.abs(this.HP - this.display_HP)
             this.display_HP -= (difference / 350) * global.delta_time + 0.03
 
-            // kill the enemy is it's "dead"
-            if (this.HP <= 0) {
+            // kill the enemy if it appears to be dead
+            if (this.display_HP <= 0) {
                 global.current_room.enemies = global.current_room.enemies.filter((enemy) => enemy != this)
             }
         }
