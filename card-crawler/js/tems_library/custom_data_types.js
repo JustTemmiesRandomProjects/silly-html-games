@@ -226,7 +226,7 @@ export class customImage {
         this.img.onload = function() {
             if (typeof post_load === 'function') {
                 post_load() // Execute the onload callback if defined
-            } else {
+            } else if (post_load != "disabled") {
                 alert(`onload function not assigned for customImage ${url}`)
             }
         }
@@ -248,7 +248,7 @@ export class customImage {
 
     newClone() {
         // return a copy of this
-        return new customImage(this.url, this.ctx, null, this.scale)
+        return new customImage(this.url, this.ctx, "disabled", this.scale)
     }
 
     draw() {

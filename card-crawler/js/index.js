@@ -9,16 +9,17 @@ import { Player } from "./classes/entities/player.js"
 import { drawHud } from "./hud.js"
 import { global, ctx, backgroundCtx, particleCtx, hudCtx, initGlobal, focusingCardCtx, debugHudCtx, WebGLHudCtx, WebGLTopCtx } from "./global.js"
 import { miscSetup, gameTick10, gameTick2, updateBackground, contexts } from "./misc.js"
-import { CombatRoom } from "./classes/rooms/combat.js"
 import { MiscRoom } from "./classes/rooms/misc.js"
-import { cardManagerInit, full_card_list } from "./card_manager.js"
-import { Shader } from "./tems_library/shaders.js"
 
-import shader_data from "./shaders/testing/test.js"
+import { cardManagerInit, full_card_list } from "./managers/card_manager.js"
+import { combatRoomManagerInit, full_combat_room_list } from "./managers/combat_room_manager.js"
+import { enemyManagerInit } from "./managers/enemy_manager.js"
 
 // ready function, called when the program is ready, before the first game tick
 function ready() {
     cardManagerInit()
+    combatRoomManagerInit()
+    enemyManagerInit()
 
     resizeCanvas(contexts, [updateBackground, drawHud])
     ctx.imageSmoothingEnabled = true
@@ -46,7 +47,7 @@ function ready() {
     global.player = new Player
     global.entities["actors"].push(global.player)
     
-    global.current_room = new MiscRoom
+    global.current_room = new full_combat_room_list[randInt(0, full_combat_room_list.length)]
     
     for (let i = 0; i < 100; i++) {
         let card = full_card_list[randInt(0, full_card_list.length)]

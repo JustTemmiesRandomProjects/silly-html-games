@@ -6,6 +6,8 @@ import { Card } from "./card.js";
 export class TargetCard extends Card {
     constructor(colour) {
         super(colour)
+
+        this.targeting_enemy = null
     }
 
     register() {

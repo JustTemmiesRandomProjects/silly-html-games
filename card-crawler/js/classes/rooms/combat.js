@@ -2,24 +2,31 @@ import { ctx, global } from "../../global.js";
 import { sleep } from "../../tems_library/tems_library.js"
 import { BaseRoom } from "./baseRoom.js"
 import { EndTurnButton } from "../scenes/pre_made_elements/buttons/end_turn_button.js";
-import { Enemy } from "../entities/enemy.js";
+import { full_enemy_list } from "../../managers/enemy_manager.js";
 
 export class CombatRoom extends BaseRoom {
     constructor() {
         super()
-        
+    
         this.turn_count = 0
 
         this.phase = this.PHASES["playerStart"]
         this.phase()
 
-
         let button = new EndTurnButton(this)
         global.entities["hud"].push(button)
 
         global.player.deck_pile = global.player.deck
-
-        this.enemies.push(new Enemy())
+    }
+    
+    register() {
+        if (this.enemies == undefined) {
+            console.debug("no enemies were found, adding debug enemies")
+            this.enemies = []
+            this.enemies.push(new full_enemy_list[0])
+            this.enemies.push(new full_enemy_list[1])
+        }
+        console.log(this.enemies)
     }
 
     tick() {

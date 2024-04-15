@@ -4,8 +4,6 @@ import { Entity } from "../parents/baseEntity.js"
 export class BaseRoom extends Entity {
     constructor() {
         super({})
-
-        this.enemies = []
         
         this.PHASES = {
             "playerStart": this._playerStart,

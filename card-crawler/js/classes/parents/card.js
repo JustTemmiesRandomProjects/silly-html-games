@@ -9,14 +9,14 @@ class CardHelper {
 
     }
 
-    damageEnemy(enemy, damage) {
+    damageEnemy(damage, enemy) {
         console.log(`dealing ${damage} damage to ${enemy.name}`)
         enemy.HP -= damage
     }
 
     damageAllEnemies(damage) {
         global.current_room.enemies.forEach((enemy) => {
-            this.damageEnemy(enemy, damage)
+            this.damageEnemy(damage, enemy)
         })
     }
 }
@@ -87,9 +87,10 @@ export class Card extends UIElement {
             }
         }
 
-        this.handleUIRightClick = async function(event) {
+
+        ctx.canvas.addEventListener("contextmenu", function(event) {
             self.cleanDragingCard()
-        }
+        })
     }
 
     drawText(ctx) {
@@ -127,7 +128,6 @@ export class Card extends UIElement {
     }
 
     cleanDragingCard() {
-        console.log("clean!")
         ctx.canvas.removeEventListener("click", this.handleDragingClick)
         this.miliseconds_focused = 0
         global.player.focused_card = null

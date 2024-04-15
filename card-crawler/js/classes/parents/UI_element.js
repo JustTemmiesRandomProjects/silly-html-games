@@ -47,6 +47,7 @@ export class UIElement extends Entity {
         this.hovering = true
         ctx.canvas.addEventListener("click", this.handleUIClick)
         ctx.canvas.addEventListener("mousedown", this.handleUIMouseDown)
+        ctx.canvas.addEventListener("mouseup", this.handleUIMouseUp)
         ctx.canvas.addEventListener("contextmenu", this.handleUIRightClick)
     }
     
@@ -54,7 +55,8 @@ export class UIElement extends Entity {
         this.hovering = false
         ctx.canvas.removeEventListener("click", this.handleUIClick)
         ctx.canvas.removeEventListener("mousedown", this.handleUIMouseDown)
-        ctx.canvas.addEventListener("contextmenu", this.handleUIRightClick)
+        ctx.canvas.removeEventListener("mouseup", this.handleUIMouseUp)
+        ctx.canvas.removeEventListener("contextmenu", this.handleUIRightClick)
     }
 
     // just a debug message
@@ -64,6 +66,10 @@ export class UIElement extends Entity {
 
     handleUIMouseDown(e) {
         console.log(`left mouse down, handleUIMouseDown() has not been set`)
+    }
+
+    handleUIMouseUp(e) {
+        console.log(`left mouse up, handleUIMouseUp() has not been set`)
     }
 
     // just a debug message

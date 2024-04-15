@@ -191,6 +191,10 @@ export class Player extends Entity {
     }
 
     turnEnd() {
-        
+        this.hand.forEach(card => {
+            card.cleanDragingCard()
+        })
+
+        this.renderHand()
     }
 }

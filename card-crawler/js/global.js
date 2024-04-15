@@ -1,9 +1,11 @@
-import { accountForDisplay, loadAssets } from "./tems_library/tems_library.js"
+import { accountForDisplay, loadAssets, randInt } from "./tems_library/tems_library.js"
 import { InputManager } from "./tems_library/input_manager.js"
 
 import { CombatRoom } from "./classes/rooms/combat.js"
 import { MiscRoom } from "./classes/rooms/misc.js"
 import { GIF, customImage } from "./tems_library/custom_data_types.js"
+import { TestRoom1 } from "./content/rooms/combat_rooms/test_room1.js"
+import { full_combat_room_list } from "./managers/combat_room_manager.js"
 
 const canvas = document.getElementById("gameCanvas")
 const particlesCanvas = document.getElementById("particleCanvas")
@@ -65,7 +67,7 @@ class Global {
         ]
     
         if (room_type == "combat") {
-            this.current_room = new CombatRoom
+            this.current_room = full_combat_room_list[randInt(0, full_combat_room_list.length)]
             
         } else if (room_type == "misc") {
             this.current_room = new MiscRoom
