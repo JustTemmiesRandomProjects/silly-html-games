@@ -32,6 +32,8 @@ export class Card extends UIElement {
 
         this.hand_ratio = 0.5
         this.miliseconds_focused = 0
+        // if the card has been dragged high enough to be removed by draging it down
+        this.dragged_out = false
         
         this.hovering = false;
         this.name_font_size = 36
@@ -80,8 +82,10 @@ export class Card extends UIElement {
 
         this.handleDragingClick = async function(event) {
             if (self.position.y > 0 && self.position.y < ctx.canvas.height * 0.7) {
+                self.dragged_out = false
                 global.player.play_queue.push(self)
                 global.player.hand = global.player.hand.filter((local_card) => local_card != self)
+
     
                 self.cleanDragingCard()
             }
@@ -90,6 +94,7 @@ export class Card extends UIElement {
 
         ctx.canvas.addEventListener("contextmenu", function(event) {
             self.cleanDragingCard()
+            self.dragged_out = false
         })
     }
 
@@ -250,12 +255,17 @@ export class Card extends UIElement {
             const player = global.player
 
             if (player.focused_card == this ){
+                if (inputManager.mouse.y < ctx.canvas.height * 0.78) {
+                    this.dragged_out = true
+                }
                 this.miliseconds_focused += global.delta_time * 2
 
                 if (player.focused_card_state == "draging" ) {
                     // if the card is low enough to "be out of play"
-                    if (inputManager.mouse.y > ctx.canvas.height * 0.945) {
+                    if ((inputManager.mouse.y > ctx.canvas.height * 0.83 && this.dragged_out)
+                        || inputManager.mouse.y > ctx.canvas.height * 0.99) {
                         this.cleanDragingCard()
+                        this.dragged_out = false
                         return
                     }
 
@@ -263,8 +273,10 @@ export class Card extends UIElement {
                 } else if (player.focused_card_state == "hovering") {
                     call_deferred(this, "draw")
                 } else if (player.focused_card_state == "targeting") {
-                    if (inputManager.mouse.y > ctx.canvas.height * 0.945) {
+                    if ((inputManager.mouse.y > ctx.canvas.height * 0.83 && this.dragged_out)
+                        || inputManager.mouse.y > ctx.canvas.height * 0.99) {
                         this.cleanDragingCard()
+                        this.dragged_out = false
                         return
                     }
 
