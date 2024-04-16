@@ -4,23 +4,6 @@ import { splitTextToFit } from "../../misc.js";
 import { drawBezierArrow, drawSquircle } from "../../tems_library/rendering.js";
 import { call_deferred } from "../../tems_library/tems_library.js";
 
-class CardHelper {
-    constructor() {
-
-    }
-
-    damageEnemy(damage, enemy) {
-        console.log(`dealing ${damage} damage to ${enemy.name}`)
-        enemy.HP -= damage
-    }
-
-    damageAllEnemies(damage) {
-        global.current_room.enemies.forEach((enemy) => {
-            this.damageEnemy(damage, enemy)
-        })
-    }
-}
-
 export class Card extends UIElement {
     constructor(colour) {
         super(
@@ -41,8 +24,6 @@ export class Card extends UIElement {
         
         this.name = "Bepis"
         this.description = "gravida cum sociis natoque penatibus et magnis dis parturient montes nascetur ridiculus mus mauris vitae"
-        
-        this.card_helper = new CardHelper()
     }
 
     register() {

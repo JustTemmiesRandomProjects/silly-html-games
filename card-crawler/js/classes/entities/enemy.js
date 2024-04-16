@@ -23,6 +23,10 @@ export class Enemy extends UIElement {
             this.sprite = global.assets["beaver"].newClone()
         }
 
+        if (this.actions == null) {
+            this.actions = []
+        }
+
         this.sprite.setPosition(this.position.x, this.position.y)
         this.sprite.setSize(this.size.x, this.size.y)
 
@@ -137,13 +141,15 @@ export class Enemy extends UIElement {
 
         // draw the text on the healthbar
         const font_size = 16 + this.sprite.size.x / 16
+        const text_string = `${Math.max(0, Math.ceil(this.HP))}/${this.MAX_HP}`
         // red background
         ctx.fillStyle = "#884f45"
         ctx.font = `${font_size}px kalam-regular`
         ctx.textAlign = "center"
         ctx.textBaseline = "middle"
+
         ctx.fillText(
-            `${Math.ceil(this.HP)}/${this.MAX_HP}`,
+            text_string,
             this.position.x + this.sprite.size.x / 2,
             this.position.y + this.sprite.size.y * 1.065 + font_size / 2 - 4
         )
@@ -151,7 +157,7 @@ export class Enemy extends UIElement {
         ctx.fillStyle = "#ffffff"
         ctx.font = `${font_size - 1}px kalam-bold`
         ctx.fillText(
-            `${Math.ceil(this.HP)}/${this.MAX_HP}`,
+            text_string,
             this.position.x + this.sprite.size.x / 2,
             this.position.y + this.sprite.size.y * 1.065 + font_size / 2 - 2
         )

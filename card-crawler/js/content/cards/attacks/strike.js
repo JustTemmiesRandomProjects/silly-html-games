@@ -1,4 +1,5 @@
 import { TargetAttackCard } from "../../../classes/parents/card_types/target_attack.js"
+import { helpers } from "../../../helpers.js"
 
 export class StrikeCard extends TargetAttackCard {
     constructor() {
@@ -8,7 +9,7 @@ export class StrikeCard extends TargetAttackCard {
         this.description = "Deal 6 damage"
 
         this.play = function() {
-            this.card_helper.damageEnemy(6, this.targeting_enemy)
+            helpers.card_helper.damageEnemy(6, this.targeting_enemy)
         }
 
         this.register()

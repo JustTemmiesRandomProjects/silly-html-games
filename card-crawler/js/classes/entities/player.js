@@ -2,6 +2,7 @@ import { randFloat, randInt, canvas_centre, shuffleArray, call_deferred, sleep }
 import { global, ctx, inputManager } from "../../global.js"
 import { Entity } from "../parents/baseEntity.js";
 import { bezierCurvePointAxis } from "../../tems_library/math.js";
+import { drawSquircle } from "../../tems_library/rendering.js";
 
 export class Player extends Entity {
     constructor() {
@@ -28,6 +29,11 @@ export class Player extends Entity {
         this.play_queue = []
 
 
+        this.MAX_HP = 70
+        this.HP = this.MAX_HP
+        this.display_HP = this.HP
+
+
         this.constants = {
             draw_amount: 7,
             max_hand_size: 7,
@@ -38,12 +44,73 @@ export class Player extends Entity {
         }
     }
 
+    drawHealthBar() {
+        const background_padding = 8
+
+        const bar_rounding = 6
+
+        const size = {
+            x: ctx.canvas.width / 6,
+            y: 25
+        }
+
+        const position = {
+            x: ctx.canvas.width / 8 - size.x / 2,
+            y: ctx.canvas.height * 0.535 - size.y
+        }
+
+        
+
+        // draw the border around the bar
+        drawSquircle(ctx,
+            position.x - background_padding,
+            position.y - background_padding,
+            size.x + background_padding * 2,
+            size.y + background_padding * 2,
+            bar_rounding + background_padding, "#28202844")
+
+        // draw dark-red background
+        drawSquircle(ctx,
+            position.x,
+            position.y,
+            size.x,
+            size.y,
+            bar_rounding, "#b89898")
+        
+        // draw red healthbar
+        const health_percentage = Math.max(0, this.display_HP / this.MAX_HP)
+        const health_bar_width = (size.x) * health_percentage
+        // if the enemy is still alive, draw the remaining HP
+        if ( health_bar_width > 8 ) {
+            drawSquircle(ctx,
+                position.x,
+                position.y,
+                health_bar_width,
+                size.y,
+                bar_rounding, "#ee3838")
+        }
+
+        // draw the text on the healthbar
+        const font_size = 40
+        // red background
+        ctx.font = `${font_size}px kalam-bold`
+        ctx.textAlign = "center"
+        ctx.textBaseline = "middle"        
+        ctx.fillStyle = "#ffffff"
+        ctx.fillText(
+            `${this.HP}/${this.MAX_HP}`,
+            position.x + size.x / 2,
+            position.y + font_size / (1 + font_size / 48)
+        )
+    }
+
 
     async tick() {
         global.player.hand.forEach(card => {
             card.tick()
         });
 
+        this.drawHealthBar()
         this.renderHand()
 
         // if (global.frames_processed % 70 == 0) {
