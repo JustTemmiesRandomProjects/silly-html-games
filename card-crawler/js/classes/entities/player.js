@@ -105,49 +105,6 @@ export class Player extends Entity {
     }
 
 
-    async tick() {
-        global.player.hand.forEach(card => {
-            card.tick()
-        });
-
-        this.drawHealthBar()
-        this.renderHand()
-
-        // if (global.frames_processed % 70 == 0) {
-        //     this.drawCards(1)
-        // }
-
-        // console.log("-----")
-
-        // console.log(this.play_queue)
-        // console.log(this.playing)
-        // console.log(this.play_cooldown)
-        
-        this.play_cooldown -= 1
-        if (this.play_queue.length >= 1) {
-            if (this.play_cooldown < 0) {
-                if (this.playing != null) {
-                    console.log("this.playing wasn't set to null, reseting it")
-                    this.playing = null
-                }
-
-                this.playing = this.play_queue.shift();
-                this.playing.play();
-                                
-                this.playing.processing = false
-                this.discard_pile.push(this.playing);
-                
-                this.playing = null
-                
-                // render hand MUST be before the dispatchEvent call
-                call_deferred(this, "renderHand")
-                call_deferred(ctx.canvas, "dispatchEvent", [event]);
-
-                this.play_cooldown = 20
-            }
-        }
-    }
-
     drawHand() {
         this.drawCards(this.constants.draw_amount)
 
@@ -263,5 +220,48 @@ export class Player extends Entity {
         })
 
         this.renderHand()
+    }
+
+    async tick() {
+        global.player.hand.forEach(card => {
+            card.tick()
+        });
+
+        this.drawHealthBar()
+        this.renderHand()
+
+        // if (global.frames_processed % 70 == 0) {
+        //     this.drawCards(1)
+        // }
+
+        // console.log("-----")
+
+        // console.log(this.play_queue)
+        // console.log(this.playing)
+        // console.log(this.play_cooldown)
+        
+        this.play_cooldown -= 1
+        if (this.play_queue.length >= 1) {
+            if (this.play_cooldown < 0) {
+                if (this.playing != null) {
+                    console.log("this.playing wasn't set to null, reseting it")
+                    this.playing = null
+                }
+
+                this.playing = this.play_queue.shift();
+                this.playing.play();
+                                
+                this.playing.processing = false
+                this.discard_pile.push(this.playing);
+                
+                this.playing = null
+                
+                // render hand MUST be before the dispatchEvent call
+                call_deferred(this, "renderHand")
+                call_deferred(ctx.canvas, "dispatchEvent", [event]);
+
+                this.play_cooldown = 20
+            }
+        }
     }
 }

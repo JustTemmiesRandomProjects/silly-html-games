@@ -11,8 +11,6 @@ export class Enemy extends UIElement {
         this.MAX_HP = 20
         this.name = "bipis"
         this.sprite = null
-
-        this.mouse_down = false
     }
 
     register() {
@@ -31,31 +29,19 @@ export class Enemy extends UIElement {
         this.sprite.setSize(this.size.x, this.size.y)
 
         const self = this 
-        this.handleUIMouseDown = async function(event) {
-            self.mouse_down = true
-        }
-        
-        this.mouseUp = function() { this.mouse_down = false }
-        this.handleUIMouseUp = async function(event) {
-            call_deferred(self, "mouseUp")
-        }
-    
         this.handleUIClick = async function(event) {
-            if (self.mouse_down) {
-                self.mouse_down = false
-                const player = global.player
-                const card = global.player.focused_card
+            const player = global.player
+            const card = global.player.focused_card
 
-                if (player.focused_card_state != "targeting") {
-                    console.log("tried playing target card whilst focused state is not targeting, returning")
-                    return
-                }
-                        
-                card.targeting_enemy = self
-                player.play_queue.push(card)
-                player.hand = player.hand.filter((local_card) => local_card != card)
-                card.cleanDragingCard()
+            if (player.focused_card_state != "targeting") {
+                console.log("tried playing target card whilst focused state is not targeting, returning")
+                return
             }
+                    
+            card.targeting_enemy = self
+            player.play_queue.push(card)
+            player.hand = player.hand.filter((local_card) => local_card != card)
+            card.cleanDragingCard()
         }
     }
 
@@ -147,7 +133,6 @@ export class Enemy extends UIElement {
         ctx.font = `${font_size}px kalam-regular`
         ctx.textAlign = "center"
         ctx.textBaseline = "middle"
-
         ctx.fillText(
             text_string,
             this.position.x + this.sprite.size.x / 2,

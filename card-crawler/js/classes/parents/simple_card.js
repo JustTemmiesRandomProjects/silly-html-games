@@ -11,4 +11,9 @@ export class SimpleCard extends Card {
     register() {
         super.register()
     }
+
+
+    register() {
+        super.register()
+    }
 }

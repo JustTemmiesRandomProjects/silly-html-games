@@ -15,6 +15,7 @@ import { cardManagerInit, full_card_list } from "./managers/card_manager.js"
 import { combatRoomManagerInit, full_combat_room_list } from "./managers/combat_room_manager.js"
 import { enemyManagerInit } from "./managers/enemy_manager.js"
 
+
 // ready function, called when the program is ready, before the first game tick
 function ready() {
     cardManagerInit()
@@ -70,6 +71,7 @@ async function process() {
         return
     }
 
+    
     global.delta_time = window.performance.now() - global.last_frame_timestamp
     global.last_frame_timestamp = window.performance.now()
 
@@ -80,17 +82,16 @@ async function process() {
     }
 
     global.frames_processed ++
-    requestAnimationFrame(process)
-
+    
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
-
+    
     // run the tick function on every entity
     for (const [key, value] of Object.entries(global.entities)) {
         for (const entity of value) {
             entity.tick()
         }
     }
-
+    
     // used for deferred ticks
     global.deferred_calls.forEach((e) => {
         // dispatchEvent seemed to crash this, idk, this might be a lil buggy
@@ -102,11 +103,13 @@ async function process() {
     })
 
     global.deferred_calls = []
-
+    
     drawHud()
-
+    
     // finally, run the combat-room tick
     global.current_room.tick()
+
+    requestAnimationFrame(process)
 }
 
 // check if the global variable is ready every 100ms, until it's ready

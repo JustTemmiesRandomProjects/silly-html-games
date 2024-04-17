@@ -37,19 +37,6 @@ export class Card extends UIElement {
         }
 
         const self = this 
-        this.handleUIClick = async function(event) {
-            if (global.player.focused_card != self) {
-                if (global.debug_mode) {
-                    console.log(`${self.name} is not being focused, returning early`)
-                }
-                return
-            }
-            
-            // self.becomeDraged(self)
-
-            // ctx.canvas.removeEventListener("click", self.handleUIClick)
-        }
-
         this.handleUIMouseDown = async function(event) {
             if (global.player.focused_card != self) {
                 if (global.debug_mode) {
@@ -59,6 +46,7 @@ export class Card extends UIElement {
             }
 
             self.becomeDraged(self)
+            console.log("drag:)")
         }
 
         this.handleDragingClick = async function(event) {
@@ -193,9 +181,9 @@ export class Card extends UIElement {
     draw() {
         const hand = global.player.hand
         // cap it at 90
-        this.miliseconds_focused = Math.min(90, this.miliseconds_focused)
+        this.miliseconds_focused = Math.min(70, this.miliseconds_focused)
 
-        const scale = 1 + (global.player.constants.focused_card_multiplier * this.miliseconds_focused / 90)
+        const scale = 1 + (global.player.constants.focused_card_multiplier * this.miliseconds_focused / 70)
         const scale_time_value = (scale - 1) / global.player.constants.focused_card_multiplier
 
         ctx.setTransform(scale, 0, 0, scale, 0, 0)
@@ -236,26 +224,29 @@ export class Card extends UIElement {
             const player = global.player
 
             if (player.focused_card == this ){
-                if (inputManager.mouse.y < ctx.canvas.height * 0.78) {
+                if (inputManager.mouse.y < ctx.canvas.height * 0.73) {
                     this.dragged_out = true
                 }
-                this.miliseconds_focused += global.delta_time * 2
+
+                this.miliseconds_focused += global.delta_time
 
                 if (player.focused_card_state == "draging" ) {
                     // if the card is low enough to "be out of play"
                     if ((inputManager.mouse.y > ctx.canvas.height * 0.83 && this.dragged_out)
-                        || inputManager.mouse.y > ctx.canvas.height * 0.99) {
+                        || inputManager.mouse.y  >= ctx.canvas.height - 1) {
                         this.cleanDragingCard()
                         this.dragged_out = false
                         return
                     }
 
                     call_deferred(this, "drawDragingCard")
+
                 } else if (player.focused_card_state == "hovering") {
                     call_deferred(this, "draw")
+
                 } else if (player.focused_card_state == "targeting") {
                     if ((inputManager.mouse.y > ctx.canvas.height * 0.83 && this.dragged_out)
-                        || inputManager.mouse.y > ctx.canvas.height * 0.99) {
+                        || inputManager.mouse.y  >= ctx.canvas.height - 1) {
                         this.cleanDragingCard()
                         this.dragged_out = false
                         return

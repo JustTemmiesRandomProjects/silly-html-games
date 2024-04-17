@@ -12,6 +12,10 @@ export class TestEnemy1 extends Enemy {
         this.name = "Debug Enemy 1"
         this.MAX_HP = randInt(72, 17)
 
+        this.moveset = [
+            
+        ]
+
         this.register()
     }
 }
