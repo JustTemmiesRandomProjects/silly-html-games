@@ -4,7 +4,7 @@ import { randInt } from "./tems_library/tems_library.js"
 export function drawHud () {
     hudCtx.clearRect(0, 0, hudCtx.canvas.width, hudCtx.canvas.height)
 
-    if (global.player != null) {
+    if (global.player != null && global.player.render_hud) {
         drawDrawPile()
         drawDiscardPile()
     }
@@ -31,9 +31,11 @@ export function drawDebug() {
         sum += num;
     })
 
+    global.average_delta_time = sum / global.frame_times.length
+
     debugHudCtx.font = "24px kalam-light"
     debugHudCtx.fillStyle = "#a8a0a8"
-    debugHudCtx.fillText(`Average Frame Times: ${(sum / global.frame_times.length).toFixed(1)}` , 30, 40) 
+    debugHudCtx.fillText(`Average Frame Times: ${(global.average_delta_time).toFixed(1)}` , 30, 40) 
     debugHudCtx.fillText(`Last delta_time: ${global.delta_time}` , 30, 65) 
     debugHudCtx.fillText(`FPS: ${(1000 / (sum / global.frame_times.length)).toFixed(1)}` , 30, 90) 
 }

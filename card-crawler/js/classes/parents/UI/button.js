@@ -12,10 +12,10 @@ export class Button extends UIElement {
         this.text_colour = "#454f45"
 
         this.font = "kalam-regular"
-        this.text = "bah gah"
+        this.text = "bepis"
         this.text_y_offset = 0
         this.text_x_offset = 0
-        this.font_size = 12
+        this.font_size = 18
     }
 
     draw() {

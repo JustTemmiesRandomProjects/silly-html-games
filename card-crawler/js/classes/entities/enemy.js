@@ -1,13 +1,12 @@
 import { global, ctx, inputManager, hudCtx } from "../../global.js"
 import { drawSquircle } from "../../tems_library/rendering.js";
-import { call_deferred } from "../../tems_library/tems_library.js";
+import { call_deferred, randInt } from "../../tems_library/tems_library.js";
 import { UIElement } from "../parents/UI_element.js";
 
 export class Enemy extends UIElement {
     constructor(pos, size) {
         super(pos, size)
 
-        
         this.MAX_HP = 20
         this.name = "bipis"
         this.sprite = null
@@ -16,11 +15,16 @@ export class Enemy extends UIElement {
     register() {
         this.HP = this.MAX_HP
         this.display_HP = this.HP
-
+        
+        // set at the start of the player's turn
+        this.active_action = null
+        this.sword_icon = global.assets["sprite_icon_sword"].newClone()
+        this.action_y_offset = 0
+        
         if (this.sprite == null) {
             this.sprite = global.assets["beaver"].newClone()
         }
-
+        
         if (this.actions == null) {
             this.actions = []
         }
@@ -40,9 +44,9 @@ export class Enemy extends UIElement {
                     
             card.targeting_enemy = self
             player.play_queue.push(card)
-            player.hand = player.hand.filter((local_card) => local_card != card)
             card.cleanDragingCard()
         }
+
     }
 
     tick() {
@@ -60,6 +64,15 @@ export class Enemy extends UIElement {
             if (global.player.focused_card_state == "targeting") this.drawBackground()
 
             this.drawName()
+        }
+
+        if (this.active_action != undefined) {
+            this.drawAction()
+            
+            const sine_frequency = ctx.canvas.height / 20
+            this.action_y_offset += Math.sin(global.frames_processed / sine_frequency) / (sine_frequency / global.delta_time * 2)
+            
+            this.action_y_offset = Math.min(sine_frequency, Math.max(0, this.action_y_offset))
         }
         
         this.sprite.draw()
@@ -86,6 +99,31 @@ export class Enemy extends UIElement {
             this.position.x + this.sprite.size.x / 2,
             this.position.y + this.sprite.size.y * 1.2125 + ctx.canvas.height / 55
         )
+    }
+
+    drawAction() {
+        const font_size = 28
+        ctx.textAlign = "right"
+        ctx.textBaseline = "middle"
+
+        if (this.active_action.intent[0] == "damage") {
+            this.sword_icon.position = {
+                x: this.position.x + this.sprite.size.x / 2 - this.sword_icon.size.x + 20,
+                y: this.position.y - ctx.canvas.height / 70 - this.sword_icon.size.y + 10 - this.action_y_offset
+            }
+            this.sword_icon.draw()
+            ctx.fillStyle = "#454f45"
+            if (this.active_action.intent[1] > global.player.MAX_HP / 5) {
+                ctx.font = `${font_size}px kalam-bold`
+            } else {
+                ctx.font = `${font_size}px kalam-regular`
+            }
+            ctx.fillText(
+                `${this.active_action.intent[1]}`,
+                this.position.x + this.sprite.size.x / 2 - 20,
+                this.position.y - ctx.canvas.height / 55 + 5 - this.action_y_offset
+            )
+        }
     }
 
     drawHealthBar() {
@@ -146,6 +184,10 @@ export class Enemy extends UIElement {
             this.position.x + this.sprite.size.x / 2,
             this.position.y + this.sprite.size.y * 1.065 + font_size / 2 - 2
         )
+    }
+
+    selectNewAction() {
+        this.active_action = this.actions[randInt(0, this.actions.length)]
     }
 
 

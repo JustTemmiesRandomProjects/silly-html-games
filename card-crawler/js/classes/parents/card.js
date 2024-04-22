@@ -27,13 +27,24 @@ export class Card extends UIElement {
     }
 
     register() {
+        if (this.energy_icon == null) {
+            this.energy_icon = global.player.energy_icon.newClone()
+        }
+        
+
         this.display_description = splitTextToFit(this.description, 110)
+        this.energy_icon.setPosition(-8, 0)
+        this.energy_icon.setSize(global.player.energy_icon.size.x, global.player.energy_icon.size.y)
         
         if (this.play == null) {
             console.log(`[WARNING] the card "${self.name}" doesn't have any play function`)
             this.play = function() {
                 return
             }
+        }
+
+        if (this.energy_cost == null) {
+            this.energy_cost = 1
         }
 
         const self = this 
@@ -44,7 +55,7 @@ export class Card extends UIElement {
                 }
                 return
             }
-
+            
             self.becomeDraged(self)
             console.log("drag:)")
         }
@@ -53,8 +64,7 @@ export class Card extends UIElement {
             if (self.position.y > 0 && self.position.y < ctx.canvas.height * 0.7) {
                 self.dragged_out = false
                 global.player.play_queue.push(self)
-                global.player.hand = global.player.hand.filter((local_card) => local_card != self)
-
+                // global.player.hand = global.player.hand.filter((local_card) => local_card != self)
     
                 self.cleanDragingCard()
             }
@@ -65,6 +75,37 @@ export class Card extends UIElement {
             self.cleanDragingCard()
             self.dragged_out = false
         })
+    }
+    
+    drawEnergyCost(ctx) {
+        // energy icon background
+        const icon = this.energy_icon
+        ctx.beginPath();
+        ctx.arc(
+            icon.position.x + icon.size.x/2,
+            icon.position.y + icon.size.y/2,
+            icon.size.x * 0.75
+            , 0, 2 * Math.PI, false);
+        
+        ctx.fillStyle = "#8BC38C";
+        ctx.fill();
+        //border
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = '#003300';
+        ctx.stroke();
+        
+        // icon.draw()
+        
+        // energy text
+        ctx.fillStyle = "#454545";
+        ctx.font = `64px kalam-bold`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(
+            `${this.energy_cost}`,
+            (icon.position.x + icon.size.x/2),
+            (icon.position.y + icon.size.y/2 + 12)
+        )
     }
 
     drawText(ctx) {
@@ -139,13 +180,12 @@ export class Card extends UIElement {
         )
 
         // border
-        if (global.player.focused_card == this) {
-            drawSquircle(ctx, -3, -3, this.size.x+6, this.size.y+6, 19, "#102f10")
-        }
+        drawSquircle(ctx, -3, -3, this.size.x+6, this.size.y+6, 19, "#102f10")
 
         // background
         drawSquircle(ctx, 0, 0, this.size.x, this.size.y, 16, this.colour)
 
+        this.drawEnergyCost(ctx)
         this.drawText(ctx)
 
         ctx.setTransform(1, 0, 0, 1, 0, 0)
@@ -173,6 +213,8 @@ export class Card extends UIElement {
         // background
         drawSquircle(focusingCardCtx, 0, 0, this.size.x, this.size.y, 16, this.colour)
 
+
+        this.drawEnergyCost(focusingCardCtx)
         this.drawText(focusingCardCtx)
 
         focusingCardCtx.setTransform(1, 0, 0, 1, 0, 0)
@@ -187,7 +229,7 @@ export class Card extends UIElement {
         const scale_time_value = (scale - 1) / global.player.constants.focused_card_multiplier
 
         ctx.setTransform(scale, 0, 0, scale, 0, 0)
-
+        
         let this_card_y = this.position.y
         let middle_card_y = this_card_y
         if (hand.length > 0) {
@@ -205,15 +247,15 @@ export class Card extends UIElement {
 
         ctx.rotate(this.rotation * (1 - scale_time_value))
         ctx.translate(-this.size.x/2, 0)
-
+        
         // border
-        // if (global.player.focused_card == this) {
-            drawSquircle(ctx, -3, -3, this.size.x+6, this.size.y+6, 19, "#102f10")
-        // }
-
+        drawSquircle(ctx, -3, -3, this.size.x+6, this.size.y+6, 19, "#102f10")        
+        
         // background
         drawSquircle(ctx, 0, 0, this.size.x, this.size.y, 16, this.colour)
+        
 
+        this.drawEnergyCost(ctx)
         this.drawText(ctx)
 
         ctx.setTransform(1, 0, 0, 1, 0, 0)
@@ -222,14 +264,14 @@ export class Card extends UIElement {
     tick() {
         if (this.processing) {  
             const player = global.player
-
+            
             if (player.focused_card == this ){
                 if (inputManager.mouse.y < ctx.canvas.height * 0.73) {
                     this.dragged_out = true
                 }
 
                 this.miliseconds_focused += global.delta_time
-
+                
                 if (player.focused_card_state == "draging" ) {
                     // if the card is low enough to "be out of play"
                     if ((inputManager.mouse.y > ctx.canvas.height * 0.83 && this.dragged_out)

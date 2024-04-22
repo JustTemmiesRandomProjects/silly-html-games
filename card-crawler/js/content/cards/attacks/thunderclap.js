@@ -7,6 +7,7 @@ export class ThunderclapCard extends AttackCard {
 
         this.name = "Die"
         this.description = "Deal 13 damage to all enemies"
+        this.energy_cost = 2
 
         this.play = function() {
             helpers.card_helper.damageAllEnemies(13)

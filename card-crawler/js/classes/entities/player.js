@@ -27,21 +27,58 @@ export class Player extends Entity {
         this.hand_x_start_pos = 0
         this.play_cooldown = 0
         this.play_queue = []
-
+        this.render_hud = true
+        
+        this.MAX_ENERGY = 3
+        this.energy = this.MAX_ENERGY
 
         this.MAX_HP = 70
         this.HP = this.MAX_HP
         this.display_HP = this.HP
 
+        this.energy_icon = global.assets["beaver"].newClone()
+        this.energy_icon.setSize(48, 48)
 
         this.constants = {
-            draw_amount: 7,
-            max_hand_size: 7,
+            draw_amount: 5,
+            max_hand_size: 9,
             max_distance_between_cards: 215,
             max_hand_width: (ctx.canvas.width / 6) * 3.3,
             focused_card_multiplier: 0.2, // 0.3, as in 1 + 0.3
             focused_card_margins: 130,
         }
+    }
+
+    drawEnergyWheel(ctx) {
+        // energy icon background
+        const icon = this.energy_icon
+        ctx.beginPath();
+        ctx.arc(
+            ctx.canvas.width / 6,
+            ctx.canvas.height * 0.42,
+            icon.size.x * 0.75
+            , 0, 2 * Math.PI, false);
+        
+        ctx.fillStyle = "#8BC38C";
+        ctx.fill();
+
+        //border
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = '#003300';
+        ctx.stroke();
+        
+        // icon.draw()
+        
+        // energy text
+        ctx.fillStyle = "#454545";
+        ctx.font = `64px kalam-bold`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(
+            `${this.energy}`,
+            ctx.canvas.width / 6,
+            ctx.canvas.height * 0.42 + 12
+        )
     }
 
     drawHealthBar() {
@@ -177,6 +214,7 @@ export class Player extends Entity {
     }
 
     drawCards(num) {
+        console.log(`drawing ${num} cards`)
         function _drawCard(self) {
             if (self.deck_pile.length == 0) return
             if (self.hand.length >= self.constants.max_hand_size) return
@@ -210,15 +248,17 @@ export class Player extends Entity {
 
     turnStart() {
         console.log("sick i can do things")
-        this.discardHand()
+        this.energy = this.MAX_ENERGY
+
         this.drawHand()
     }
-
+    
     turnEnd() {
         this.hand.forEach(card => {
             card.cleanDragingCard()
         })
-
+        
+        this.discardHand()
         this.renderHand()
     }
 
@@ -227,7 +267,13 @@ export class Player extends Entity {
             card.tick()
         });
 
+        if (this.display_HP > this.HP) {
+            const difference = Math.abs(this.HP - this.display_HP)
+            this.display_HP -= (difference / 350) * global.delta_time + 0.03
+        }
+
         this.drawHealthBar()
+        this.drawEnergyWheel(ctx)
         this.renderHand()
 
         // if (global.frames_processed % 70 == 0) {
@@ -249,12 +295,19 @@ export class Player extends Entity {
                 }
 
                 this.playing = this.play_queue.shift();
-                this.playing.play();
-                                
-                this.playing.processing = false
-                this.discard_pile.push(this.playing);
-                
-                this.playing = null
+
+                if (this.energy >= this.playing.energy_cost) {
+                    this.energy -= this.playing.energy_cost
+                    this.hand = this.hand.filter((card) => card != this.playing)
+                    this.playing.play()
+                                    
+                    this.playing.processing = false
+                    this.discard_pile.push(this.playing);
+                    
+                    this.playing = null
+
+
+                }
                 
                 // render hand MUST be before the dispatchEvent call
                 call_deferred(this, "renderHand")

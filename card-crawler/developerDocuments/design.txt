@@ -5,6 +5,7 @@ palettes:
 
 colour palette values:
     # 45 4f 45 <- text
+    # df e8 df <- white text
 
     # ff b3 ba <- attack
     # ba ff c9 <- skill

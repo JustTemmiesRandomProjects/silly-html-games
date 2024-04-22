@@ -12,7 +12,7 @@ import { miscSetup, gameTick10, gameTick2, updateBackground, contexts } from "./
 import { MiscRoom } from "./classes/rooms/misc.js"
 
 import { cardManagerInit, full_card_list } from "./managers/card_manager.js"
-import { combatRoomManagerInit, full_combat_room_list } from "./managers/combat_room_manager.js"
+import { combatRoomManagerInit } from "./managers/combat_room_manager.js"
 import { enemyManagerInit } from "./managers/enemy_manager.js"
 
 
@@ -36,19 +36,10 @@ function ready() {
     // make the gameTick2 function run every 500 ms
     setInterval(gameTick2, 500)
 
-    // const positions = [
-    //     -0.7, -0.9,
-    //     0.9, -0.7,
-    //     -0.9, 0.7,
-    //     0.7, 0.9,
-    // ];
-    // const test_shader = new Shader(WebGLTopCtx, positions, shader_data)
-    // global.entities["shaders"].push(test_shader)
-
     global.player = new Player
     global.entities["actors"].push(global.player)
     
-    global.current_room = new full_combat_room_list[randInt(0, full_combat_room_list.length)]
+    global.setRoomType("combat")
     
     for (let i = 0; i < 100; i++) {
         let card = full_card_list[randInt(0, full_card_list.length)]
@@ -107,7 +98,11 @@ async function process() {
     drawHud()
     
     // finally, run the combat-room tick
-    global.current_room.tick()
+    if (global.current_room != null) {
+        global.current_room.tick()
+    } else {
+        console.log(global.current_room)
+    }
 
     requestAnimationFrame(process)
 }

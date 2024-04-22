@@ -8,12 +8,11 @@ export class TestRoom3 extends CombatRoom {
         super()
 
         this.enemies = [
-            new TestEnemy1,
-            new TestEnemy2({x: 1230, y:randInt(280, 20)}),
+            // new TestEnemy1,
+            // new TestEnemy2({x: 1230, y:randInt(280, 20)}),
             new TestEnemy2({x: 1400, y:randInt(280, 20)}),
             new TestEnemy2({x: 1570, y:randInt(280, 20)}),
-            new TestEnemy2({x: 1740, y:randInt(280, 20)}),
-            new TestEnemy2({x: 1910, y:randInt(280, 20)}),
+            // new TestEnemy1({x: 1740, y:randInt(280, 20)}),
         ]
 
         this.register()

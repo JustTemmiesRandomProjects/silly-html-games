@@ -5,7 +5,7 @@ import { CombatRoom } from "./classes/rooms/combat.js"
 import { MiscRoom } from "./classes/rooms/misc.js"
 import { GIF, customImage } from "./tems_library/custom_data_types.js"
 import { TestRoom1 } from "./content/rooms/combat_rooms/test_room1.js"
-import { full_combat_room_list } from "./managers/combat_room_manager.js"
+import { getNewCombatRoom } from "./managers/combat_room_manager.js"
 
 const canvas = document.getElementById("gameCanvas")
 const particlesCanvas = document.getElementById("particleCanvas")
@@ -29,6 +29,8 @@ class Global {
         this.entity_counter = 0
         this.frames_processed = 0
         this.delta_time = 1
+        this.average_delta_time = 1
+        
         this.last_frame_timestamp = window.performance.now()
         this.frame_times = []
 
@@ -51,10 +53,10 @@ class Global {
             shaders: [],
             misc: [],
         }
+        this.last_rooms = {}
 
         // functions to run after the ticks are done processing
         this.deferred_calls = []
-
 
         this.assets = asset_objects
         this.asset_bonus_data = asset_bonus_data
@@ -65,13 +67,16 @@ class Global {
             "combat",
             "misc",
         ]
+
+        global.player.focused_card_state = null
     
         if (room_type == "combat") {
-            this.current_room = full_combat_room_list[randInt(0, full_combat_room_list.length)]
-            
+            const new_room_type = getNewCombatRoom()
+            this.current_room = new new_room_type
+
         } else if (room_type == "misc") {
             this.current_room = new MiscRoom
-    
+            
         }
     }
 }
@@ -99,6 +104,7 @@ window.onload = async function () {
         "beaver": [customImage, "assets/sprites/original/beaver.svg", {}],
         "sfx_zap": [Audio, "assets/audio/sound-effects/kenney/sfx_zap.ogg", {}],
 
+        "sprite_icon_sword": [customImage, ["assets/sprites/pixabay/sword.svg"], {}],
         "sprite_player_idle": [GIF, ["assets/sprites/kenney/kenney_tiny-ski/ski_idle.png"], {}],
         "sprite_player_active": [GIF, [
             "assets/sprites/kenney/kenney_tiny-ski/ski_walk.png",
