@@ -35,8 +35,8 @@ export function drawDebug() {
 
     debugHudCtx.font = "24px kalam-light"
     debugHudCtx.fillStyle = "#a8a0a8"
-    debugHudCtx.fillText(`Average Frame Times: ${(global.average_delta_time).toFixed(1)}` , 30, 40) 
-    debugHudCtx.fillText(`Last delta_time: ${global.delta_time}` , 30, 65) 
+    debugHudCtx.fillText(`Average Frame Times: ${(global.average_delta_time).toFixed(2)}` , 30, 40) 
+    debugHudCtx.fillText(`Last delta_time: ${(global.delta_time).toFixed(2)}` , 30, 65) 
     debugHudCtx.fillText(`FPS: ${(1000 / (sum / global.frame_times.length)).toFixed(1)}` , 30, 90) 
 }
 

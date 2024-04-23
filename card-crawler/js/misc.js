@@ -24,11 +24,11 @@ export function miscSetup() {
 // gameTick function, called 100 ms (10 times/second)
 export function gameTick10() {
     resizeCanvas(contexts, [updateBackground, drawHud])
-    drawDebug()
 }
 
-// gameTick function, called every 500 ms (2 times/second)
+// gameTick function, ca111111lled every 500 ms (2 times/second)
 export function gameTick2() {
+    drawDebug()
 }
 
 export function updateBackground() {
