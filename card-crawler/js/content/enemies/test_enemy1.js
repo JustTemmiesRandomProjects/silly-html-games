@@ -2,6 +2,7 @@ import { Enemy } from "../../classes/entities/enemy.js"
 import { EnemyAction } from "../../classes/parents/enemy_actions.js"
 import { global } from "../../global.js"
 import { helpers } from "../../helpers.js"
+import { setRoomType } from "../../managers/room_manager.js"
 import { randInt } from "../../tems_library/tems_library.js"
 
 export class TestEnemy1 extends Enemy {
@@ -36,7 +37,7 @@ export class TestEnemy1 extends Enemy {
             new EnemyAction(
                 ["other", 1],
                 function() {
-                    global.setRoomType("combat")
+                    setRoomType("combat")
                 }
             )
         ]

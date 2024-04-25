@@ -1,11 +1,7 @@
 import { accountForDisplay, loadAssets, randInt } from "./tems_library/tems_library.js"
 import { InputManager } from "./tems_library/input_manager.js"
 
-import { CombatRoom } from "./classes/rooms/combat.js"
-import { MiscRoom } from "./classes/rooms/misc.js"
 import { GIF, customImage } from "./tems_library/custom_data_types.js"
-import { TestRoom1 } from "./content/rooms/combat_rooms/test_room1.js"
-import { getNewCombatRoom } from "./managers/combat_room_manager.js"
 
 const canvas = document.getElementById("gameCanvas")
 const particlesCanvas = document.getElementById("particleCanvas")
@@ -15,14 +11,15 @@ const debugHudCanvas = document.getElementById("debugHudCanvas")
 const WebGLHudCanvas = document.getElementById("WebGLHudCanvas")
 const focusingCardCanvas = document.getElementById("focusingCardCanvas")
 const WebGLTopCanvas = document.getElementById("WebGLTopCanvas")
-const ctx = canvas.getContext("2d")
-const particleCtx = particlesCanvas.getContext("2d")
-const backgroundCtx = backgroundCanvas.getContext("2d")
-const hudCtx = hudCanvas.getContext("2d")
-const debugHudCtx = debugHudCanvas.getContext("2d")
-const WebGLHudCtx = WebGLHudCanvas.getContext("webgl2")
-const focusingCardCtx = focusingCardCanvas.getContext("2d")
-const WebGLTopCtx = WebGLTopCanvas.getContext("webgl2")
+export const ctx = canvas.getContext("2d")
+export const particleCtx = particlesCanvas.getContext("2d")
+export const backgroundCtx = backgroundCanvas.getContext("2d")
+export const hudCtx = hudCanvas.getContext("2d")
+export const debugHudCtx = debugHudCanvas.getContext("2d")
+export const WebGLHudCtx = WebGLHudCanvas.getContext("webgl2")
+export const focusingCardCtx = focusingCardCanvas.getContext("2d")
+export const WebGLTopCtx = WebGLTopCanvas.getContext("webgl2")
+
 
 class Global {
     constructor(asset_objects, asset_bonus_data) {
@@ -60,24 +57,6 @@ class Global {
 
         this.assets = asset_objects
         this.asset_bonus_data = asset_bonus_data
-    }
-
-    setRoomType(room_type) {
-        const ROOM_TYPES = [
-            "combat",
-            "misc",
-        ]
-
-        global.player.focused_card_state = null
-    
-        if (room_type == "combat") {
-            const new_room_type = getNewCombatRoom()
-            this.current_room = new new_room_type
-
-        } else if (room_type == "misc") {
-            this.current_room = new MiscRoom
-            
-        }
     }
 }
 
@@ -129,6 +108,4 @@ export async function initGlobal() {
     global = new Global(asset_objects, asset_bonus_data)
 }
 
-export {
-    ctx, particleCtx, backgroundCtx, hudCtx, debugHudCtx, WebGLHudCtx, focusingCardCtx, WebGLTopCtx,
-    global, inputManager }
+export {global, inputManager}

@@ -30,11 +30,14 @@ export class CombatRewardScreen extends UIElement {
         this.font_size = 64
 
         this.rewards_scenes = []
+        this.focused_reward = null
+
 
         let i = 0
         const reward_height = 120
         const reward_margin = 25
         const initial_top_margin = 60
+        const self = this
         rewards.forEach((reward) => {
             const new_rect_width = rect_width * 0.8
             const new_rect_height = rect_height * 0.8
@@ -50,13 +53,19 @@ export class CombatRewardScreen extends UIElement {
             )
             i ++
         })
+
+        this.rewards_scenes.forEach((reward) => {
+            reward.combat_reward_screen = this
+        })
     }
 
-    draw() {
+    drawBackground() {
         // darken the rest of the screen
         hudCtx.fillStyle="#1f0f1faf";
         hudCtx.fillRect(0, 0, hudCtx.canvas.width, hudCtx.canvas.height)
-        
+    }
+
+    drawRewards() {
         // draw the reward background
         hudCtx.save()
         hudCtx.translate(this.position.x, this.position.y)
@@ -83,7 +92,12 @@ export class CombatRewardScreen extends UIElement {
     }
 
     tick() {
-        this.draw()
+        this.drawBackground()
+        if (this.focused_reward != null) {
+            this.focused_reward.tick()
+        } else {
+            this.drawRewards()
+        }
     }
 }
 

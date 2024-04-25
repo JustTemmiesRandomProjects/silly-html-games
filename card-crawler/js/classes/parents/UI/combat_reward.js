@@ -16,13 +16,6 @@ export class CombatReward extends Button {
         this.font = "kalam-bold"
         this.text_y_offset = 8
         this.font_size = 32
-
-        this.rewards = []
-
-        const self = this
-        this.handleUIClick = function () {
-            console.log(`clicked! ${self.text}`)
-        }
     }
 
     draw() {

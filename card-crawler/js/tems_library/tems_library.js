@@ -1,6 +1,5 @@
+import { ctx, global } from "../global.js"
 import { settings } from "./settings.js"
-import { ctx } from "../global.js"
-import { global } from "../global.js"
 import { GIF, customImage, sound } from "./custom_data_types.js"
 
 const developer_screen_size_width = 1920
@@ -12,7 +11,7 @@ var biggest_user_size_dimension = Math.max(window.innerWidth, window.innerHeight
 var user_current_screen_width = 1
 var user_current_screen_height = 1
 
-export var canvas_centre = [ctx.canvas.width / 2, ctx.canvas.height / 2]
+export var canvas_centre = [window.width / 2, window.height / 2]
 
 // generate a random integer, from 0 (inclusive) to multiplier (exclusive)
 export function randInt(offset, multiplier) {

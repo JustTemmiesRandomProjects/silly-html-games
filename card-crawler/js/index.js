@@ -1,4 +1,6 @@
 console.log("index.js initialized")
+import { global, ctx, backgroundCtx, particleCtx, hudCtx, initGlobal, focusingCardCtx, debugHudCtx, WebGLHudCtx, WebGLTopCtx } from "./global.js"
+
 import { randFloat, randInt, resizeCanvas, canvas_centre } from "./tems_library/tems_library.js"
 import { loadMenu, playButtonClick, showGameOverScreen } from "./main_menu/index.js"
 
@@ -7,13 +9,13 @@ import { Card } from "./classes/parents/card.js"
 import { Player } from "./classes/entities/player.js"
 
 import { drawHud } from "./hud.js"
-import { global, ctx, backgroundCtx, particleCtx, hudCtx, initGlobal, focusingCardCtx, debugHudCtx, WebGLHudCtx, WebGLTopCtx } from "./global.js"
 import { miscSetup, gameTick10, gameTick2, updateBackground, contexts } from "./misc.js"
 import { MiscRoom } from "./classes/rooms/misc.js"
 
 import { cardManagerInit, full_card_list } from "./managers/card_manager.js"
 import { combatRoomManagerInit } from "./managers/combat_room_manager.js"
 import { enemyManagerInit } from "./managers/enemy_manager.js"
+import { setRoomType } from "./managers/room_manager.js"
 
 
 // ready function, called when the program is ready, before the first game tick
@@ -39,7 +41,7 @@ function ready() {
     global.player = new Player
     global.entities["actors"].push(global.player)
     
-    global.setRoomType("combat")
+    setRoomType("combat")
     
     for (let i = 0; i < 100; i++) {
         let card = full_card_list[randInt(0, full_card_list.length)]
