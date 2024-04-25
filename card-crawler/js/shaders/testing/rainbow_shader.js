@@ -17,9 +17,9 @@ precision mediump float;
 uniform float u_time;
 
 void main() {
-    float red = cos(u_time * 0.5); // Example animation using sine function
-    float green = cos(u_time * 0.3); // Another example animation
-    float blue = cos(u_time * 0.1); // Yet another example animation
+    float red = cos(u_time * 0.5);
+    float green = cos(u_time * 0.3);
+    float blue = cos(u_time * 0.1);
     gl_FragColor = vec4(red, green, blue, 0.3);
 }
 `;

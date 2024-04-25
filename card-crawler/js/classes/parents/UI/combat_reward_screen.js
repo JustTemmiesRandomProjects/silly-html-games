@@ -4,14 +4,25 @@ import { randInt } from "../../../tems_library/tems_library.js";
 import { UIElement } from "../UI_element.js";
 import { CombatReward } from "./combat_reward.js";
 
+let width
+let height
+let rect_width
+let rect_height
+let x_offset
+let y_offset
+
+let reward_height
+let reward_margin
+let initial_top_margin
+
 export class CombatRewardScreen extends UIElement {
     constructor(rewards) {
-        const width = ctx.canvas.width
-        const height = ctx.canvas.height
-        const rect_width = width / 3.5
-        const rect_height = height / 1.6
-        const x_offset = (width - rect_width) / 2 + width / 8
-        const y_offset = (height - rect_height) / 2
+        width = ctx.canvas.width
+        height = ctx.canvas.height
+        rect_width = width / 3.5
+        rect_height = height / 1.6
+        x_offset = (width - rect_width) / 2 + width / 8
+        y_offset = (height - rect_height) / 2
         super(
             {x: x_offset, y: y_offset},
             {x: rect_width, y: rect_height}
@@ -29,34 +40,37 @@ export class CombatRewardScreen extends UIElement {
         this.font = "kalam-bold"
         this.font_size = 64
 
-        this.rewards_scenes = []
+        this.reward_scenes = []
         this.focused_reward = null
 
 
         let i = 0
-        const reward_height = 120
-        const reward_margin = 25
-        const initial_top_margin = 60
+        reward_height = 120
+        reward_margin = 25
+        initial_top_margin = 60
         const self = this
         rewards.forEach((reward) => {
-            const new_rect_width = rect_width * 0.8
-            const new_rect_height = rect_height * 0.8
-            this.rewards_scenes.push(
+            this.reward_scenes.push(
                 new reward(
-                    {
-                        x: x_offset + (rect_width - new_rect_width) / 2,
-                        y: y_offset + (reward_height + reward_margin) * i + initial_top_margin
-                    },
-                    {x: new_rect_width, y: reward_height},
+                    this.getRewardPos(i, height),
+                    {x: rect_width * 0.8, y: reward_height},
                     hudCtx
                 )
             )
             i ++
         })
 
-        this.rewards_scenes.forEach((reward) => {
+        this.reward_scenes.forEach((reward) => {
             reward.combat_reward_screen = this
+            console.log(reward.position)
         })
+    }
+
+    getRewardPos(i) {
+        return {
+            x: Math.floor(x_offset + rect_width / 10),
+            y: Math.floor(y_offset + (reward_height + reward_margin) * i + initial_top_margin)
+        }
     }
 
     drawBackground() {
@@ -84,7 +98,7 @@ export class CombatRewardScreen extends UIElement {
         hudCtx.setTransform(1, 0, 0, 1, 0, 0)
         
         // reset the mask back and transforms back
-        this.rewards_scenes.forEach((reward) => {
+        this.reward_scenes.forEach((reward) => {
             reward.tick()
         })
 
@@ -93,18 +107,28 @@ export class CombatRewardScreen extends UIElement {
 
     tick() {
         this.drawBackground()
-        console.log(this.focused_reward)
+
+        this.reward_scenes.forEach((reward) => {
+            reward.processing = (this.focused_reward == null)
+        })
+
         if (this.focused_reward != null) {
-            this.rewards_scenes.forEach((reward) => {
-                reward.processing = false
+            this.reward_scenes.forEach((reward) => {
+                reward.UIExit()
             })
+
             this.focused_reward.tick()
+
         } else {
-            this.rewards_scenes.forEach((reward) => {
-                // reward.processing = true
+            let i = 0
+            this.reward_scenes.forEach((reward) => {
+                reward.position = this.getRewardPos(i)
+                i ++
             })
+
             this.drawRewards()
         }
+
     }
 }
 

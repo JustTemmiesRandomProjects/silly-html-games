@@ -6,9 +6,9 @@ import { randInt } from "../../../../tems_library/tems_library.js";
 import { Entity } from "../../baseEntity.js";
 
 export class CardRewardScreen extends Entity {
-    constructor() {
+    constructor(parent) {
         super()
-        
+
         this.card_scenes = [
             new full_card_list[randInt(0, full_card_list.length)],
             new full_card_list[randInt(0, full_card_list.length)],
@@ -23,6 +23,7 @@ export class CardRewardScreen extends Entity {
         this.starting_point = (screen_width - card_area) / 2 + screen_width / 8 + this.card_scenes[0].size.x / 8
 
         let i = 0
+        const self = this
         this.card_scenes.forEach((card) => {
             card.position = {
                 x: this.starting_point + this.size_per_card * i,
@@ -31,6 +32,11 @@ export class CardRewardScreen extends Entity {
             card.handleUIClick = function() {
                 console.log("adding :3")
                 global.player.discard_pile.push(card)
+                self.card_scenes.forEach((local_card) => {
+                    local_card.UIExit()
+                    local_card.processing = false
+                })
+                parent.combat_reward_screen.focused_reward = null
             }
             
             card.handleUIMouseDown = function () {}

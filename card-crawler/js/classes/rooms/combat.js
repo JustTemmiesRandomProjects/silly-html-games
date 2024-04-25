@@ -42,9 +42,6 @@ export class CombatRoom extends BaseRoom {
                 CardReward,
                 CardReward,
                 CardReward,
-                CardReward,
-                CardReward,
-                CardReward,
             ])
             await this._setPhase("playerEnd")
         } else {

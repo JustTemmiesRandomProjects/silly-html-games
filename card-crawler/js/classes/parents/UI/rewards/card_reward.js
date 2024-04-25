@@ -11,7 +11,11 @@ export class CardReward extends CombatReward {
 
         const self = this
         this.handleUIClick = function() {
-            self.combat_reward_screen.focused_reward = new CardRewardScreen()
+            if (self.processing) {
+                console.log("card reward activated!")
+                self.combat_reward_screen.focused_reward = new CardRewardScreen(self)
+                self.combat_reward_screen.reward_scenes = self.combat_reward_screen.reward_scenes.filter((reward) => reward != self)
+            }
         }
     }
 }
