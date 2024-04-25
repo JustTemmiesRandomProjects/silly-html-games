@@ -1,7 +1,5 @@
-import { accountForDisplay, loadAssets, randInt } from "./tems_library/tems_library.js"
 import { InputManager } from "./tems_library/input_manager.js"
-
-import { GIF, customImage } from "./tems_library/custom_data_types.js"
+import { GIF, customImage, loadAssets } from "./tems_library/custom_data_types.js"
 
 const canvas = document.getElementById("gameCanvas")
 const particlesCanvas = document.getElementById("particleCanvas")
@@ -88,8 +86,8 @@ window.onload = async function () {
         "sprite_player_active": [GIF, [
             "assets/sprites/kenney/kenney_tiny-ski/ski_walk.png",
             "assets/sprites/kenney/kenney_tiny-ski/ski_idle.png",
-        ], {}],
-    })
+        ], {}]
+    }, ctx)
     asset_objects = asset_data[0]
     asset_bonus_data = asset_data[1]
     console.log("completed loading all assets!")

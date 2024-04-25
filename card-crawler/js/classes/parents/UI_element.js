@@ -33,7 +33,8 @@ export class UIElement extends Entity {
         const local_rotated_mouseX = local_mouseX * Math.cos(-this.rotation) - local_mouseY * Math.sin(-this.rotation)
         const local_rotated_mouseY = local_mouseY * Math.cos(-this.rotation) - local_mouseX * Math.sin(-this.rotation)
 
-        if (local_rotated_mouseX >= 0
+        if (this.processing
+        && local_rotated_mouseX >= 0
         && local_rotated_mouseY >= 0
         && local_rotated_mouseX <= this.size.x
         && local_rotated_mouseY <= this.size.y) {

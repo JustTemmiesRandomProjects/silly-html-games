@@ -93,9 +93,16 @@ export class CombatRewardScreen extends UIElement {
 
     tick() {
         this.drawBackground()
+        console.log(this.focused_reward)
         if (this.focused_reward != null) {
+            this.rewards_scenes.forEach((reward) => {
+                reward.processing = false
+            })
             this.focused_reward.tick()
         } else {
+            this.rewards_scenes.forEach((reward) => {
+                // reward.processing = true
+            })
             this.drawRewards()
         }
     }

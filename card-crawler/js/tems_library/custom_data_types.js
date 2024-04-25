@@ -262,3 +262,89 @@ export class customImage {
             this.size.x, this.size.y);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+// function to make sure all the needed assets are loaded before we try to use them
+export async function loadAssets(assetSources, ctx) {
+    return new Promise(resolve => {
+        let assetObjects = {}
+        let asset_bonus_data = {}
+        let assetReady = {}
+        for (const [key, value] of Object.entries(assetSources)) {
+            // stuff for all formats
+            asset_bonus_data[key] = assetSources[key][2]
+
+            // gif, a custom format
+            if ( value[0] == GIF ) {
+                assetReady[key] = false
+                assetObjects[key] = new GIF(value[1], ctx, function () {
+                    console.log(`[ASSETS] [GIF] ${key} is done loading`)
+                    assetReady[key] = true
+                })
+            }
+
+            else if ( value[0] == customImage ) {
+                assetReady[key] = false
+                assetObjects[key] = new customImage(value[1], ctx, function () {
+                    console.log(`[ASSETS] [customImage] ${key} is done loading`)
+                    assetReady[key] = true
+                })
+            }
+
+            // handling images
+            else if ( value[0] == Image ) {
+                assetObjects[key] = new Image
+                assetReady[key] = false
+
+                assetObjects[key].onload = function () {
+                    console.log(`[ASSETS] [IMAGE] ${key} is done loading`)
+                    assetReady[key] = true
+                }
+
+                assetObjects[key].src = value[1]
+            }
+
+            // handling audio
+            else if (value[0] == Audio) {
+                assetObjects[key] = new sound(value[1], key)
+                assetReady[key] = true
+            }
+
+            // if it's none of the above
+            else {
+                console.log(`format for ${key} was set to ${value[0]}, which is not a valid option`)
+                alert(`format for ${key} was set to ${value[0]}, which is not a valid option`)
+            }
+
+        }
+
+        // make sure assets are loaded
+        function isComplete() {
+            // loop over the images, if any aren't loaded, break
+            for (const [key, value] of Object.entries(assetReady)) {
+                if (value == false) {
+                    return
+                }
+
+            }
+            // stop the function from executing
+            clearInterval(isComplete)
+            // return the data
+            resolve([assetObjects, asset_bonus_data])
+        }
+
+        // set a function to check if all the images are properly loaded every 100 ms
+        setInterval(isComplete, 100)
+    })
+}

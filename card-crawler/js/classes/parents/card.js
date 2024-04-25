@@ -32,7 +32,9 @@ export class Card extends UIElement {
         }
         
 
-        this.display_description = splitTextToFit(this.description, 110)
+        console.log("rendering display description...")
+        ctx.font = `${this.description_font_size}px kalam-regular`;
+        this.display_description = splitTextToFit(this.description, this.size.x)
         this.energy_icon.setPosition(-8, 0)
         this.energy_icon.setSize(global.player.energy_icon.size.x, global.player.energy_icon.size.y)
         
