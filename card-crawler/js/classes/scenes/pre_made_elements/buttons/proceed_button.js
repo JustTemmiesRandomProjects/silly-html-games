@@ -4,7 +4,7 @@ import { Button } from "../../../parents/UI/button.js"
 
 // this is used in the combat segment to end the player's turn
 export class ProceedButton extends Button {
-    constructor() {
+    constructor(parent) {
         super(
             {x: ctx.canvas.width / 8 - 130, y: ctx.canvas.height * 0.65 - 60},
             {x: 260, y: 120}
@@ -23,9 +23,15 @@ export class ProceedButton extends Button {
         this.handleUIClick = async function(event) {
             if (self.processing == true) {
                 console.log("proceeding, starting new combat")
-                setRoomType("combat")
                 self.UIExit()
                 self.processing = false
+                
+                parent.reward_scenes.forEach((reward) => {
+                    reward.UIExit()
+                    reward.processing = false
+                })
+
+                setRoomType("combat")
             }
         }
     }

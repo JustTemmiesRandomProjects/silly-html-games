@@ -36,6 +36,11 @@ export class CardRewardScreen extends Entity {
                     local_card.UIExit()
                     local_card.processing = false
                 })
+                parent.combat_reward_screen.reward_scenes.forEach((reward) => {
+                    reward.UIExit()
+                    reward.processing = false
+                })
+
                 parent.combat_reward_screen.focused_reward = null
             }
             

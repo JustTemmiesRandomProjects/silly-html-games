@@ -43,7 +43,7 @@ export class CombatRewardScreen extends UIElement {
 
         this.reward_scenes = []
         this.focused_reward = null
-        this.proceed_button = new ProceedButton
+        this.proceed_button = new ProceedButton(this)
 
 
         let i = 0
@@ -64,7 +64,6 @@ export class CombatRewardScreen extends UIElement {
 
         this.reward_scenes.forEach((reward) => {
             reward.combat_reward_screen = this
-            console.log(reward.position)
         })
     }
 
