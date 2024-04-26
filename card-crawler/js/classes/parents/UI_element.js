@@ -22,7 +22,7 @@ export class UIElement extends Entity {
         });
     }
 
-    processMouse(e) {
+    processMouse(e) {        
         const rect = ctx.canvas.getBoundingClientRect();
         const mouseX = e.clientX - rect.left;
         const mouseY = e.clientY - rect.top;

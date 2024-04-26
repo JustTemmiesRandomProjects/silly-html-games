@@ -7,4 +7,8 @@ export class Entity {
     }
 
     tick() {}
+
+    genericEntityTick() {
+        global.loaded_entities ++
+    }
 }

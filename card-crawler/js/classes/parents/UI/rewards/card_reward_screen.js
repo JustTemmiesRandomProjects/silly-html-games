@@ -30,7 +30,7 @@ export class CardRewardScreen extends Entity {
                 y: ctx.canvas.height * (6 / 13) - card.size.y / 2
             }
             card.handleUIClick = function() {
-                console.log("adding :3")
+                console.log(`adding ${card.name}`)
                 global.player.discard_pile.push(card)
                 self.card_scenes.forEach((local_card) => {
                     local_card.UIExit()
@@ -49,23 +49,17 @@ export class CardRewardScreen extends Entity {
     }
 
     tick() {
+        this.genericEntityTick()
         this.card_scenes.forEach((card) => {
-            hudCtx.translate(
-                card.position.x,
-                card.position.y
-            )
+            if (card.hovering) {
+                card.miliseconds_focused += global.delta_time
+                card.miliseconds_focused = Math.min(70, card.miliseconds_focused)
+            } else {
+                card.miliseconds_focused -= global.delta_time * 2
+                card.miliseconds_focused = Math.max(0, card.miliseconds_focused)
+            }
 
-            // border
-            drawSquircle(hudCtx, -3, -3, card.size.x+6, card.size.y+6, 19, "#102f10")        
-            
-            // background
-            drawSquircle(hudCtx, 0, 0, card.size.x, card.size.y, 16, card.colour)
-            
-
-            card.drawEnergyCost(hudCtx)
-            card.drawText(hudCtx)
-
-            hudCtx.setTransform(1, 0, 0, 1, 0, 0)
+            card.drawReward(hudCtx)
         })
     }
 }

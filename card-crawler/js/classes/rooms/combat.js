@@ -15,8 +15,7 @@ export class CombatRoom extends BaseRoom {
         this.enemy_action_queue = []
         this.time_since_last_attack = 0
 
-        let button = new EndTurnButton(this)
-        global.entities["hud"].push(button)
+        this.end_turn_button = new EndTurnButton(this)
 
         global.player.deck_pile = global.player.deck
 
@@ -36,6 +35,7 @@ export class CombatRoom extends BaseRoom {
     }
 
     async tick() {
+        this.genericEntityTick()
         if (this.enemies.length == 0 && this.reward == null) {
             console.log("you win, yay")
             this.reward = new CombatRewardScreen([
@@ -62,18 +62,24 @@ export class CombatRoom extends BaseRoom {
                 this.enemy_action_queue = this.enemy_action_queue.filter((temp_enemy) => temp_enemy != enemy)
                 enemy.active_action = null
             }
-        } else if (this.phase == this._enemyEnd) {
+        } else if (this.phase_name == "enemyEnd") {
             await this._setPhase("playerStart")
         }
 
         if (this.reward != null) {
             this.reward.tick()
+            this.end_turn_button.processing = false
+        } else {
+            this.end_turn_button.tick()
+            this.end_turn_button.processing = true
         }
     }
     
     async end_turn() {
-        if (this.phase == this.PHASES["playerControl"]) {
-            this.phase = this.PHASES["playerEnd"]
+        console.log("ending turn...")
+        console.log(this.phase_name)
+        if (this.phase_name == "playerControl") {
+            await this._setPhase("playerEnd")
             await this.phase()
         } else {
             console.log("can't end turn, it's not the players' turn yet")
@@ -82,8 +88,9 @@ export class CombatRoom extends BaseRoom {
 
     async _setPhase(phase) {
         this.phase = this.PHASES[phase]
+        this.phase_name = phase
 
-        await sleep(40)
+        await sleep(400)
 
         await this.phase()
     }

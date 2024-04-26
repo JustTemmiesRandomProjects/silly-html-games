@@ -15,6 +15,7 @@ export function drawSquircle(ctx, x, y, width, height, cornerRadius, colour) {
 export function drawBezierArrow(ctx, origin, destination) {
     const p1X = origin.x + (destination.x - origin.x) * -0.25
     const p1Y = origin.y + (destination.y - origin.y) * 0.8
+    
     const p2X = origin.x + (destination.x - origin.x) * 0.1
     const p2Y = origin.y + (destination.y - origin.y) * 1.25
 

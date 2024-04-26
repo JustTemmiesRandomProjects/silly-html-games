@@ -42,6 +42,8 @@ export class Background extends Entity{
     }
 
     tick() {
+        this.genericEntityTick()
+        
         this.draw()
     }
 }

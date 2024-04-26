@@ -263,6 +263,8 @@ export class Player extends Entity {
     }
 
     async tick() {
+        this.genericEntityTick()
+        
         global.player.hand.forEach(card => {
             card.tick()
         });

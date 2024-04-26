@@ -43,6 +43,7 @@ export class CombatReward extends Button {
     }
 
     tick() {
+        this.genericEntityTick()
         this.draw()
     }
 }

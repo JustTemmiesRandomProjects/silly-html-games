@@ -64,7 +64,7 @@ async function process() {
         return
     }
 
-    
+    global.loaded_entities = 0
     global.delta_time = window.performance.now() - global.last_frame_timestamp
     global.last_frame_timestamp = window.performance.now()
 
@@ -82,16 +82,17 @@ async function process() {
     for (const [key, value] of Object.entries(global.entities)) {
         for (const entity of value) {
             entity.tick()
+            entity.genericEntityTick()
         }
     }
     
     // used for deferred ticks
     global.deferred_calls.forEach((e) => {
         // dispatchEvent seemed to crash this, idk, this might be a lil buggy
-        if (e.namespace[e.func] != dispatchEvent) {
-            e.namespace[e.func](...e.optional_arguments)
-        } else {
+        if (e.namespace[e.func] == dispatchEvent) {
             console.log("e.namespace[e.func] is of type dispatchEvent, ignoring call")
+        } else {
+            e.namespace[e.func](...e.optional_arguments)
         }
     })
 

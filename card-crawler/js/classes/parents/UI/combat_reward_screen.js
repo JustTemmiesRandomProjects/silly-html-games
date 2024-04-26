@@ -1,6 +1,7 @@
 import { ctx, hudCtx } from "../../../global.js";
 import { drawSquircle } from "../../../tems_library/rendering.js";
 import { randInt } from "../../../tems_library/tems_library.js";
+import { ProceedButton } from "../../scenes/pre_made_elements/buttons/proceed_button.js";
 import { UIElement } from "../UI_element.js";
 import { CombatReward } from "./combat_reward.js";
 
@@ -42,6 +43,7 @@ export class CombatRewardScreen extends UIElement {
 
         this.reward_scenes = []
         this.focused_reward = null
+        this.proceed_button = new ProceedButton
 
 
         let i = 0
@@ -106,27 +108,29 @@ export class CombatRewardScreen extends UIElement {
     }
 
     tick() {
+        this.genericEntityTick()
         this.drawBackground()
-
+        
         this.reward_scenes.forEach((reward) => {
             reward.processing = (this.focused_reward == null)
         })
-
+        
         if (this.focused_reward != null) {
             this.reward_scenes.forEach((reward) => {
                 reward.UIExit()
             })
-
+            
             this.focused_reward.tick()
-
+            
         } else {
             let i = 0
             this.reward_scenes.forEach((reward) => {
                 reward.position = this.getRewardPos(i)
                 i ++
             })
-
+            
             this.drawRewards()
+            this.proceed_button.tick()
         }
 
     }

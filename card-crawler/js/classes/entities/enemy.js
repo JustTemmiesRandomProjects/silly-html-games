@@ -50,6 +50,8 @@ export class Enemy extends UIElement {
     }
 
     tick() {
+        this.genericEntityTick()
+        
         if (this.display_HP > this.HP) {
             const difference = Math.abs(this.HP - this.display_HP)
             this.display_HP -= (difference / 350) * global.delta_time + 0.03

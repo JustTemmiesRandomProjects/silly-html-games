@@ -222,6 +222,33 @@ export class Card extends UIElement {
         focusingCardCtx.setTransform(1, 0, 0, 1, 0, 0)
     }
 
+    drawReward(ctx) {
+        const scale = 1 + (global.player.constants.focused_card_multiplier * this.miliseconds_focused / 70)
+
+        ctx.setTransform(scale, 0, 0, scale, 0, 0)
+        ctx.translate(
+            this.position.x / scale
+            + this.size.x / 2 / scale
+            - this.size.x / 2,
+
+            this.position.y / scale
+            + this.size.y / 2 / scale
+            - this.size.y / 2
+        )
+
+        // border
+        drawSquircle(ctx, -3, -3, this.size.x+6, this.size.y+6, 19, "#102f10")        
+        
+        // background
+        drawSquircle(ctx, 0, 0, this.size.x, this.size.y, 16, this.colour)
+        
+
+        this.drawEnergyCost(ctx)
+        this.drawText(ctx)
+
+        ctx.setTransform(1, 0, 0, 1, 0, 0)
+    }
+
     draw() {
         const hand = global.player.hand
         // cap it at 90
@@ -264,6 +291,8 @@ export class Card extends UIElement {
     }
     
     tick() {
+        this.genericEntityTick()
+        
         if (this.processing) {  
             const player = global.player
             

@@ -18,7 +18,7 @@ export class Button extends UIElement {
         this.font_size = 18
     }
 
-    draw() {
+    draw(ctx) {
         ctx.translate(this.position.x, this.position.y)
 
         let fill_colour = this.standard_colour
@@ -44,7 +44,8 @@ export class Button extends UIElement {
     }
 
     tick() {
-        this.draw()
+        this.genericEntityTick()
+        this.draw(ctx)
     }
 }
 

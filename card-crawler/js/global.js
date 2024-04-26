@@ -28,6 +28,7 @@ class Global {
         
         this.last_frame_timestamp = window.performance.now()
         this.frame_times = []
+        this.loaded_entities = 0
 
         this.is_playing = false
         this.is_focused = true
