@@ -15,7 +15,7 @@ export class TestEnemy1 extends Enemy {
         )
 
         this.name = "Debug Enemy 1"
-        this.MAX_HP = randInt(5, 3)
+        this.MAX_HP = randInt(1, 7)
         // this.MAX_HP = randInt(72, 17)
         
         this.actions = [
@@ -25,21 +25,21 @@ export class TestEnemy1 extends Enemy {
             new EnemyAction(
                 ["damage", 15]
             ),
-            new EnemyAction(
-                ["defend", 12]
-            ),
-            new EnemyAction(
-                ["buff", 1],
-                function() {
+            // new EnemyAction(
+            //     ["defend", 12]
+            // ),
+            // new EnemyAction(
+            //     ["buff", 1],
+            //     function() {
                     
-                }
-            ),
-            new EnemyAction(
-                ["other", 1],
-                function() {
-                    setRoomType("combat")
-                }
-            )
+            //     }
+            // ),
+            // new EnemyAction(
+            //     ["other", 1],
+            //     function() {
+            //         setRoomType("combat")
+            //     }
+            // )
         ]
 
         this.register()

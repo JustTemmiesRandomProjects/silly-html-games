@@ -13,6 +13,8 @@ export class Card extends UIElement {
         
         this.colour = colour;
 
+        this.card_reward_ID = null
+
         this.hand_ratio = 0.5
         this.miliseconds_focused = 0
         // if the card has been dragged high enough to be removed by draging it down

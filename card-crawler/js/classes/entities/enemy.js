@@ -36,6 +36,8 @@ export class Enemy extends UIElement {
         this.handleUIClick = async function(event) {
             const player = global.player
             const card = global.player.focused_card
+            
+            console.log(self)
 
             if (player.focused_card_state != "targeting") {
                 console.log("tried playing target card whilst focused state is not targeting, returning")
@@ -44,7 +46,10 @@ export class Enemy extends UIElement {
                     
             card.targeting_enemy = self
             player.play_queue.push(card)
-            card.cleanDragingCard()
+
+            self.processing = false
+            self.UIExit()
+            self.handleUIClick = async function(event) {}
         }
 
     }

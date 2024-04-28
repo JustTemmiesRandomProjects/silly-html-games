@@ -1,5 +1,5 @@
 import { randFloat, randInt, canvas_centre, shuffleArray, call_deferred, sleep } from "../../tems_library/tems_library.js"
-import { global, ctx, inputManager } from "../../global.js"
+import { global, ctx, inputManager, focusingCardCtx } from "../../global.js"
 import { Entity } from "../parents/baseEntity.js";
 import { bezierCurvePointAxis } from "../../tems_library/math.js";
 import { drawSquircle } from "../../tems_library/rendering.js";
@@ -220,8 +220,14 @@ export class Player extends Entity {
             if (self.hand.length >= self.constants.max_hand_size) return
             
             let card = self.deck_pile.pop()
-            card.processing = true
-            self.hand.push(card)
+
+            // if the hand already contains this new card
+            if (self.hand.some(e => e == card)) {
+                _drawCard(self)
+            } else {
+                card.processing = true
+                self.hand.push(card)
+            }
         }
 
         for (let i = 0; i < num; i++) {
@@ -244,6 +250,10 @@ export class Player extends Entity {
         })
 
         this.hand = []
+    }
+
+    fightStart() {
+        this.deck_pile = this.deck
     }
 
     turnStart() {
@@ -288,6 +298,10 @@ export class Player extends Entity {
         // console.log(this.playing)
         // console.log(this.play_cooldown)
         
+        this.play_queue.forEach((card) => {
+            call_deferred(card, "cleanDragingCard")
+        })
+
         this.play_cooldown -= 1
         if (this.play_queue.length >= 1) {
             if (this.play_cooldown < 0) {
@@ -300,8 +314,8 @@ export class Player extends Entity {
 
                 if (this.energy >= this.playing.energy_cost) {
                     this.energy -= this.playing.energy_cost
-                    this.hand = this.hand.filter((card) => card != this.playing)
                     this.playing.play()
+                    this.hand = this.hand.filter((card) => card != this.playing)
                                     
                     this.playing.processing = false
                     this.discard_pile.push(this.playing);
@@ -318,5 +332,6 @@ export class Player extends Entity {
                 this.play_cooldown = 20
             }
         }
+
     }
 }

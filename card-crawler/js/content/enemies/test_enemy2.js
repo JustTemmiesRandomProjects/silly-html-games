@@ -13,7 +13,7 @@ export class TestEnemy2 extends Enemy {
         )
 
         this.name = "Debug Enemy 2"
-        this.MAX_HP = randInt(3, 5)
+        this.MAX_HP = randInt(5, 7)
 
         this.actions = [
             new EnemyAction(

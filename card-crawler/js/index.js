@@ -16,6 +16,8 @@ import { cardManagerInit, full_card_list } from "./managers/card_manager.js"
 import { combatRoomManagerInit } from "./managers/combat_room_manager.js"
 import { enemyManagerInit } from "./managers/enemy_manager.js"
 import { setRoomType } from "./managers/room_manager.js"
+import { StrikeCard } from "./content/cards/attacks/strike.js"
+import { ThunderclapCard } from "./content/cards/attacks/thunderclap.js"
 
 
 // ready function, called when the program is ready, before the first game tick
@@ -43,11 +45,14 @@ function ready() {
     
     setRoomType("combat")
     
-    for (let i = 0; i < 100; i++) {
-        let card = full_card_list[randInt(0, full_card_list.length)]
-        let card_instace = new card()
+    for (let i = 0; i < 1; i++) {
+        // let card = full_card_list[randInt(0, full_card_list.length)]
+        let card_instace = new StrikeCard
         card_instace.processing = false
         global.player.deck.push(card_instace)
+        let card_instace2 = new ThunderclapCard
+        card_instace.processing = false
+        global.player.deck.push(card_instace2)
     }
 
     global.entities["backgrounds"].push( new Background() )

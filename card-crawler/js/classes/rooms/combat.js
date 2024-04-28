@@ -17,8 +17,6 @@ export class CombatRoom extends BaseRoom {
 
         this.end_turn_button = new EndTurnButton(this)
 
-        global.player.deck_pile = global.player.deck
-
         this.reward = null
     }
     
@@ -29,6 +27,8 @@ export class CombatRoom extends BaseRoom {
             this.enemies.push(new full_enemy_list[0])
             this.enemies.push(new full_enemy_list[1])
         }
+
+        global.player.fightStart()
 
         this.phase = this.PHASES["playerStart"]
         this.phase()
@@ -90,7 +90,7 @@ export class CombatRoom extends BaseRoom {
         this.phase = this.PHASES[phase]
         this.phase_name = phase
 
-        await sleep(400)
+        await sleep(40)
 
         await this.phase()
     }

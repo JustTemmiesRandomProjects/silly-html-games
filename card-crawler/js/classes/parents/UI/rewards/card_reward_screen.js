@@ -8,13 +8,24 @@ import { Entity } from "../../baseEntity.js";
 export class CardRewardScreen extends Entity {
     constructor(parent) {
         super()
-
-        this.card_scenes = [
-            new full_card_list[randInt(0, full_card_list.length)],
-            new full_card_list[randInt(0, full_card_list.length)],
-            new full_card_list[randInt(0, full_card_list.length)],
-            new full_card_list[randInt(0, full_card_list.length)],
+        
+        this.card_list = [
+            full_card_list[randInt(0, full_card_list.length)],
+            full_card_list[randInt(0, full_card_list.length)],
+            full_card_list[randInt(0, full_card_list.length)],
+            full_card_list[randInt(0, full_card_list.length)],
         ]
+
+        this.card_scenes = []
+
+        let counter = 0
+        this.card_list.forEach((card) => {
+            const new_card = new card
+            new_card.card_reward_ID = counter
+            this.card_scenes.push(new_card)
+
+            counter ++
+        })
 
         const screen_width = ctx.canvas.width
         const screen_height = ctx.canvas.height
@@ -30,8 +41,12 @@ export class CardRewardScreen extends Entity {
                 y: ctx.canvas.height * (6 / 13) - card.size.y / 2
             }
             card.handleUIClick = function() {
-                console.log(`adding ${card.name}`)
-                global.player.discard_pile.push(card)
+                console.log(`adding ${card.name} - ID: ${card.card_reward_ID}`)
+                
+                const new_card = new self.card_list[card.card_reward_ID]
+                new_card.processing = false
+                global.player.discard_pile.push(new_card)
+
                 self.card_scenes.forEach((local_card) => {
                     local_card.UIExit()
                     local_card.processing = false
