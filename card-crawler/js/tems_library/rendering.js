@@ -12,26 +12,26 @@ export function drawSquircle(ctx, x, y, width, height, cornerRadius, colour) {
     ctx.fill();
 }
 
-export function drawBezierArrow(ctx, origin, destination) {
-    const p1X = origin.x + (destination.x - origin.x) * -0.25
-    const p1Y = origin.y + (destination.y - origin.y) * 0.8
+export function drawBezierArrow(ctx, p0, p3) {
+    const p1X = p0.x + (p3.x - p0.x) * -0.25
+    const p1Y = p0.y + (p3.y - p0.y) * 0.8
     
-    const p2X = origin.x + (destination.x - origin.x) * 0.1
-    const p2Y = origin.y + (destination.y - origin.y) * 1.25
+    const p2X = p0.x + (p3.x - p0.x) * 0.1
+    const p2Y = p0.y + (p3.y - p0.y) * 1.25
 
     const points = []
     const nodes = 20
     for (let i = 0; i < nodes; i ++) {
         // t -> 0 <= t <= 1
-        const t = Math.log2(1 * i / (nodes - 1) + 1)
+        const t = Math.log2(i / (nodes - 1) + 1)
         points.push(bezierCurvePoint(t,
-            [origin, {x: p1X, y: p1Y}, {x: p2X, y: p2Y}, destination]
+            [p0, {x: p1X, y: p1Y}, {x: p2X, y: p2Y}, p3]
         ))
     }
 
     points.forEach((point) => {
         ctx.fillStyle = "#ff8888"
-        ctx.fillRect(point.x - 15, point.y - 5, 10, 10)
+        ctx.fillRect(point.x - 5, point.y - 5, 10, 10)
     })
 }
 

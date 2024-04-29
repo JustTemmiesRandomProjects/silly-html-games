@@ -46,12 +46,7 @@ export class Enemy extends UIElement {
                     
             card.targeting_enemy = self
             player.play_queue.push(card)
-
-            self.processing = false
-            self.UIExit()
-            self.handleUIClick = async function(event) {}
         }
-
     }
 
     tick() {
@@ -63,6 +58,9 @@ export class Enemy extends UIElement {
 
             // kill the enemy if it appears to be dead
             if (this.display_HP <= 0) {
+                this.processing = false
+                this.UIExit()
+                this.handleUIClick = async function(event) {}
                 global.current_room.enemies = global.current_room.enemies.filter((enemy) => enemy != this)
             }
         }

@@ -35,10 +35,13 @@ export function updateBackground() {
     drawBackgroundImage(backgroundCtx, global.assets["sprite_background"])
 }
 
-export function splitTextToFit(text, maxWidth) {
+export function splitTextToFit(text, maxWidth, font) {
     let words = text.split(' ');
     let lines = [];
     let currentLine = words[0];
+
+    ctx.setTransform(1, 0, 0, 1, 0, 0)
+    ctx.font = font
 
     for (let i = 1; i < words.length; i++) {
         let word = words[i];

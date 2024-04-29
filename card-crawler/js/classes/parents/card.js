@@ -21,8 +21,10 @@ export class Card extends UIElement {
         this.dragged_out = false
         
         this.hovering = false;
-        this.name_font_size = 36
+        this.name_font_size = 28
         this.description_font_size = 24
+        
+        this.border_size = 4
         
         this.name = "Bepis"
         this.description = "gravida cum sociis natoque penatibus et magnis dis parturient montes nascetur ridiculus mus mauris vitae"
@@ -35,9 +37,8 @@ export class Card extends UIElement {
         
 
         console.log("rendering display description...")
-        ctx.font = `${this.description_font_size}px kalam-regular`;
-        this.display_description = splitTextToFit(this.description, this.size.x)
-        this.energy_icon.setPosition(-8, 0)
+        this.display_description = splitTextToFit(this.description, this.size.x, `${this.description_font_size}px kalam-regular`)
+        this.energy_icon.setPosition(-18, 0)
         this.energy_icon.setSize(global.player.energy_icon.size.x, global.player.energy_icon.size.y)
         
         if (this.play == null) {
@@ -91,7 +92,7 @@ export class Card extends UIElement {
             icon.size.x * 0.75
             , 0, 2 * Math.PI, false);
         
-        ctx.fillStyle = "#8BC38C";
+        ctx.fillStyle = "#8cc38c";
         ctx.fill();
         //border
         ctx.lineWidth = 3;
@@ -112,6 +113,21 @@ export class Card extends UIElement {
         )
     }
 
+    drawBorder(ctx) {
+        // border
+        if (global.player.energy >= this.energy_cost) {
+            drawSquircle(ctx,
+                -this.border_size, -this.border_size,
+                this.size.x+(this.border_size * 2), this.size.y+(this.border_size * 2),
+                19, "#8cc38c")        
+        } else {
+            drawSquircle(ctx,
+                -this.border_size, -this.border_size,
+                this.size.x+(this.border_size * 2), this.size.y+(this.border_size * 2),
+                19, "#2f3f2f")
+        }
+    }
+    
     drawText(ctx) {
         // text 
         ctx.fillStyle = "#454f45";
@@ -126,8 +142,8 @@ export class Card extends UIElement {
             let shift_down_amount = (i+1)*(this.description_font_size + 2)
             ctx.fillText(
                 line,
-                (this.size.x / 2),
-                (this.size.y / 2) - shift_up_amount + shift_down_amount,
+                this.size.x / 2,
+                this.size.y / 2 - shift_up_amount + shift_down_amount,
             )
         }
 
@@ -155,6 +171,7 @@ export class Card extends UIElement {
         this.UIExit()
         focusingCardCtx.clearRect(0, 0, focusingCardCtx.canvas.width, focusingCardCtx.canvas.height)
     }
+    
 
     drawTargetingCard() {
         const player = global.player
@@ -183,8 +200,7 @@ export class Card extends UIElement {
             this.position.y
         )
 
-        // border
-        drawSquircle(ctx, -3, -3, this.size.x+6, this.size.y+6, 19, "#102f10")
+        this.drawBorder(ctx)
 
         // background
         drawSquircle(ctx, 0, 0, this.size.x, this.size.y, 16, this.colour)
@@ -194,7 +210,7 @@ export class Card extends UIElement {
 
         ctx.setTransform(1, 0, 0, 1, 0, 0)
 
-        this.renderArrow()
+        this.drawArrow()
     }
 
     drawDragingCard() {
@@ -211,8 +227,7 @@ export class Card extends UIElement {
             this.position.y / scale - this.size.y / 2
         )
 
-        // border
-        drawSquircle(focusingCardCtx, -3, -3, this.size.x+6, this.size.y+6, 19, "#102f10")
+        this.drawBorder(focusingCardCtx)
 
         // background
         drawSquircle(focusingCardCtx, 0, 0, this.size.x, this.size.y, 16, this.colour)
@@ -238,8 +253,10 @@ export class Card extends UIElement {
             - this.size.y / 2
         )
 
-        // border
-        drawSquircle(ctx, -3, -3, this.size.x+6, this.size.y+6, 19, "#102f10")        
+        drawSquircle(ctx,
+            -this.border_size, -this.border_size,
+            this.size.x+(this.border_size * 2), this.size.y+(this.border_size * 2),
+            19, "#2f3f2f")
         
         // background
         drawSquircle(ctx, 0, 0, this.size.x, this.size.y, 16, this.colour)
@@ -279,9 +296,8 @@ export class Card extends UIElement {
         ctx.rotate(this.rotation * (1 - scale_time_value))
         ctx.translate(-this.size.x/2, 0)
         
-        // border
-        drawSquircle(ctx, -3, -3, this.size.x+6, this.size.y+6, 19, "#102f10")        
-        
+        this.drawBorder(ctx)
+
         // background
         drawSquircle(ctx, 0, 0, this.size.x, this.size.y, 16, this.colour)
         
@@ -338,7 +354,7 @@ export class Card extends UIElement {
     }
 
 
-    renderArrow() {
+    drawArrow() {
         drawBezierArrow(focusingCardCtx, 
             {x: this.position.x + this.size.x / 2, y: this.position.y + this.size.y / 2},
             inputManager.mouse)

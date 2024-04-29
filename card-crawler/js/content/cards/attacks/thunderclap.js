@@ -5,8 +5,8 @@ export class ThunderclapCard extends AttackCard {
     constructor() {
         super()
 
-        this.name = "Die"
-        this.description = "Deal 13 damage to all enemies"
+        this.name = "Thunderclap"
+        this.description = "Deal 13 damage to ALL enemies."
         this.energy_cost = 2
 
         this.play = function() {

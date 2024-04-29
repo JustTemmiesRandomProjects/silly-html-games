@@ -59,7 +59,7 @@ export class Player extends Entity {
             icon.size.x * 0.75
             , 0, 2 * Math.PI, false);
         
-        ctx.fillStyle = "#8BC38C";
+        ctx.fillStyle = "#8cc38c";
         ctx.fill();
 
         //border
@@ -253,10 +253,18 @@ export class Player extends Entity {
     }
 
     fightStart() {
-        this.deck_pile = this.deck
+        this.deck_pile = []
+        this.discard_pile = []
     }
 
     turnStart() {
+        if (this.deck_pile.length == 0 && this.discard_pile.length == 0) {
+            this.deck.forEach((card) => {
+                this.deck_pile.push(card)
+                console.log(card)
+            })
+        }
+        
         console.log("sick i can do things")
         this.energy = this.MAX_ENERGY
 

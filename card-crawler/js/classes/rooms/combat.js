@@ -32,6 +32,7 @@ export class CombatRoom extends BaseRoom {
 
         this.phase = this.PHASES["playerStart"]
         this.phase()
+
     }
 
     async tick() {
