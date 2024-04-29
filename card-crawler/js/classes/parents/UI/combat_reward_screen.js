@@ -84,7 +84,7 @@ export class CombatRewardScreen extends UIElement {
         // draw the reward background
         hudCtx.save()
         hudCtx.translate(this.position.x, this.position.y)
-
+        
         hudCtx.font = `${this.font_size}px ${this.font}`;
         hudCtx.textAlign = 'center';
         hudCtx.textBaseline = 'middle';
@@ -93,7 +93,7 @@ export class CombatRewardScreen extends UIElement {
             this.text,
             this.size.x / 2, -this.size.y / 12,
         );
-
+        
         drawSquircle(hudCtx, 0, 0, this.size.x, this.size.y, 24, this.standard_colour)
         hudCtx.clip()
         hudCtx.setTransform(1, 0, 0, 1, 0, 0)
@@ -102,7 +102,8 @@ export class CombatRewardScreen extends UIElement {
         this.reward_scenes.forEach((reward) => {
             reward.tick()
         })
-
+        
+        
         hudCtx.restore()
     }
 

@@ -1,6 +1,6 @@
 import { global, ctx, inputManager, hudCtx } from "../../global.js"
 import { drawSquircle } from "../../tems_library/rendering.js";
-import { call_deferred, randInt } from "../../tems_library/tems_library.js";
+import { randInt } from "../../tems_library/tems_library.js";
 import { UIElement } from "../parents/UI_element.js";
 
 export class Enemy extends UIElement {
@@ -195,15 +195,5 @@ export class Enemy extends UIElement {
 
     selectNewAction() {
         this.active_action = this.actions[randInt(0, this.actions.length)]
-    }
-
-
-    turnStart() {
-        console.log("sick i can do things")
-        this.drawHand()
-    }
-
-    turnEnd() {
-        this.discardHand()
     }
 }

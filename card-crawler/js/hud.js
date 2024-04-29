@@ -5,6 +5,10 @@ export function drawHud () {
     hudCtx.clearRect(0, 0, hudCtx.canvas.width, hudCtx.canvas.height)
 
     if (global.player != null && global.player.render_hud) {
+
+        hudCtx.textAlign = "left"
+        hudCtx.textBaseline = "left"
+
         drawDrawPile()
         drawDiscardPile()
     }
@@ -20,8 +24,10 @@ function drawDrawPile() {
 function drawDiscardPile() {
     hudCtx.font = "36px kalam-light"
     hudCtx.fillStyle = "#a038c8"
-    hudCtx.fillText(`Restock Pile: ${global.player.discard_pile.length}` , 40, 920) 
+    hudCtx.fillText(`Restock Pile: ${global.player.discard_pile.length}` , 40, 920)
 }
+
+
 
 export function drawDebug() {
     debugHudCtx.clearRect(0, 0, debugHudCtx.canvas.width, debugHudCtx.canvas.height)
