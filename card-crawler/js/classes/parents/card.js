@@ -37,7 +37,7 @@ export class Card extends UIElement {
         
 
         console.log("rendering display description...")
-        this.display_description = splitTextToFit(this.description, this.size.x, `${this.description_font_size}px kalam-regular`)
+        this.generateDisplayDescription()
         this.energy_icon.setPosition(-18, 0)
         this.energy_icon.setSize(global.player.energy_icon.size.x, global.player.energy_icon.size.y)
         
@@ -80,6 +80,13 @@ export class Card extends UIElement {
             self.cleanDragingCard()
             self.dragged_out = false
         })
+    }
+
+    generateDisplayDescription() {
+        this.display_description = splitTextToFit(
+            this.description,
+            this.size.x * 0.9,
+            `${this.description_font_size}px kalam-regular`)
     }
     
     drawEnergyCost(ctx) {
@@ -175,6 +182,8 @@ export class Card extends UIElement {
 
     drawTargetingCard() {
         const player = global.player
+
+        if (player.hand.length == 0) return
 
 
         if (player.hand.length % 2 == 0) {

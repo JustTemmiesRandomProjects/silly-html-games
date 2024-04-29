@@ -62,16 +62,19 @@ function ready() {
 
 // process function, called every frame
 async function process() {
-    if ( !global.is_playing ) {
+    if (!global.is_playing) {
         return
-    } else if ( !global.is_focused ) {
+    }
+
+    global.delta_time = window.performance.now() - global.last_frame_timestamp
+    global.last_frame_timestamp = window.performance.now()
+
+    if (!global.is_focused) {
         requestAnimationFrame(process)
         return
     }
 
     global.loaded_entities = 0
-    global.delta_time = window.performance.now() - global.last_frame_timestamp
-    global.last_frame_timestamp = window.performance.now()
 
     global.frame_times.push(global.delta_time)
 

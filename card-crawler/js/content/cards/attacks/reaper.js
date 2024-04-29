@@ -15,7 +15,7 @@ export class ReaperCard extends AttackCard {
 
         this.play = function() {
             global.current_room.enemies.forEach((enemy) => {
-                helpers.card_helper.healPlayer(Math.max(4, enemy.HP))
+                helpers.card_helper.healPlayer(Math.min(4, enemy.HP))
                 helpers.card_helper.damageEnemy(4, enemy)
             })
         }

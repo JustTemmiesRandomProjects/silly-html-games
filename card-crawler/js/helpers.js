@@ -18,6 +18,7 @@ class CardHelper {
     }
 
     healPlayer(health) {
+        console.log(`healing the player ${health} HP`)
         global.player.HP += health
         if (global.player.HP > global.player.MAX_HP) {
             global.player.HP = global.player.MAX_HP

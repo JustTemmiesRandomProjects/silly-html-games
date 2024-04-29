@@ -18,8 +18,7 @@ export class RampageCard extends TargetAttackCard {
             this.damage += 2
 
             this.description = `Deal ${this.damage} damage. Increase this card's damage by 2 PERMANENTLY.`
-            this.display_description = splitTextToFit(this.description, this.size.x, `${this.description_font_size}px kalam-regular`)
-            console.log(this.size.x)
+            this.generateDisplayDescription()
         }
 
         this.register()
