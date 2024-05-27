@@ -41,11 +41,36 @@ async function process() {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
 
 
+    // run the tick function on every entity
     for (const [key, value] of Object.entries(global.entities)) {
         for (const entity of value) {
             entity.tick()
+            entity.genericEntityTick()
         }
     }
+    
+    // used for deferred ticks
+    global.deferred_calls.forEach((e) => {
+        // dispatchEvent seemed to crash this, idk, this might be a lil buggy
+        if (e.namespace[e.func] == dispatchEvent) {
+            console.log("e.namespace[e.func] is of type dispatchEvent, ignoring call")
+        } else {
+            e.namespace[e.func](...e.optional_arguments)
+        }
+    })
+
+    global.deferred_calls = []
+    
+    drawHud()
+    
+    // finally, run the combat-room tick
+    if (global.current_room != null) {
+        global.current_room.tick()
+    } else {
+        console.log(global.current_room)
+    }
+
+    requestAnimationFrame(process)
 }
 
 // gameTick function, called 100 ms (10 times/second)

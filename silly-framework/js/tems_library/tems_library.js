@@ -210,7 +210,7 @@ export function drawWithScreenWrap(position_x, position_y, radius, drawAtPos, of
     drawn_this_frame ++
 
     // if there's already been 3 objects drawn, we need to draw a 4th one as the real object is in one of the corners
-    // and the code above simply doesn't have the ability to handle corners properly :)
+    // and the code above simply doesn't have the ability to handle corners properly, and i quite simply can't be fucked fixing it :3
     if ( drawn_this_frame >= 3 ){
         // if object is on the rgiht
         if ( position_x > ctx.canvas.width / 2 ) {

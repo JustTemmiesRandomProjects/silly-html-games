@@ -13,12 +13,7 @@ const hudCtx = hudCanvas.getContext("2d")
 class Global {
     constructor(asset_objects, asset_bonus_data) {
         this.entity_counter = 0
-        
-        this.player_acceleration = accountForDisplay(0.3)
-        this.player_max_speed = accountForDisplay(5)
-        this.player_slipperiness = 0.97
-        this.players_last_shot_laser_power = 0
-        
+                
         this.frames_processed = 0
         this.is_playing = false
 
@@ -28,6 +23,9 @@ class Global {
             players: [],
             coins: []
         }
+
+        // functions to run after the ticks are done processing
+        this.deferred_calls = []
 
         this.assets = asset_objects
         this.asset_bonus_data = asset_bonus_data
